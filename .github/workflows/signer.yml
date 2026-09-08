@@ -112,3 +112,20 @@ jobs:
 
           # 7. الرفع النهائي
           gh release create "build-${BUILD_ID}" "${APP_NAME}_signed.ipa" "bundle_id.txt" -t "Cloud Build ${BUILD_ID}" -R ${{ github.repository }}
+
+      - name: 🧹 Auto Cleanup Old Releases (15+ mins)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NOW=$(date +%s)
+          # هێنانەخوارەوەی هەموو ڕیلیزەکان جگە لە V1
+          gh api repos/${{ github.repository }}/releases --jq '.[] | select(.tag_name != "V1") | .tag_name + " " + .created_at' | while read TAG CREATED_AT; do
+            CREATED_TIMESTAMP=$(date -d "$CREATED_AT" +%s)
+            DIFF=$(( (NOW - CREATED_TIMESTAMP) / 60 ))
+            
+            # ئەگەر ڕیلیزەکە تەمەنی لە 15 خولەک زیاتر بوو، بیسڕەوە
+            if [ "$DIFF" -ge 15 ]; then
+              echo "Deleting old release: $TAG (Age: $DIFF minutes)..."
+              gh release delete "$TAG" --cleanup-tag -y || true
+            fi
+          done
