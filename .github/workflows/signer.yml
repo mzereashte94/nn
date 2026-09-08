@@ -21,6 +21,7 @@ jobs:
         env:
           APP_NAME: ${{ github.event.client_payload.app_name }}
           USE_FREE_CERT: ${{ github.event.client_payload.use_free_cert }}
+          CERT_FOLDER: ${{ github.event.client_payload.cert_folder }}
           P12_BASE64: ${{ github.event.client_payload.p12_base64 }}
           PROV_BASE64: ${{ github.event.client_payload.prov_base64 }}
           CUSTOM_PASSWORD: ${{ github.event.client_payload.password }}
@@ -28,8 +29,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         run: |
           set -euo pipefail
+          
+          # جێگیرکردنی ناوی فۆڵدەر ئەگەر بەتاڵ بوو
+          CERT_FOLDER="${CERT_FOLDER:-aramco}"
 
-          # 1. تخطي حماية الشهادات لـ Ubuntu-latest (OpenSSL 3 Bypass)
+          # 1. تخطي حماية الشهادات
           cat << 'EOF' > /tmp/custom_openssl.cnf
           openssl_conf = openssl_init
           [openssl_init]
@@ -44,14 +48,15 @@ jobs:
           EOF
           export OPENSSL_CONF=/tmp/custom_openssl.cnf
           
-          # 2. تحديد الأسماء
-          if [[ "$APP_NAME" == "ESign" ]]; then IPA_NAME="esign_5.0.2_unsigned.ipa"; ICON_NAME="IMG_1419.jpeg";
-          elif [[ "$APP_NAME" == "KSign" ]]; then IPA_NAME="Ksign.7.ipa"; ICON_NAME="IMG_1416.jpeg";
-          elif [[ "$APP_NAME" == "Feather" ]]; then IPA_NAME="Feather.ipa"; ICON_NAME="IMG_1421.jpeg";
-          elif [[ "$APP_NAME" == "Scarlet" ]]; then IPA_NAME="Scarlet.ipa"; ICON_NAME="IMG_1420.jpeg";
-          elif [[ "$APP_NAME" == "GBox" ]]; then IPA_NAME="GBox_v5.7.6.ipa"; ICON_NAME="IMG_1417.jpeg"; fi
+          # 2. تحديد الأسماء حسب الملفات المرفوعة في V1
+          if [[ "$APP_NAME" == "AshteMobile" ]]; then IPA_NAME="AshteMobile.ipa"; ICON_NAME="Ashtemobile.jpeg";
+          elif [[ "$APP_NAME" == "Esign" || "$APP_NAME" == "ESign" ]]; then IPA_NAME="Esign.ipa"; ICON_NAME="Esign.jpeg";
+          elif [[ "$APP_NAME" == "Ksign" || "$APP_NAME" == "KSign" ]]; then IPA_NAME="Ksign.ipa"; ICON_NAME="Ksign.jpeg";
+          elif [[ "$APP_NAME" == "MyTV" ]]; then IPA_NAME="mytv.ipa"; ICON_NAME="mytv.jpeg";
+          elif [[ "$APP_NAME" == "ipaomtk" ]]; then IPA_NAME="ipaomtk.ipa"; ICON_NAME="Ashtemobile.jpeg";
+          fi
 
-          # 3. تنفيذ المهام بالتوازي لأقصى سرعة (Parallel Execution)
+          # 3. تنفيذ المهام بالتوازي
           (
             wget -qO- https://github.com/zhlynn/zsign/releases/download/v1.0.4/zsign-linux-x86_64.tar.gz | tar -xz
             chmod +x zsign
@@ -63,43 +68,51 @@ jobs:
           ) &
           
           (
-            cp "$GITHUB_WORKSPACE/icons/$ICON_NAME" downloaded_icon.png
+            # پشتگوێخستنی هەڵە ئەگەر وێنەی ئایکۆنەکە نەبوو
+            cp "$GITHUB_WORKSPACE/icons/$ICON_NAME" downloaded_icon.png || true
+            
             if [[ "$USE_FREE_CERT" == "true" ]]; then
-              cp "$GITHUB_WORKSPACE/cert/cert.p12" ./cert.p12
-              cp "$GITHUB_WORKSPACE/cert/profile.mobileprovision" ./profile.mobileprovision
+              cp "$GITHUB_WORKSPACE/cert/$CERT_FOLDER/cert.p12" ./cert.p12
+              cp "$GITHUB_WORKSPACE/cert/$CERT_FOLDER/profile.mobileprovision" ./profile.mobileprovision
             else
               echo "$P12_BASE64" | tr -d ' \n\r' | base64 -d > cert.p12
               echo "$PROV_BASE64" | tr -d ' \n\r' | base64 -d > profile.mobileprovision
             fi
           ) &
           
-          # انتظار انتهاء جميع المهام المتوازية (لن يستغرق سوى ثوانٍ معدودة)
           wait
 
           # استخراج كلمة المرور
-          if [[ "$USE_FREE_CERT" == "true" ]]; then CERT_PASSWORD=$(cat "$GITHUB_WORKSPACE/cert/pass.txt" | tr -d '\n\r');
-          else CERT_PASSWORD=$(echo "$CUSTOM_PASSWORD" | tr -d '\n\r'); fi
+          if [[ "$USE_FREE_CERT" == "true" ]]; then 
+            CERT_PASSWORD=$(cat "$GITHUB_WORKSPACE/cert/$CERT_FOLDER/pass.txt" | tr -d '\n\r')
+          else 
+            CERT_PASSWORD=$(echo "$CUSTOM_PASSWORD" | tr -d '\n\r')
+          fi
 
           # 4. الحقن السريع جداً 
           APP_DIR=$(unzip -Z1 raw_app.ipa | grep -m1 '^Payload/[^/]*.app/')
           unzip -qq raw_app.ipa "${APP_DIR}Info.plist"
-          mv downloaded_icon.png "${APP_DIR}CustomIpaBlackIcon.png"
+          
+          if [ -f downloaded_icon.png ]; then
+            mv downloaded_icon.png "${APP_DIR}CustomIpaBlackIcon.png"
+          fi
 
           # 5. بايثون محسّن ولحظي
           python3 -c '
-          import plistlib, sys
+          import plistlib, sys, os
           app_name, app_dir = sys.argv[1], sys.argv[2]
           plist_path = f"{app_dir}Info.plist"
           try:
               with open(plist_path, "rb") as f: pl = plistlib.load(f)
-              print(pl.get("CFBundleIdentifier", f"com.ipablack.{app_name}"))
-              pl["CFBundleIcons"] = {"CFBundlePrimaryIcon": {"CFBundleIconFiles": ["CustomIpaBlackIcon"], "UIPrerenderedIcon": True}}
-              if "CFBundleIcons~ipad" in pl: pl["CFBundleIcons~ipad"] = pl["CFBundleIcons"]
+              print(pl.get("CFBundleIdentifier", f"com.ashtemobile.{app_name}"))
+              if os.path.exists(f"{app_dir}CustomIpaBlackIcon.png"):
+                  pl["CFBundleIcons"] = {"CFBundlePrimaryIcon": {"CFBundleIconFiles": ["CustomIpaBlackIcon"], "UIPrerenderedIcon": True}}
+                  if "CFBundleIcons~ipad" in pl: pl["CFBundleIcons~ipad"] = pl["CFBundleIcons"]
               with open(plist_path, "wb") as f: plistlib.dump(pl, f)
-          except: print(f"com.ipablack.{app_name}")
+          except: print(f"com.ashtemobile.{app_name}")
           ' "$APP_NAME" "$APP_DIR" > bundle_id.txt
 
-          if [[ "$APP_NAME" == "Feather" || "$APP_NAME" == "KSign" ]]; then
+          if [[ "$APP_NAME" == "Feather" || "$APP_NAME" == "KSign" || "$APP_NAME" == "Ksign" ]]; then
             mkdir -p "${APP_DIR}signing-assets/PremiumCert"
             cp cert.p12 "${APP_DIR}signing-assets/PremiumCert/cert.p12"
             cp profile.mobileprovision "${APP_DIR}signing-assets/PremiumCert/cert.mobileprovision"
