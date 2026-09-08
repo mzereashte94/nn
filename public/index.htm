@@ -73,8 +73,18 @@
         .progress-wrapper { width: 100%; background: rgba(255, 255, 255, 0.05); border-radius: 8px; height: 6px; overflow: hidden; display: none; margin-top: 10px; }
         .progress-fill { width: 0%; height: 100%; background: var(--gold); transition: width 0.2s ease-out; }
 
-        /* تنسيقات قسم الشهادة المجانية */
+        /* تنسيقات قسم الشهادة المجانية (مع السيرفرات) */
         .free-section { display: none; opacity: 0; transition: all 0.4s ease; display: flex; flex-direction: column; gap: 10px; }
+        
+        .cert-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 5px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 20px; border: 1px solid rgba(212,175,55,0.1); }
+        .cert-select { background: rgba(0,0,0,0.5); color: var(--gold-light); border: 1px solid rgba(212,175,55,0.2); padding: 12px 16px; border-radius: 14px; width: 100%; font-size: 0.9rem; font-weight: bold; outline: none; appearance: none; -webkit-appearance: none; text-align: right; cursor: pointer;}
+        .cert-select option { background: #1a1a1a; color: #fff; }
+        .btn-group { display: flex; gap: 10px; }
+        .btn-dns { background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 10px; border-radius: 14px; width: 50%; font-weight: 800; font-size: 0.85rem; cursor: pointer; transition: 0.3s; }
+        .btn-dns:active { transform: scale(0.95); background: rgba(74, 222, 128, 0.3); }
+        .btn-zip { background: rgba(212, 175, 55, 0.15); color: var(--gold); border: 1px solid rgba(212, 175, 55, 0.3); padding: 10px; border-radius: 14px; width: 50%; font-weight: 800; font-size: 0.85rem; cursor: pointer; transition: 0.3s; }
+        .btn-zip:active { transform: scale(0.95); background: rgba(212, 175, 55, 0.3); }
+
         .free-app-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 12px 16px; transition: 0.3s; }
         .free-app-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(212,175,55,0.2); }
         
@@ -164,12 +174,48 @@
 
         <!-- 2. قسم الشهادة المجانية -->
         <div id="freeAppsSection" class="free-section" style="display: none;">
-            <!-- سيتم توليد التطبيقات هنا عبر الجافاسكربت -->
+            
+            <!-- قسم السيرفرات (تحميل الـ DNS والـ ZIP) -->
+            <div class="cert-container">
+                <select id="certSelect" class="cert-select">
+                    <option value="aramco">Aramco Services Company</option>
+                    <option value="beijing_xibei">Beijing Xibei</option>
+                    <option value="bzi_boc">BZI BOC</option>
+                    <option value="china_telecom">China Telecom Corporation</option>
+                    <option value="jiangsu">Jiangsu</option>
+                    <option value="luoyang">Luoyang Postal Administration</option>
+                    <option value="moving">Moving Increasingly</option>
+                    <option value="powerchin">Powerchin</option>
+                    <option value="qingdao">Qingdao</option>
+                    <option value="vietnam">Vietnam</option>
+                    <option value="xl_axia">XL Axia</option>
+                </select>
+                <div class="btn-group">
+                    <button type="button" onclick="downloadDNS()" class="btn-dns">DNS AdBlock</button>
+                    <button type="button" onclick="downloadZIP()" class="btn-zip">Download ZIP</button>
+                </div>
+            </div>
+
+            <!-- قائمة التطبيقات ستتولد هنا -->
+            <div id="appsListContainer" class="flex flex-col gap-[10px]"></div>
+
         </div>
 
     </div>
 
     <script>
+        // دوال تحميل الـ DNS والـ ZIP
+        function downloadZIP() {
+            const selectedCert = document.getElementById("certSelect").value;
+            const zipUrl = `https://raw.githubusercontent.com/mzereashte94/nn/main/cert/${selectedCert}/${selectedCert}.zip`;
+            window.open(zipUrl, '_blank');
+        }
+
+        function downloadDNS() {
+            const dnsUrl = "https://raw.githubusercontent.com/mzereashte94/nn/main/cert/dns.mobileconfig";
+            window.open(dnsUrl, '_blank');
+        }
+
         // توليد النجوم
         const starsContainer = document.getElementById('stars-container');
         for (let i = 0; i < 40; i++) {
@@ -194,9 +240,9 @@
         ];
 
         // بناء قائمة التطبيقات
-        const freeAppsSection = document.getElementById('freeAppsSection');
+        const appsListContainer = document.getElementById('appsListContainer');
         appsData.forEach(app => {
-            freeAppsSection.innerHTML += `
+            appsListContainer.innerHTML += `
                 <div class="free-app-item">
                     <div class="flex items-center gap-3">
                         <img src="${app.icon}" class="app-icon-img" alt="${app.id}">
@@ -226,6 +272,7 @@
         const premiumSection = document.querySelector('.premium-section');
         const modeToggleBox = document.getElementById('modeToggleBox');
         const toggleTextLabel = document.getElementById('toggleTextLabel');
+        const freeAppsSection = document.getElementById('freeAppsSection');
 
         freeCertToggle.addEventListener('change', function() {
             if (this.checked) {
@@ -320,7 +367,7 @@
                             
                             // توجيه سحري لتليجرام بعد ظهور رسالة التثبيت بثانية ونصف
                             setTimeout(() => {
-                                window.location.href = "https://t.me/hl00ss";
+                                window.location.href = "https://t.me/ashtemobile";
                             }, 1500);
 
                         }, 500);
@@ -410,7 +457,7 @@
                             
                             // توجيه سحري لتليجرام بعد ظهور التثبيت بثانية ونصف
                             setTimeout(() => {
-                                window.location.href = "https://t.me/hl00ss";
+                                window.location.href = "https://t.me/ashtemobile";
                             }, 1500);
 
                         }, 800); 
