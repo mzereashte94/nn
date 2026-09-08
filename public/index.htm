@@ -6,7 +6,6 @@
     <title>AshteMobile | Premium Cloud</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- کتێبخانەی JSZip بۆ دروستکردنی فایلی زیپ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root { --gold: #d4af37; --gold-light: #fceabb; --gold-dark: #8c6b14; --black: #050505; }
@@ -79,15 +78,16 @@
         <!-- VIP Section (Premium Certificate) -->
         <form id="signForm" class="premium-section space-y-4" style="display: none; opacity: 0;">
             <div class="custom-select" id="customSelect">
+                <!-- گەڕاندنەوەی وێنەکان بۆ Mzere -->
                 <div class="select-selected" id="selectedApp">
-                    <img src="https://raw.githubusercontent.com/mzereashte94/nn/main/icons/Ashtemobile.jpeg" alt="icon">
+                    <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" alt="icon">
                     <span class="text-gray-200">AshteMobile</span>
                 </div>
                 <div class="select-items" id="appOptions">
-                    <div data-value="AshteMobile"><img src="https://raw.githubusercontent.com/mzereashte94/nn/main/icons/Ashtemobile.jpeg" alt="AshteMobile">AshteMobile</div>
-                    <div data-value="ESign"><img src="https://raw.githubusercontent.com/mzereashte94/nn/main/icons/Esign.jpeg" alt="Esign">Esign</div>
-                    <div data-value="KSign"><img src="https://raw.githubusercontent.com/mzereashte94/nn/main/icons/Ksign.jpeg" alt="Ksign">Ksign</div>
-                    <div data-value="MyTV"><img src="https://raw.githubusercontent.com/mzereashte94/nn/main/icons/mytv.jpeg" alt="MyTV">MyTV</div>
+                    <div data-value="AshteMobile"><img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" alt="AshteMobile">AshteMobile</div>
+                    <div data-value="Esign"><img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg" alt="Esign">Esign</div>
+                    <div data-value="Ksign"><img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg" alt="Ksign">Ksign</div>
+                    <div data-value="MyTV"><img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg" alt="MyTV">MyTV</div>
                 </div>
                 <input type="hidden" id="appInput" value="AshteMobile" required>
             </div>
@@ -167,11 +167,12 @@
             starsContainer.appendChild(star);
         }
 
+        // گەڕاندنەوەی وێنەکان بۆ ڕیپۆزتۆری Mzere
         const appsData = [
-            { id: 'AshteMobile', name: 'AshteMobile', icon: 'https://raw.githubusercontent.com/mzereashte94/nn/main/icons/Ashtemobile.jpeg' },
-            { id: 'ESign', name: 'Esign', icon: 'https://raw.githubusercontent.com/mzereashte94/nn/main/icons/Esign.jpeg' },
-            { id: 'KSign', name: 'Ksign', icon: 'https://raw.githubusercontent.com/mzereashte94/nn/main/icons/Ksign.jpeg' },
-            { id: 'MyTV', name: 'MyTV', icon: 'https://raw.githubusercontent.com/mzereashte94/nn/main/icons/mytv.jpeg' }
+            { id: 'AshteMobile', name: 'AshteMobile', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
+            { id: 'Esign', name: 'Esign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
+            { id: 'Ksign', name: 'Ksign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
+            { id: 'MyTV', name: 'MyTV', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
         ];
 
         const appsListContainer = document.getElementById('appsListContainer');
@@ -241,7 +242,6 @@
             } catch (e) { return { status: 'processing' }; }
         }
 
-        // فەنکشن بۆ دروستکردنی فایلی زیپ لە ڕیپۆزتۆرییە نوێیەکەتەوە (nn)
         async function downloadCertFiles() {
             const certId = document.getElementById('freeCertSelect').value;
             const baseUrl = `https://raw.githubusercontent.com/mzereashte94/nn/main/cert/${certId}`;
@@ -327,7 +327,6 @@
                             progressContainer.style.display = 'none';
                             successBadge.style.display = 'flex';
                             
-                            // گەڕاندنەوەی فۆرماتی دروستی manifest بۆ پاراستنی بێ کێشەیی دابەزاندن
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
                             
