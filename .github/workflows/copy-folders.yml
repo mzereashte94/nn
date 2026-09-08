@@ -1,0 +1,38 @@
+name: Copy Cert Folders
+
+on:
+  workflow_dispatch: # کارپێکردنی دەستی
+
+jobs:
+  copy-files:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Destination Repo
+        uses: actions/checkout@v4
+
+      - name: Clone Source Repo
+        run: |
+          # ڕاکێشانی ڕیپۆزتۆرییە کۆنەکەت کە فۆڵدەرەکانی تێدایە
+          git clone https://github.com/mzereashte94/Mzere.git old_repo
+
+      - name: Copy Folders to New Repo
+        run: |
+          # دروستکردنی فۆڵدەری cert ئەگەر نەبێت
+          mkdir -p cert
+          
+          # کۆپیکردنی هەموو شتێک لە ناو certی کۆنەوە بۆ نوێیەکە
+          cp -r old_repo/cert/* cert/
+          
+          # سڕینەوەی ڕیپۆزتۆرییە کاتییەکە
+          rm -rf old_repo
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add cert/
+          # ئەگەر گۆڕانکاری هەبوو، پاشەکەوتی بکە
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-copied cert folders from Mzere repo"
+          git push
