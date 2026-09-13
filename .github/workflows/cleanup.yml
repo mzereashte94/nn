@@ -1,0 +1,40 @@
+name: 🧹 Auto Cleanup Background
+
+on:
+  schedule:
+    # ئەمە وا دەکات هەر 10 خولەک جارێک ئۆتۆماتیکی ئیش بکات
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # ئەمە بۆ ئەوەیە بتوانیت بە دەستی خۆشتیش ئیشی پێ بکەیت
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # مۆڵەتی سڕینەوە دەدات بە سکریپتەکە
+    steps:
+      - name: 🗑️ Delete Releases Older Than 10 Mins
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NOW=$(date +%s)
+          
+          echo "Starting cleanup process..."
+          
+          # هێنانەخوارەوەی هەموو ڕیلیزەکان جگە لە V1
+          gh api repos/${{ github.repository }}/releases --paginate --jq '.[] | select(.tag_name != "V1") | .tag_name + " " + .created_at' | while read TAG CREATED_AT; do
+            if [ -z "$TAG" ]; then continue; fi
+            
+            CREATED_TIMESTAMP=$(date -d "$CREATED_AT" +%s)
+            DIFF=$(( (NOW - CREATED_TIMESTAMP) / 60 ))
+            
+            # ئەگەر تەمەنی ڕیلیزەکە 10 خولەک یان زیاتر بوو، دەیسڕێتەوە
+            if [ "$DIFF" -ge 10 ]; then
+              echo "Deleting old release: $TAG (Age: $DIFF minutes)..."
+              gh release delete "$TAG" --cleanup-tag -y || true
+            else
+              echo "Keeping new release: $TAG (Age: $DIFF minutes)"
+            fi
+          done
+          
+          echo "Cleanup finished successfully!"
