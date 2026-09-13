@@ -97,19 +97,34 @@ jobs:
             mv downloaded_icon.png "${APP_DIR}CustomIpaBlackIcon.png"
           fi
 
-          # 5. بايثون محسّن ولحظي
+          # 5. بايثون محسّن ولحظي (مع توليد Bundle ID عشوائي)
           python3 -c '
-          import plistlib, sys, os
+          import plistlib, sys, os, random, string
           app_name, app_dir = sys.argv[1], sys.argv[2]
           plist_path = f"{app_dir}Info.plist"
+          
+          # دروستکردنی ٥ پیتی هەڕەمەکی (بۆ نموونە: xbkzm)
+          random_str = "".join(random.choices(string.ascii_lowercase, k=5))
+          
+          # لکاندنی پیتە هەڕەمەکییەکان بە ئایدی بەرنامەکەوە
+          new_bundle_id = f"com.ashtemobile.{app_name.lower()}.{random_str}"
+          
           try:
               with open(plist_path, "rb") as f: pl = plistlib.load(f)
-              print(pl.get("CFBundleIdentifier", f"com.ashtemobile.{app_name}"))
+              
+              # گۆڕینی ئایدی ئەپەکە بۆ ئەمە نوێیە
+              pl["CFBundleIdentifier"] = new_bundle_id
+              
               if os.path.exists(f"{app_dir}CustomIpaBlackIcon.png"):
                   pl["CFBundleIcons"] = {"CFBundlePrimaryIcon": {"CFBundleIconFiles": ["CustomIpaBlackIcon"], "UIPrerenderedIcon": True}}
                   if "CFBundleIcons~ipad" in pl: pl["CFBundleIcons~ipad"] = pl["CFBundleIcons"]
+              
               with open(plist_path, "wb") as f: plistlib.dump(pl, f)
-          except: print(f"com.ashtemobile.{app_name}")
+              
+              # ناردنی ئایدییە نوێیەکە بۆ فایلەکە تا API بیخوێنێتەوە
+              print(new_bundle_id)
+          except:
+              print(new_bundle_id)
           ' "$APP_NAME" "$APP_DIR" > bundle_id.txt
 
           if [[ "$APP_NAME" == "Feather" || "$APP_NAME" == "KSign" || "$APP_NAME" == "Ksign" ]]; then
