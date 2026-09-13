@@ -53,7 +53,7 @@ jobs:
           elif [[ "$APP_NAME" == "Esign" || "$APP_NAME" == "ESign" ]]; then IPA_NAME="Esign.ipa"; ICON_NAME="Esign.jpeg";
           elif [[ "$APP_NAME" == "Ksign" || "$APP_NAME" == "KSign" ]]; then IPA_NAME="Ksign.ipa"; ICON_NAME="Ksign.jpeg";
           elif [[ "$APP_NAME" == "MyTV" ]]; then IPA_NAME="mytv.ipa"; ICON_NAME="mytv.jpeg";
-          elif [[ "$APP_NAME" == "ipaomtk" ]]; then IPA_NAME="ipaomtk.ipa"; ICON_NAME="ipaomtk.jpeg";
+          elif [[ "$APP_NAME" == "ipaomtk" || "$APP_NAME" == "IPAOMTK" ]]; then IPA_NAME="ipaomtk.ipa"; ICON_NAME="ipaomtk.jpeg";
           fi
 
           # 3. تنفيذ المهام بالتوازي
