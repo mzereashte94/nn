@@ -9,10 +9,12 @@ export default async function handler(req, res) {
         });
 
         if (response.status === 200) {
+            // ئەگەر فایلەکە ئامادە بوو، لینکەکان دروست دەکات
             const ipaUrl = `https://github.com/${GITHUB_REPO}/releases/download/build-${build_id}/${app}_signed.ipa`;
             const bundleUrl = `https://github.com/${GITHUB_REPO}/releases/download/build-${build_id}/bundle_id.txt`;
             return res.status(200).json({ status: 'done', ipaUrl, bundleUrl });
         } else if (response.status === 404) {
+            // ئەگەر هێشتا کاری تێدا دەکرا (لە گیتھەب ئەکشن)
             return res.status(200).json({ status: 'processing' });
         } else {
             return res.status(500).json({ error: 'GitHub API error' });
