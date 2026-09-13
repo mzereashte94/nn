@@ -2,16 +2,18 @@ export default async function handler(req, res) {
     const { ipa, bundle_url, app } = req.query;
     if (!ipa || !app) return res.status(400).send('Invalid Request');
 
+    // گۆڕینی ئایکۆنەکان بۆ ئەوانەی پڕۆژەی AshteMobile
     const customIcons = {
-        'esign': 'https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1419.jpeg',
-        'ksign': 'https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1416.jpeg',
-        'scarlet': 'https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1420.jpeg',
-        'gbox': 'https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1417.jpeg',
-        'feather': 'https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1421.jpeg'
+        'ashtemobile': 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg',
+        'esign': 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg',
+        'ksign': 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg',
+        'mytv': 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg'
     };
 
-    const iconUrl = customIcons[app.toLowerCase()] || customIcons['esign'];
-    let actualBundleId = `com.ipablack.${app.toLowerCase()}`;
+    // دانانی AshteMobile وەک ئایکۆنی بنەڕەتی
+    const iconUrl = customIcons[app.toLowerCase()] || customIcons['ashtemobile'];
+    // گۆڕینی Bundle ID بۆ AshteMobile
+    let actualBundleId = `com.ashtemobile.${app.toLowerCase()}`;
 
     try {
         if (bundle_url) {
@@ -57,7 +59,8 @@ export default async function handler(req, res) {
                 <key>kind</key>
                 <string>software</string>
                 <key>title</key>
-                <string>${app} - IPA BLACK</string>
+                <!-- گۆڕینی ناوی ئەپەکە لە کاتی دابەزاندندا -->
+                <string>${app} - AshteMobile</string>
             </dict>
         </dict>
     </array>
