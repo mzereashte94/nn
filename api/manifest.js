@@ -7,10 +7,11 @@ export default async function handler(req, res) {
         'ashtemobile': 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg',
         'esign': 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg',
         'ksign': 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg',
-        'mytv': 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg'
+        'mytv': 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg',
+        'ipaomtk': 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' // ئەم دێڕە زیاد کرا
     };
 
-    // دانانی AshteMobile وەک ئایکۆنی بنەڕەتی
+    // دانانی AshteMobile وەک ئایکۆنی بنەڕەتی لە کاتی نەبوونی ئایکۆن
     const iconUrl = customIcons[app.toLowerCase()] || customIcons['ashtemobile'];
     // گۆڕینی Bundle ID بۆ AshteMobile
     let actualBundleId = `com.ashtemobile.${app.toLowerCase()}`;
