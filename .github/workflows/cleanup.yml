@@ -2,7 +2,6 @@ name: 🧹 Auto Cleanup Background
 
 on:
   schedule:
-    # گۆڕدرا بۆ هەر 5 خولەک جارێک
     - cron: '*/5 * * * *'
   workflow_dispatch:
 
@@ -11,23 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write
     steps:
       - name: 🗑️ Delete Releases Older Than 5 Mins
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          NOW=$(date +%s)
+          CURRENT_TIME=$(date -u +%s)
           
           echo "Starting cleanup process..."
           
-          gh api repos/${{ github.repository }}/releases --paginate --jq '.[] | select(.tag_name != "V1") | .tag_name + " " + .created_at' | while read TAG CREATED_AT; do
+          # وەرگرتنی هەموو ڕیلیزەکان جگە لە V1
+          gh api repos/${{ github.repository }}/releases --paginate --jq '.[] | select(.tag_name != "V1") | .tag_name + "|" + .created_at' | while IFS='|' read -r TAG CREATED_AT; do
             if [ -z "$TAG" ]; then continue; fi
             
-            CREATED_TIMESTAMP=$(date -d "$CREATED_AT" +%s)
-            DIFF=$(( (NOW - CREATED_TIMESTAMP) / 60 ))
+            RELEASE_TIME=$(date -u -d "$CREATED_AT" +%s)
+            DIFF=$(( (CURRENT_TIME - RELEASE_TIME) / 60 ))
             
-            # گۆڕدرا بۆ 5 خولەک
             if [ "$DIFF" -ge 5 ]; then
               echo "Deleting old release: $TAG (Age: $DIFF minutes)..."
               gh release delete "$TAG" --cleanup-tag -y || true
