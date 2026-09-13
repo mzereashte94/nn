@@ -90,7 +90,7 @@ jobs:
           fi
 
           # 4. الحقن السريع جداً 
-          APP_DIR=$(unzip -Z1 raw_app.ipa | grep -m1 '^Payload/[^/]*.app/')
+          APP_DIR=$(unzip -Z1 raw_app.ipa | grep -o -E '^Payload/[^/]+\.app/' | head -n 1)
           unzip -qq raw_app.ipa "${APP_DIR}Info.plist"
           
           if [ -f downloaded_icon.png ]; then
