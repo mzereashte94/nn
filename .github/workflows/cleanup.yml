@@ -1,53 +1,64 @@
-name: 🧹 Ultra Strong Auto Cleanup
+name: 🧹 Ultra Auto Cleanup
 
 on:
+  workflow_run:
+    workflows: ["Premium Cloud Signer Engine (Ultra Fast)"]
+    types:
+      - completed
   schedule:
-    # هەر ٥ خولەک جارێک سێرڤەرەکە خەبەر دەکاتەوە بۆ پشکنین
-    - cron: '*/5 * * * *'
-  workflow_dispatch: # بۆ ئەوەی بتوانیت بە دەستی خۆیشت کاری پێ بکەیت
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
 
 jobs:
-  force-cleanup:
+  smart-cleanup:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: write
     steps:
-      - name: 🗑️ Force Delete Releases Older Than 10 Mins
+      - name: ⏳ Wait 10 Minutes (If triggered by Signer)
+        if: ${{ github.event_name == 'workflow_run' }}
+        run: |
+          echo "Waiting 10 minutes to allow user to download..."
+          sleep 600
+
+      - name: 🧹 Smart Cleanup Engine (Python)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Starting ultra-strong cleanup process..."
+          python3 -c '
+          import os, json, subprocess
+          from datetime import datetime, timezone
           
-          # وەرگرتنی کاتی ئێستا بە سانیە
-          NOW=$(date +%s)
+          repo = os.environ.get("GITHUB_REPOSITORY")
+          print("🔄 Checking for old temporary releases...")
           
-          # هێنانەخوارەوەی لیستی هەموو ڕیلیزەکان، بەدەر لە V1
-          RELEASES=$(gh api repos/${{ github.repository }}/releases --paginate -q '.[] | select(.tag_name != "V1") | "\(.tag_name)|\(.created_at)"')
-          
-          if [ -z "$RELEASES" ]; then
-            echo "No releases found to clean up."
-            exit 0
-          fi
-          
-          for release in $RELEASES; do
-            # جیاکردنەوەی تاگ و بەرواری دروستبوون
-            TAG=$(echo "$release" | cut -d'|' -f1)
-            CREATED_AT=$(echo "$release" | cut -d'|' -f2)
-            
-            # گۆڕینی بەرواری ڕیلیزەکە بۆ سانیە بۆ هەژمارکردنی دروست
-            CREATED_TIMESTAMP=$(date -d "$CREATED_AT" +%s)
-            
-            # هەژمارکردنی تەمەنی ڕیلیزەکە بە خولەک
-            DIFF_MINUTES=$(( (NOW - CREATED_TIMESTAMP) / 60 ))
-            
-            # ئەگەر تەمەنی ١٠ خولەک یان زیاتر بوو، بە زۆر دەیسڕێتەوە
-            if [ "$DIFF_MINUTES" -ge 10 ]; then
-              echo "⚠️ Deleting release '$TAG' (Age: $DIFF_MINUTES minutes)..."
-              gh release delete "$TAG" --cleanup-tag -y || echo "Failed to delete $TAG, moving on..."
-            else
-              echo "✅ Keeping release '$TAG' (Age: $DIFF_MINUTES minutes - needs to wait)."
-            fi
-          done
-          
-          echo "Cleanup finished perfectly!"
+          try:
+              output = subprocess.check_output(["gh", "api", f"repos/{repo}/releases", "--paginate"]).decode("utf-8")
+              releases = json.loads(output)
+              now = datetime.now(timezone.utc)
+              deleted = 0
+              
+              for r in releases:
+                  tag = r.get("tag_name", "")
+                  
+                  # تەنها ڕیلیزە کاتییەکان دەسڕێتەوە کە بە build دەست پێدەکەن، دەست بۆ V1 نابات
+                  if tag == "V1" or not str(tag).startswith("build-"): 
+                      continue
+                  
+                  created = datetime.strptime(r.get("created_at"), "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+                  mins = (now - created).total_seconds() / 60.0
+                  
+                  # ئەگەر تەمەنی لە ١٠ خولەک زیاتر بوو، دەیسڕێتەوە
+                  if mins >= 10:
+                      print(f"🗑️ Deleting: {tag} (Age: {mins:.1f} minutes)")
+                      os.system(f"gh release delete {tag} --cleanup-tag -y")
+                      deleted += 1
+                      
+              if deleted == 0: 
+                  print("✅ No old temporary releases found.")
+                  
+          except Exception as e: 
+              print("❌ Error during cleanup:", e)
+          '
