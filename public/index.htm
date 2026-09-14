@@ -3,183 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AshteMobile | Premium Signer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
+    <title>AshteMobile | Premium Cloud</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root { 
-            --gold: #E5C07B;
-            --gold-glow: rgba(229, 192, 123, 0.4);
-            --bg-deep: #050505;
-            --surface: rgba(20, 20, 22, 0.6);
-            --surface-hover: rgba(30, 30, 35, 0.8);
-            --border-light: rgba(255, 255, 255, 0.08);
-            --text-muted: #88888D;
+            --gold: #FACC15; /* Premium Gold */
+            --bg-base: #09090B; /* Zinc 950 */
+            --surface: #18181B; /* Zinc 900 */
+            --surface-hover: #27272A; /* Zinc 800 */
+            --border: #27272A;
+            --text-main: #FAFAFA;
+            --text-muted: #A1A1AA;
         }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', 'Cairo', sans-serif; }
         
         body { 
-            font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
-            background-color: var(--bg-deep); 
-            color: #ffffff; 
+            background-color: var(--bg-base); 
+            color: var(--text-main); 
             margin: 0; 
             min-height: 100vh;
             display: flex; justify-content: center;
-            overflow-x: hidden; padding: 24px 0 50px 0;
+            overflow-x: hidden; padding: 24px 0 60px 0;
+            background-image: radial-gradient(circle at 50% -20%, rgba(250, 204, 21, 0.08) 0%, transparent 60%);
         }
 
-        /* باکگراوندی مۆدێرن (Ambient Glow) */
-        .ambient-bg {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;
-            background: radial-gradient(circle at 50% 0%, rgba(35, 28, 15, 0.5) 0%, transparent 60%);
-        }
-        .glow-sphere {
-            position: absolute; width: 300px; height: 300px; background: var(--gold); border-radius: 50%; filter: blur(120px); opacity: 0.15; top: -100px; left: 50%; transform: translateX(-50%); animation: pulse 8s infinite alternate;
-        }
-        @keyframes pulse { 0% { opacity: 0.1; transform: translateX(-50%) scale(0.9); } 100% { opacity: 0.2; transform: translateX(-50%) scale(1.1); } }
+        .app-wrapper { width: 92%; max-width: 440px; display: flex; flex-direction: column; gap: 24px; z-index: 10; }
 
-        .app-container { width: 92%; max-width: 420px; z-index: 10; display: flex; flex-direction: column; gap: 24px; }
+        /* Header */
+        .header { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 8px; }
+        .header-title { font-size: 32px; font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1; }
+        .header-title span { color: var(--gold); }
+        .header-badge { background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.2); color: var(--gold); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* لۆگۆ */
-        .brand-box { text-align: center; margin-bottom: 8px; }
-        .brand-title { font-size: 32px; font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1.1; }
-        .brand-title span { background: linear-gradient(135deg, #FFF, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .brand-badge { display: inline-block; background: rgba(229, 192, 123, 0.1); border: 1px solid rgba(229, 192, 123, 0.2); color: var(--gold); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 8px; }
-
-        /* تابی مۆدێرن (Pill Switcher) */
-        .modern-switcher {
-            display: flex; background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); border-radius: 100px; padding: 5px; position: relative; backdrop-filter: blur(20px);
+        /* Modern Tabs */
+        .tab-container {
+            display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 4px; position: relative;
         }
-        .switch-btn {
+        .tab-btn {
             flex: 1; text-align: center; padding: 10px 0; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; position: relative; z-index: 2; transition: 0.3s;
         }
-        .switch-btn.active { color: #000; }
-        .switch-slider {
-            position: absolute; top: 5px; bottom: 5px; left: 5px; width: calc(50% - 5px); background: linear-gradient(135deg, var(--gold), #c9a35e); border-radius: 100px; z-index: 1; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 4px 15px rgba(229, 192, 123, 0.25);
+        .tab-btn.active { color: #000; }
+        .tab-indicator {
+            position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: var(--gold); border-radius: 12px; z-index: 1; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 4px 12px rgba(250, 204, 21, 0.2);
         }
 
-        /* کارتەکانی UI */
-        .glass-panel {
-            background: var(--surface); border: 1px solid var(--border-light); border-radius: 24px; padding: 20px; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        /* Clean Cards */
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+        /* VIP Forms */
+        .app-selector {
+            display: flex; align-items: center; justify-content: space-between; background: var(--bg-base); border: 1px solid var(--border); border-radius: 16px; padding: 12px 16px; cursor: pointer; transition: 0.2s;
+        }
+        .app-selector:active { background: var(--surface-hover); }
+
+        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+        .upload-btn {
+            background: var(--bg-base); border: 1px dashed var(--border); border-radius: 16px; padding: 18px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s; text-align: center;
+        }
+        .upload-btn:active { border-color: var(--gold); background: rgba(250, 204, 21, 0.05); }
+        .upload-btn svg { color: var(--gold); width: 22px; height: 22px; }
+
+        .clean-input {
+            width: 100%; background: var(--bg-base); border: 1px solid var(--border); border-radius: 14px; padding: 16px; color: white; font-size: 15px; font-weight: 500; outline: none; transition: 0.3s;
+        }
+        .clean-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1); }
+
+        .btn-primary {
+            background: var(--gold); color: #000; font-weight: 700; font-size: 16px; padding: 16px; border-radius: 14px; width: 100%; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 16px;
+        }
+        .btn-primary:active { transform: scale(0.97); opacity: 0.9; }
+
+        /* Free Section */
+        .native-select {
+            width: 100%; background: var(--bg-base) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center; background-size: 16px; border: 1px solid var(--border); border-radius: 14px; padding: 16px; color: white; font-size: 15px; font-weight: 600; outline: none; appearance: none;
         }
 
-        /* ئینپوت و دوگمەکان */
-        .premium-select {
-            display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); border: 1px solid var(--border-light); border-radius: 18px; padding: 14px 18px; cursor: pointer; transition: 0.2s;
+        .tools-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+        .tool-action {
+            background: var(--bg-base); border: 1px solid var(--border); color: #fff; font-size: 14px; font-weight: 600; padding: 14px; border-radius: 12px; display: flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; cursor: pointer;
         }
-        .premium-select:active { background: rgba(255,255,255,0.05); }
+        .tool-action:active { background: var(--surface-hover); }
 
-        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
-        .upload-card {
-            background: rgba(0,0,0,0.3); border: 1px dashed rgba(255,255,255,0.15); border-radius: 18px; padding: 18px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: 0.2s; text-align: center;
-        }
-        .upload-card:active { border-color: var(--gold); background: rgba(229, 192, 123, 0.05); transform: scale(0.98); }
-        .upload-icon { color: var(--gold); width: 24px; height: 24px; }
-
-        .modern-input {
-            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border-light); border-radius: 16px; padding: 16px; color: white; font-size: 15px; font-weight: 500; outline: none; transition: 0.3s;
-        }
-        .modern-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(229, 192, 123, 0.1); }
-
-        .btn-gold {
-            background: linear-gradient(135deg, var(--gold), #c9a35e); color: #000; font-weight: 700; font-size: 16px; padding: 16px; border-radius: 16px; width: 100%; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 16px; box-shadow: 0 8px 20px rgba(229, 192, 123, 0.2);
-        }
-        .btn-gold:active { transform: scale(0.96); box-shadow: 0 4px 10px rgba(229, 192, 123, 0.3); }
-
-        .native-dropdown {
-            width: 100%; background: rgba(0,0,0,0.3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2388888D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center; background-size: 16px; border: 1px solid var(--border-light); border-radius: 16px; padding: 16px; color: white; font-size: 15px; font-weight: 600; outline: none; appearance: none;
-        }
-
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
-        .btn-outline {
-            background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); color: #fff; font-size: 14px; font-weight: 600; padding: 14px; border-radius: 14px; display: flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; cursor: pointer;
-        }
-        .btn-outline:active { background: rgba(255,255,255,0.08); transform: scale(0.97); }
-
-        /* لیستی ئەپەکان (کێشەی شوێنەکەی بەتەواوی چارەسەر کراوە) */
-        .app-list-header { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; padding-left: 4px; display: flex; align-items: center; gap: 8px; }
-        .app-list-header::before { content: ''; display: block; width: 4px; height: 14px; background: var(--gold); border-radius: 4px; }
+        /* App List (FLAWLESS LAYOUT) */
+        .list-header { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .list-header::before { content: ''; width: 4px; height: 16px; background: var(--gold); border-radius: 4px; }
         
-        .app-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border-light); }
-        .app-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .app-row { display: flex; items-center; justify-content: space-between; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; margin-bottom: 12px; transition: 0.2s; }
         
-        .app-icon { width: 54px; height: 54px; border-radius: 14px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); }
+        .app-icon { width: 52px; height: 52px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.05); }
         
-        /* چوارچێوەی جێگیری دوگمە و پرۆگرێس - قەت تێکناچێت */
-        .action-wrapper { position: relative; width: 78px; height: 34px; }
+        /* THIS IS THE MAGIC FIX: A strictly bounded container for actions */
+        .action-zone { width: 76px; height: 34px; position: relative; }
         
-        .btn-get {
-            position: absolute; inset: 0; background: rgba(255,255,255,0.06); color: var(--gold); border: none; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center;
+        .btn-install {
+            position: absolute; inset: 0; width: 100%; height: 100%; background: var(--surface-hover); color: var(--gold); border: 1px solid var(--border); border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s;
         }
-        .btn-get:active { background: var(--gold); color: #000; }
+        .btn-install:active { background: var(--gold); color: #000; border-color: var(--gold); }
 
-        .progress-box {
-            position: absolute; inset: 0; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 4px; background: rgba(0,0,0,0.2); border-radius: 12px;
+        .progress-ui {
+            position: absolute; inset: 0; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 4px; background: var(--bg-base); border-radius: 12px; border: 1px solid var(--border);
         }
-        .pct-val { font-size: 11px; font-weight: 800; color: var(--gold); line-height: 1; }
-        .progress-track { width: 80%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .progress-text { font-size: 11px; font-weight: 800; color: var(--gold); line-height: 1; }
+        .progress-track { width: 70%; height: 4px; background: var(--surface-hover); border-radius: 4px; overflow: hidden; }
         .progress-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.2s ease; }
         
-        .success-box {
-            position: absolute; inset: 0; display: none; justify-content: center; align-items: center; font-size: 12px; font-weight: 800; color: #4ADE80; background: rgba(74, 222, 128, 0.1); border-radius: 12px; border: 1px solid rgba(74, 222, 128, 0.2);
+        .done-ui {
+            position: absolute; inset: 0; width: 100%; height: 100%; display: none; justify-content: center; align-items: center; font-size: 12px; font-weight: 800; color: #4ADE80; background: rgba(74, 222, 128, 0.1); border-radius: 12px; border: 1px solid rgba(74, 222, 128, 0.2);
         }
 
-        /* Bottom Sheet Modal بۆ VIP */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 50; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
-        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        /* Bottom Sheet (VIP Selector) */
+        .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 50; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(4px); }
+        .sheet-overlay.show { opacity: 1; pointer-events: auto; }
         
         .bottom-sheet {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: #121214; border-top: 1px solid var(--border-light); border-top-left-radius: 28px; border-top-right-radius: 28px; padding: 16px 20px 40px 20px; z-index: 60; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+            position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); border-top: 1px solid var(--border); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 16px 20px 40px 20px; z-index: 60; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
         }
-        .bottom-sheet.active { transform: translateY(0); }
-        .sheet-drag { width: 40px; height: 5px; background: rgba(255,255,255,0.15); border-radius: 5px; margin: 0 auto 20px auto; }
+        .bottom-sheet.show { transform: translateY(0); }
+        .drag-handle { width: 40px; height: 5px; background: var(--surface-hover); border-radius: 5px; margin: 0 auto 20px auto; }
         
-        .sheet-app-item { display: flex; align-items: center; gap: 16px; padding: 14px 16px; border-radius: 16px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
-        .sheet-app-item:active, .sheet-app-item:hover { background: rgba(255,255,255,0.03); border-color: var(--border-light); }
-        .sheet-app-item img { width: 46px; height: 46px; border-radius: 12px; }
-        .sheet-app-item span { font-size: 16px; font-weight: 600; color: #fff; }
+        .sheet-item { display: flex; align-items: center; gap: 16px; padding: 14px 16px; border-radius: 16px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+        .sheet-item:active { background: var(--bg-base); border-color: var(--border); }
+        .sheet-item img { width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .sheet-item span { font-size: 16px; font-weight: 600; color: #fff; }
 
-        .hidden-view { display: none; opacity: 0; transition: opacity 0.3s; }
-        .active-view { display: block; opacity: 1; }
+        .view-hidden { display: none; opacity: 0; transition: opacity 0.3s; }
+        .view-active { display: block; opacity: 1; }
 
-        /* VIP پرۆگرێس */
-        .vip-loader-wrap { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; display: none; margin-top: 16px; }
-        .vip-loader-fill { height: 100%; width: 0%; background: var(--gold); transition: 0.3s; box-shadow: 0 0 10px var(--gold-glow); }
-        .status-message { text-align: center; font-size: 13px; font-weight: 600; margin-top: 12px; display: none; color: var(--gold); }
+        /* VIP Main Progress */
+        .vip-track { width: 100%; height: 6px; background: var(--bg-base); border-radius: 6px; overflow: hidden; display: none; margin-top: 16px; border: 1px solid var(--border); }
+        .vip-fill { height: 100%; width: 0%; background: var(--gold); transition: 0.3s; }
+        .vip-msg { text-align: center; font-size: 13px; font-weight: 600; margin-top: 12px; display: none; color: var(--gold); }
     </style>
 </head>
 <body>
 
-    <div class="ambient-bg">
-        <div class="glow-sphere"></div>
-    </div>
-
-    <div class="app-container">
+    <div class="app-wrapper">
         
         <!-- Header -->
-        <div class="brand-box">
-            <h1 class="brand-title">Ashte<span>Mobile</span></h1>
-            <div class="brand-badge">Premium Cloud</div>
+        <div class="header">
+            <h1 class="header-title">Ashte<span>Mobile</span></h1>
+            <div class="header-badge">Premium Cloud System</div>
         </div>
 
-        <!-- Switcher -->
-        <div class="modern-switcher">
-            <div class="switch-slider" id="tabSlider" style="transform: translateX(100%);"></div>
-            <div class="switch-btn" id="tabPrem" onclick="changeTab('premium')">VIP Signature</div>
-            <div class="switch-btn active" id="tabFree" onclick="changeTab('free')">Free Enterprise</div>
+        <!-- Modern Tab Switcher -->
+        <div class="tab-container">
+            <div class="tab-indicator" id="tabIndicator" style="transform: translateX(100%);"></div>
+            <div class="tab-btn" id="btnPrem" onclick="setTab('premium')">VIP Signer</div>
+            <div class="tab-btn active" id="btnFree" onclick="setTab('free')">Free Enterprise</div>
         </div>
 
-        <!-- بەشی VIP -->
-        <form id="signForm" class="hidden-view">
-            <div class="glass-panel">
+        <!-- VIP Section -->
+        <form id="formVIP" class="view-hidden">
+            <div class="card">
                 
-                <div class="premium-select" onclick="openModal()">
+                <div class="app-selector" onclick="openSheet()">
                     <div class="flex items-center gap-4">
-                        <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-10 h-10 rounded-xl object-cover shadow-sm">
+                        <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-11 h-11 rounded-xl object-cover border border-[var(--border)]">
                         <div class="flex flex-col">
-                            <span class="text-[11px] text-[var(--text-muted)] font-bold uppercase tracking-wider mb-0.5">Selected App</span>
+                            <span class="text-[11px] text-[var(--text-muted)] font-bold uppercase tracking-wider mb-0.5">App to Sign</span>
                             <span id="selName" class="text-white font-bold text-[16px] leading-none">AshteMobile</span>
                         </div>
                     </div>
@@ -188,41 +172,41 @@
                 <input type="hidden" id="appInput" value="AshteMobile">
 
                 <div class="upload-grid">
-                    <div class="upload-card" onclick="document.getElementById('p12File').click()">
-                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                    <div class="upload-btn" onclick="document.getElementById('p12File').click()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
                         <div>
                             <div class="text-[14px] font-bold text-white">Certificate</div>
-                            <div id="p12Name" class="text-[11px] text-[var(--text-muted)] mt-1 whitespace-nowrap overflow-hidden text-ellipsis w-[110px]">Upload .p12</div>
+                            <div id="p12Name" class="text-[11px] text-[var(--text-muted)] mt-0.5 truncate w-[100px] mx-auto">.p12 File</div>
                         </div>
                         <input type="file" id="p12File" class="hidden" accept=".p12">
                     </div>
-                    <div class="upload-card" onclick="document.getElementById('provFile').click()">
-                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+                    <div class="upload-btn" onclick="document.getElementById('provFile').click()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
                         <div>
                             <div class="text-[14px] font-bold text-white">Provision</div>
-                            <div id="provName" class="text-[11px] text-[var(--text-muted)] mt-1 whitespace-nowrap overflow-hidden text-ellipsis w-[110px]">Upload .prov</div>
+                            <div id="provName" class="text-[11px] text-[var(--text-muted)] mt-0.5 truncate w-[100px] mx-auto">.mobileprovision</div>
                         </div>
                         <input type="file" id="provFile" class="hidden" accept=".mobileprovision">
                     </div>
                 </div>
 
-                <input type="password" id="password" placeholder="Certificate Password" class="modern-input text-center">
+                <input type="password" id="password" placeholder="Certificate Password" class="clean-input text-center">
                 
-                <button type="submit" id="submitBtn" class="btn-gold">
+                <button type="submit" id="submitBtn" class="btn-primary">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                     Start Engine
                 </button>
-                <div id="vipProgressWrapper" class="vip-loader-wrap"><div id="vipProgressFill" class="vip-loader-fill"></div></div>
-                <div id="vipStatus" class="status-message"></div>
+                <div id="vipProgressWrapper" class="vip-track"><div id="vipProgressFill" class="vip-fill"></div></div>
+                <div id="vipStatus" class="vip-msg"></div>
                 
             </div>
         </form>
 
-        <!-- بەشی Free -->
-        <div id="freeSection" class="active-view">
+        <!-- Free Section -->
+        <div id="formFree" class="view-active">
             
-            <div class="glass-panel mb-4 !p-5">
-                <select id="freeCertSelect" class="native-dropdown">
+            <div class="card mb-4 !p-4">
+                <select id="freeCertSelect" class="native-select">
                     <option value="File">Enterprise Certs (Auto)</option>
                     <option value="moving2">2 Moving Increasingly</option>
                     <option value="aramco">Aramco Services Company</option>
@@ -235,20 +219,20 @@
                     <option value="powerchin">Powerchin</option>
                 </select>
 
-                <div class="action-grid">
-                    <a href="https://ashtemobile.site/ashtemobile.mobileconfig" class="btn-outline">
+                <div class="tools-row">
+                    <a href="https://ashtemobile.site/ashtemobile.mobileconfig" class="tool-action">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         Block DNS
                     </a>
-                    <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="btn-outline !text-[var(--gold)] !border-[rgba(229,192,123,0.3)]">
+                    <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="tool-action !text-[var(--gold)] !border-[rgba(250,204,21,0.2)]">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                         Get ZIP
                     </button>
                 </div>
             </div>
 
-            <div class="glass-panel !p-5">
-                <h2 class="app-list-header">App Library</h2>
+            <div>
+                <h2 class="list-header">App Library</h2>
                 <div id="appsListContainer" class="flex flex-col"></div>
             </div>
             
@@ -256,24 +240,24 @@
 
     </div>
 
-    <!-- Bottom Sheet Modal -->
-    <div class="modal-overlay" id="sheetOverlay" onclick="closeModal()"></div>
+    <!-- Bottom Sheet Modal (VIP Selector) -->
+    <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
     <div class="bottom-sheet" id="appSheet">
-        <div class="sheet-drag"></div>
+        <div class="drag-handle"></div>
         <div class="flex flex-col gap-1">
-            <div class="sheet-app-item" onclick="selectApp('AshteMobile', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg')">
+            <div class="sheet-item" onclick="selectApp('AshteMobile', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg')">
                 <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg"> <span>AshteMobile</span>
             </div>
-            <div class="sheet-app-item" onclick="selectApp('ipaomtk', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg')">
+            <div class="sheet-item" onclick="selectApp('ipaomtk', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg')">
                 <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg"> <span>ipaomtk</span>
             </div>
-            <div class="sheet-app-item" onclick="selectApp('Esign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg')">
+            <div class="sheet-item" onclick="selectApp('Esign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg')">
                 <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg"> <span>Esign</span>
             </div>
-            <div class="sheet-app-item" onclick="selectApp('Ksign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg')">
+            <div class="sheet-item" onclick="selectApp('Ksign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg')">
                 <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg"> <span>Ksign</span>
             </div>
-            <div class="sheet-app-item" onclick="selectApp('MyTV', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg')">
+            <div class="sheet-item" onclick="selectApp('MyTV', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg')">
                 <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg"> <span>MyTV</span>
             </div>
         </div>
@@ -281,68 +265,68 @@
 
     <script>
         const appsData = [
-            { id: 'AshteMobile', name: 'AshteMobile', sub: 'Cloud Signer', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
-            { id: 'ipaomtk', name: 'ipaomtk', sub: 'Tools', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' },
-            { id: 'Esign', name: 'Esign', sub: 'Utility', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
-            { id: 'Ksign', name: 'Ksign', sub: 'Utility', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
-            { id: 'MyTV', name: 'MyTV', sub: 'Entertainment', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
+            { id: 'AshteMobile', name: 'AshteMobile', sub: 'Cloud Tool', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
+            { id: 'ipaomtk', name: 'ipaomtk', sub: 'Utility', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' },
+            { id: 'Esign', name: 'Esign', sub: 'Signer', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
+            { id: 'Ksign', name: 'Ksign', sub: 'Signer', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
+            { id: 'MyTV', name: 'MyTV', sub: 'Media', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
         ];
 
-        // دروستکردنی لیستی ئەپەکان بێ هیچ کێشەیەکی Overlap
+        // دروستکردنی لیستی ئەپەکان بێ هیچ کێشەیەکی جووڵە (Fixed Geometry)
         const appsListContainer = document.getElementById('appsListContainer');
         appsData.forEach(app => {
             appsListContainer.innerHTML += `
-                <div class="app-item">
+                <div class="app-row">
                     <div class="flex items-center gap-4">
                         <img src="${app.icon}" class="app-icon">
                         <div class="flex flex-col">
                             <span class="text-[16px] font-bold text-white leading-tight">${app.name}</span>
-                            <span class="text-[12px] font-semibold text-[var(--text-muted)] mt-1">${app.sub}</span>
+                            <span class="text-[12px] font-medium text-[var(--text-muted)] mt-1">${app.sub}</span>
                         </div>
                     </div>
-                    <!-- Action Wrapper (Fixed Size) -->
-                    <div class="action-wrapper">
-                        <button class="btn-get" onclick="installFreeApp('${app.id}', this)">GET</button>
-                        <div class="progress-box">
-                            <span class="pct-val">0%</span>
+                    <!-- قوفڵدانی شوێنی دوگمە و پرۆگرێس بۆ ئەوەی هەرگیز تێک نەچێت -->
+                    <div class="action-zone">
+                        <button class="btn-install" onclick="installFreeApp('${app.id}', this)">GET</button>
+                        <div class="progress-ui">
+                            <span class="progress-text">0%</span>
                             <div class="progress-track"><div class="progress-fill"></div></div>
                         </div>
-                        <div class="success-box">✓ Done</div>
+                        <div class="done-ui">Ready</div>
                     </div>
                 </div>
             `;
         });
 
-        function changeTab(mode) {
-            const tabSlider = document.getElementById('tabSlider');
-            const tabPrem = document.getElementById('tabPrem');
-            const tabFree = document.getElementById('tabFree');
-            const formVIP = document.getElementById('signForm');
-            const secFree = document.getElementById('freeSection');
+        function setTab(mode) {
+            const indicator = document.getElementById('tabIndicator');
+            const btnPrem = document.getElementById('btnPrem');
+            const btnFree = document.getElementById('btnFree');
+            const formVIP = document.getElementById('formVIP');
+            const formFree = document.getElementById('formFree');
 
             if(mode === 'premium') {
-                tabSlider.style.transform = 'translateX(0)';
-                tabPrem.classList.add('active'); tabFree.classList.remove('active');
+                indicator.style.transform = 'translateX(0)';
+                btnPrem.classList.add('active'); btnFree.classList.remove('active');
                 
-                secFree.style.display = 'none'; secFree.classList.remove('active-view');
-                formVIP.style.display = 'block'; setTimeout(() => formVIP.classList.add('active-view'), 20);
+                formFree.style.display = 'none'; formFree.classList.remove('view-active');
+                formVIP.style.display = 'block'; setTimeout(() => formVIP.classList.add('view-active'), 20);
             } else {
-                tabSlider.style.transform = 'translateX(100%)';
-                tabFree.classList.add('active'); tabPrem.classList.remove('active');
+                indicator.style.transform = 'translateX(100%)';
+                btnFree.classList.add('active'); btnPrem.classList.remove('active');
                 
-                formVIP.style.display = 'none'; formVIP.classList.remove('active-view');
-                secFree.style.display = 'block'; setTimeout(() => secFree.classList.add('active-view'), 20);
+                formVIP.style.display = 'none'; formVIP.classList.remove('view-active');
+                formFree.style.display = 'block'; setTimeout(() => formFree.classList.add('view-active'), 20);
             }
         }
 
         const sheetOverlay = document.getElementById('sheetOverlay');
         const appSheet = document.getElementById('appSheet');
         
-        function openModal() { sheetOverlay.classList.add('active'); appSheet.classList.add('active'); }
-        function closeModal() { sheetOverlay.classList.remove('active'); appSheet.classList.remove('active'); }
+        function openSheet() { sheetOverlay.classList.add('show'); appSheet.classList.add('show'); }
+        function closeSheet() { sheetOverlay.classList.remove('show'); appSheet.classList.remove('show'); }
         function selectApp(id, img) {
             document.getElementById('selImg').src = img; document.getElementById('selName').innerText = id;
-            document.getElementById('appInput').value = id; closeModal();
+            document.getElementById('appInput').value = id; closeSheet();
         }
 
         document.getElementById('p12File').onchange = e => { if(e.target.files[0]) document.getElementById('p12Name').innerText = e.target.files[0].name; };
@@ -383,17 +367,17 @@
 
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
-            const wrapper = btnElement.parentElement;
-            const progressBox = wrapper.querySelector('.progress-box');
-            const pctText = wrapper.querySelector('.pct-val');
-            const fillBar = wrapper.querySelector('.progress-fill');
-            const successBox = wrapper.querySelector('.success-box');
+            const actionZone = btnElement.parentElement;
+            const progressUi = actionZone.querySelector('.progress-ui');
+            const progressText = actionZone.querySelector('.progress-text');
+            const progressFill = actionZone.querySelector('.progress-fill');
+            const doneUi = actionZone.querySelector('.done-ui');
             
             btnElement.style.display = 'none'; 
-            progressBox.style.display = 'flex';
+            progressUi.style.display = 'flex';
 
             let pct = 0;
-            const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; pctText.innerText = pct + '%'; fillBar.style.width = pct + '%'; } }, 200);
+            const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; progressText.innerText = pct + '%'; progressFill.style.width = pct + '%'; } }, 200);
 
             try {
                 const res = await fetch('/api/sign', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app: appName, use_free_cert: true, cert_folder: selectedCertId }) });
@@ -404,10 +388,10 @@
                     const serverStatus = await checkStatus(data.build_id, appName);
                     if (serverStatus.status === 'done') {
                         clearInterval(checker); clearInterval(sim);
-                        pctText.innerText = '100%'; fillBar.style.width = '100%';
+                        progressText.innerText = '100%'; progressFill.style.width = '100%';
                         
                         setTimeout(() => {
-                            progressBox.style.display = 'none'; successBox.style.display = 'flex';
+                            progressUi.style.display = 'none'; doneUi.style.display = 'flex';
                             
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
@@ -416,8 +400,8 @@
                     }
                 }, 1200);
             } catch (err) {
-                clearInterval(sim); pctText.innerText = 'Err'; pctText.style.color = '#ef4444'; fillBar.style.background = '#ef4444';
-                setTimeout(() => { progressBox.style.display = 'none'; pctText.style.color = 'var(--gold)'; fillBar.style.background = 'var(--gold)'; btnElement.style.display = 'flex'; }, 2500);
+                clearInterval(sim); progressText.innerText = 'Error'; progressText.style.color = '#ef4444'; progressFill.style.background = '#ef4444';
+                setTimeout(() => { progressUi.style.display = 'none'; progressText.style.color = 'var(--gold)'; progressFill.style.background = 'var(--gold)'; btnElement.style.display = 'flex'; }, 2500);
             }
         }
 
