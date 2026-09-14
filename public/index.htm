@@ -4,170 +4,187 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>AshteMobile | Premium Cloud</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root { 
-            --gold: #FACC15; /* Premium Gold */
-            --bg-base: #09090B; /* Zinc 950 */
-            --surface: #18181B; /* Zinc 900 */
-            --surface-hover: #27272A; /* Zinc 800 */
-            --border: #27272A;
-            --text-main: #FAFAFA;
-            --text-muted: #A1A1AA;
+            --accent-1: #FF0080; /* Vibrant Pink */
+            --accent-2: #7928CA; /* Deep Purple */
+            --bg-color: #030014;
+            --glass-bg: rgba(15, 15, 20, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #FFFFFF;
+            --text-muted: #9BA1A6;
         }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', 'Cairo', sans-serif; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Outfit', 'Cairo', sans-serif; }
         
         body { 
-            background-color: var(--bg-base); 
+            background-color: var(--bg-color); 
             color: var(--text-main); 
             margin: 0; 
             min-height: 100vh;
             display: flex; justify-content: center;
             overflow-x: hidden; padding: 24px 0 60px 0;
-            background-image: radial-gradient(circle at 50% -20%, rgba(250, 204, 21, 0.08) 0%, transparent 60%);
         }
 
-        .app-wrapper { width: 92%; max-width: 440px; display: flex; flex-direction: column; gap: 24px; z-index: 10; }
+        /* باکگراوندی سەرنجڕاکێشی جوڵاو */
+        .animated-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; background: #030014;
+        }
+        .orb {
+            position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.5; animation: float 10s infinite alternate ease-in-out;
+        }
+        .orb-1 { width: 350px; height: 350px; background: var(--accent-1); top: -10%; left: -15%; }
+        .orb-2 { width: 400px; height: 400px; background: var(--accent-2); bottom: -10%; right: -15%; animation-delay: -5s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, 40px) scale(1.1); } }
 
-        /* Header */
-        .header { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 8px; }
-        .header-title { font-size: 32px; font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1; }
-        .header-title span { color: var(--gold); }
-        .header-badge { background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.2); color: var(--gold); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .app-wrapper { width: 92%; max-width: 440px; display: flex; flex-direction: column; gap: 20px; z-index: 10; }
 
-        /* Modern Tabs */
-        .tab-container {
-            display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 4px; position: relative;
+        /* لۆگۆ */
+        .header { text-align: center; margin-bottom: 10px; }
+        .header-title { font-size: 36px; font-weight: 800; letter-spacing: -1px; background: linear-gradient(to right, #FFF, #FFA1E6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
+        .header-badge { display: inline-block; background: linear-gradient(90deg, rgba(255,0,128,0.15), rgba(121,40,202,0.15)); border: 1px solid rgba(255,255,255,0.1); color: #FFA1E6; font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; box-shadow: 0 0 15px rgba(255,0,128,0.2); }
+
+        /* سویچەری مۆدێرن */
+        .modern-tabs {
+            display: flex; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); border-radius: 20px; padding: 5px; position: relative; backdrop-filter: blur(10px);
         }
         .tab-btn {
-            flex: 1; text-align: center; padding: 10px 0; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; position: relative; z-index: 2; transition: 0.3s;
+            flex: 1; text-align: center; padding: 12px 0; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; position: relative; z-index: 2; transition: 0.3s;
         }
-        .tab-btn.active { color: #000; }
+        .tab-btn.active { color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .tab-indicator {
-            position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: var(--gold); border-radius: 12px; z-index: 1; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 4px 12px rgba(250, 204, 21, 0.2);
+            position: absolute; top: 5px; bottom: 5px; left: 5px; width: calc(50% - 5px); background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); border-radius: 16px; z-index: 1; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 4px 15px rgba(255,0,128,0.3);
         }
 
-        /* Clean Cards */
-        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* کارتە شوشەییەکان */
+        .glass-card { 
+            background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 28px; padding: 22px; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); 
+        }
 
-        /* VIP Forms */
+        /* VIP UI */
         .app-selector {
-            display: flex; align-items: center; justify-content: space-between; background: var(--bg-base); border: 1px solid var(--border); border-radius: 16px; padding: 12px 16px; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 20px; padding: 12px 16px; cursor: pointer; transition: 0.2s;
         }
-        .app-selector:active { background: var(--surface-hover); }
+        .app-selector:active { background: rgba(255,255,255,0.05); }
 
-        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
         .upload-btn {
-            background: var(--bg-base); border: 1px dashed var(--border); border-radius: 16px; padding: 18px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s; text-align: center;
+            background: rgba(0,0,0,0.2); border: 1px dashed rgba(255,255,255,0.2); border-radius: 20px; padding: 18px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s; text-align: center;
         }
-        .upload-btn:active { border-color: var(--gold); background: rgba(250, 204, 21, 0.05); }
-        .upload-btn svg { color: var(--gold); width: 22px; height: 22px; }
+        .upload-btn:active { border-color: var(--accent-1); background: rgba(255,0,128,0.1); transform: scale(0.97); }
+        .upload-btn svg { color: #FFA1E6; width: 24px; height: 24px; }
 
         .clean-input {
-            width: 100%; background: var(--bg-base); border: 1px solid var(--border); border-radius: 14px; padding: 16px; color: white; font-size: 15px; font-weight: 500; outline: none; transition: 0.3s;
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px; color: white; font-size: 15px; font-weight: 500; outline: none; transition: 0.3s;
         }
-        .clean-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.1); }
+        .clean-input:focus { border-color: var(--accent-1); box-shadow: 0 0 0 3px rgba(255,0,128,0.15); }
 
         .btn-primary {
-            background: var(--gold); color: #000; font-weight: 700; font-size: 16px; padding: 16px; border-radius: 14px; width: 100%; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 16px;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: #FFF; font-weight: 700; font-size: 16px; padding: 16px; border-radius: 18px; width: 100%; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 16px; box-shadow: 0 10px 20px rgba(121,40,202,0.3);
         }
-        .btn-primary:active { transform: scale(0.97); opacity: 0.9; }
+        .btn-primary:active { transform: scale(0.97); box-shadow: 0 5px 10px rgba(121,40,202,0.4); }
 
-        /* Free Section */
+        /* Free UI */
         .native-select {
-            width: 100%; background: var(--bg-base) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center; background-size: 16px; border: 1px solid var(--border); border-radius: 14px; padding: 16px; color: white; font-size: 15px; font-weight: 600; outline: none; appearance: none;
+            width: 100%; background: rgba(0,0,0,0.3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239BA1A6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center; background-size: 16px; border: 1px solid var(--glass-border); border-radius: 16px; padding: 16px; color: white; font-size: 14px; font-weight: 600; outline: none; appearance: none;
         }
 
-        .tools-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+        .tools-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
         .tool-action {
-            background: var(--bg-base); border: 1px solid var(--border); color: #fff; font-size: 14px; font-weight: 600; padding: 14px; border-radius: 12px; display: flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; cursor: pointer;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #fff; font-size: 14px; font-weight: 600; padding: 14px; border-radius: 16px; display: flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; cursor: pointer;
         }
-        .tool-action:active { background: var(--surface-hover); }
+        .tool-action:active { background: rgba(255,255,255,0.1); transform: scale(0.97); }
 
-        /* App List (FLAWLESS LAYOUT) */
+        /* App List */
         .list-header { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        .list-header::before { content: ''; width: 4px; height: 16px; background: var(--gold); border-radius: 4px; }
+        .list-header::before { content: ''; width: 6px; height: 16px; background: var(--accent-1); border-radius: 4px; box-shadow: 0 0 10px var(--accent-1); }
         
-        .app-row { display: flex; items-center; justify-content: space-between; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; margin-bottom: 12px; transition: 0.2s; }
+        .app-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--glass-border); transition: 0.2s; }
+        .app-row:last-child { border-bottom: none; padding-bottom: 0; }
         
-        .app-icon { width: 52px; height: 52px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.05); }
+        .app-icon { width: 54px; height: 54px; border-radius: 16px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); }
         
-        /* THIS IS THE MAGIC FIX: A strictly bounded container for actions */
+        /* Fixed Action Zone - مەحاڵە تێکبچێت */
         .action-zone { width: 76px; height: 34px; position: relative; }
         
         .btn-install {
-            position: absolute; inset: 0; width: 100%; height: 100%; background: var(--surface-hover); color: var(--gold); border: 1px solid var(--border); border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s;
+            position: absolute; inset: 0; width: 100%; height: 100%; background: rgba(255,0,128,0.1); color: #FFA1E6; border: 1px solid rgba(255,0,128,0.3); border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s;
         }
-        .btn-install:active { background: var(--gold); color: #000; border-color: var(--gold); }
+        .btn-install:active { background: var(--accent-1); color: #fff; border-color: var(--accent-1); }
 
         .progress-ui {
-            position: absolute; inset: 0; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 4px; background: var(--bg-base); border-radius: 12px; border: 1px solid var(--border);
+            position: absolute; inset: 0; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: center; align-items: center; gap: 4px; background: rgba(0,0,0,0.4); border-radius: 12px; border: 1px solid var(--glass-border);
         }
-        .progress-text { font-size: 11px; font-weight: 800; color: var(--gold); line-height: 1; }
-        .progress-track { width: 70%; height: 4px; background: var(--surface-hover); border-radius: 4px; overflow: hidden; }
-        .progress-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.2s ease; }
+        .progress-text { font-size: 11px; font-weight: 800; color: #FFA1E6; line-height: 1; }
+        .progress-track { width: 70%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); transition: width 0.2s ease; }
         
         .done-ui {
-            position: absolute; inset: 0; width: 100%; height: 100%; display: none; justify-content: center; align-items: center; font-size: 12px; font-weight: 800; color: #4ADE80; background: rgba(74, 222, 128, 0.1); border-radius: 12px; border: 1px solid rgba(74, 222, 128, 0.2);
+            position: absolute; inset: 0; width: 100%; height: 100%; display: none; justify-content: center; align-items: center; font-size: 12px; font-weight: 800; color: #32D74B; background: rgba(50, 215, 75, 0.15); border-radius: 12px; border: 1px solid rgba(50, 215, 75, 0.3);
         }
 
-        /* Bottom Sheet (VIP Selector) */
-        .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 50; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(4px); }
+        /* Bottom Sheet */
+        .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 50; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
         .sheet-overlay.show { opacity: 1; pointer-events: auto; }
         
         .bottom-sheet {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); border-top: 1px solid var(--border); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 16px 20px 40px 20px; z-index: 60; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #0A0A10; border-top: 1px solid var(--glass-border); border-top-left-radius: 28px; border-top-right-radius: 28px; padding: 16px 20px 40px 20px; z-index: 60; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
         }
         .bottom-sheet.show { transform: translateY(0); }
-        .drag-handle { width: 40px; height: 5px; background: var(--surface-hover); border-radius: 5px; margin: 0 auto 20px auto; }
+        .drag-handle { width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 5px; margin: 0 auto 20px auto; }
         
         .sheet-item { display: flex; align-items: center; gap: 16px; padding: 14px 16px; border-radius: 16px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
-        .sheet-item:active { background: var(--bg-base); border-color: var(--border); }
+        .sheet-item:active { background: rgba(255,255,255,0.05); border-color: var(--glass-border); }
         .sheet-item img { width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
         .sheet-item span { font-size: 16px; font-weight: 600; color: #fff; }
 
         .view-hidden { display: none; opacity: 0; transition: opacity 0.3s; }
         .view-active { display: block; opacity: 1; }
 
-        /* VIP Main Progress */
-        .vip-track { width: 100%; height: 6px; background: var(--bg-base); border-radius: 6px; overflow: hidden; display: none; margin-top: 16px; border: 1px solid var(--border); }
-        .vip-fill { height: 100%; width: 0%; background: var(--gold); transition: 0.3s; }
-        .vip-msg { text-align: center; font-size: 13px; font-weight: 600; margin-top: 12px; display: none; color: var(--gold); }
+        /* VIP Progress */
+        .vip-track { width: 100%; height: 6px; background: rgba(0,0,0,0.4); border-radius: 6px; overflow: hidden; display: none; margin-top: 16px; border: 1px solid var(--glass-border); }
+        .vip-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); transition: 0.3s; box-shadow: 0 0 10px var(--accent-1); }
+        .vip-msg { text-align: center; font-size: 13px; font-weight: 600; margin-top: 12px; display: none; color: #FFA1E6; }
     </style>
 </head>
 <body>
+
+    <div class="animated-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
 
     <div class="app-wrapper">
         
         <!-- Header -->
         <div class="header">
-            <h1 class="header-title">Ashte<span>Mobile</span></h1>
-            <div class="header-badge">Premium Cloud System</div>
+            <h1 class="header-title">AshteMobile</h1>
+            <div class="header-badge">Premium Cloud Signer</div>
         </div>
 
-        <!-- Modern Tab Switcher -->
-        <div class="tab-container">
+        <!-- Modern Tabs -->
+        <div class="modern-tabs">
             <div class="tab-indicator" id="tabIndicator" style="transform: translateX(100%);"></div>
-            <div class="tab-btn" id="btnPrem" onclick="setTab('premium')">VIP Signer</div>
+            <div class="tab-btn" id="btnPrem" onclick="setTab('premium')">VIP Signature</div>
             <div class="tab-btn active" id="btnFree" onclick="setTab('free')">Free Enterprise</div>
         </div>
 
         <!-- VIP Section -->
         <form id="formVIP" class="view-hidden">
-            <div class="card">
+            <div class="glass-card">
                 
                 <div class="app-selector" onclick="openSheet()">
                     <div class="flex items-center gap-4">
-                        <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-11 h-11 rounded-xl object-cover border border-[var(--border)]">
+                        <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-12 h-12 rounded-2xl object-cover shadow-lg border border-[var(--glass-border)]">
                         <div class="flex flex-col">
                             <span class="text-[11px] text-[var(--text-muted)] font-bold uppercase tracking-wider mb-0.5">App to Sign</span>
-                            <span id="selName" class="text-white font-bold text-[16px] leading-none">AshteMobile</span>
+                            <span id="selName" class="text-white font-bold text-[17px] leading-none">AshteMobile</span>
                         </div>
                     </div>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
                 </div>
                 <input type="hidden" id="appInput" value="AshteMobile">
 
@@ -202,36 +219,40 @@
             </div>
         </form>
 
-        <!-- Free Section -->
+        <!-- Free Section (هەموو شەهادەکان لێرەدان) -->
         <div id="formFree" class="view-active">
             
-            <div class="card mb-4 !p-4">
+            <div class="glass-card mb-5 !p-5">
+                <!-- هەموو ١٣ شەهادەکە بە تەواوی گەڕێندراونەتەوە -->
                 <select id="freeCertSelect" class="native-select">
-                    <option value="File">Enterprise Certs (Auto)</option>
+                    <option value="File">Enterprise Cert (Auto)</option>
                     <option value="moving2">2 Moving Increasingly</option>
                     <option value="aramco">Aramco Services Company</option>
                     <option value="beijing_xibei">Beijing Xibei</option>
                     <option value="beijing_zhizhangyi">Beijing Zhizhangyi Inc</option>
                     <option value="bzi_boc">BZI BOC</option>
-                    <option value="china_telecom">China Telecom</option>
-                    <option value="luoyang">Luoyang Postal</option>
+                    <option value="china_telecom">China Telecom Corporation Limited</option>
+                    <option value="luoyang">Luoyang Postal Administration</option>
                     <option value="moving">Moving Increasingly</option>
                     <option value="powerchin">Powerchin</option>
+                    <option value="qingdao">Qingdao Rural Commercial Bank Co., Ltd</option>
+                    <option value="vietnam">Vietnam Rubber</option>
+                    <option value="xl_axia">XL AXIATA, PT TBK</option>
                 </select>
 
                 <div class="tools-row">
                     <a href="https://ashtemobile.site/ashtemobile.mobileconfig" class="tool-action">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         Block DNS
                     </a>
-                    <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="tool-action !text-[var(--gold)] !border-[rgba(250,204,21,0.2)]">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="tool-action !text-[#FFA1E6] !border-[rgba(255,0,128,0.3)]">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                         Get ZIP
                     </button>
                 </div>
             </div>
 
-            <div>
+            <div class="glass-card !p-5">
                 <h2 class="list-header">App Library</h2>
                 <div id="appsListContainer" class="flex flex-col"></div>
             </div>
@@ -240,7 +261,7 @@
 
     </div>
 
-    <!-- Bottom Sheet Modal (VIP Selector) -->
+    <!-- Bottom Sheet Modal بۆ هەڵبژاردنی ئەپ لە VIP -->
     <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
     <div class="bottom-sheet" id="appSheet">
         <div class="drag-handle"></div>
@@ -272,7 +293,7 @@
             { id: 'MyTV', name: 'MyTV', sub: 'Media', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
         ];
 
-        // دروستکردنی لیستی ئەپەکان بێ هیچ کێشەیەکی جووڵە (Fixed Geometry)
+        // دروستکردنی لیستی ئەپەکان بە بێ کێشەی تێکچوون
         const appsListContainer = document.getElementById('appsListContainer');
         appsData.forEach(app => {
             appsListContainer.innerHTML += `
@@ -281,17 +302,17 @@
                         <img src="${app.icon}" class="app-icon">
                         <div class="flex flex-col">
                             <span class="text-[16px] font-bold text-white leading-tight">${app.name}</span>
-                            <span class="text-[12px] font-medium text-[var(--text-muted)] mt-1">${app.sub}</span>
+                            <span class="text-[12px] font-semibold text-[var(--text-muted)] mt-1">${app.sub}</span>
                         </div>
                     </div>
-                    <!-- قوفڵدانی شوێنی دوگمە و پرۆگرێس بۆ ئەوەی هەرگیز تێک نەچێت -->
+                    <!-- ئەم شوێنە قوفڵ دراوە بۆ ئەوەی هەرگیز تێک نەچێت -->
                     <div class="action-zone">
                         <button class="btn-install" onclick="installFreeApp('${app.id}', this)">GET</button>
                         <div class="progress-ui">
                             <span class="progress-text">0%</span>
                             <div class="progress-track"><div class="progress-fill"></div></div>
                         </div>
-                        <div class="done-ui">Ready</div>
+                        <div class="done-ui">Done</div>
                     </div>
                 </div>
             `;
@@ -401,7 +422,7 @@
                 }, 1200);
             } catch (err) {
                 clearInterval(sim); progressText.innerText = 'Error'; progressText.style.color = '#ef4444'; progressFill.style.background = '#ef4444';
-                setTimeout(() => { progressUi.style.display = 'none'; progressText.style.color = 'var(--gold)'; progressFill.style.background = 'var(--gold)'; btnElement.style.display = 'flex'; }, 2500);
+                setTimeout(() => { progressUi.style.display = 'none'; progressText.style.color = '#FFA1E6'; progressFill.style.background = 'linear-gradient(90deg, var(--accent-1), var(--accent-2))'; btnElement.style.display = 'flex'; }, 2500);
             }
         }
 
@@ -436,7 +457,7 @@
                     const serverStatus = await checkStatus(data.build_id, appSelected);
                     if (serverStatus.status === 'done') {
                         clearInterval(checker); clearInterval(anim); pFill.style.width = '100%';
-                        status.innerText = 'Success! Prompting Install...'; status.style.color = '#4ADE80';
+                        status.innerText = 'Success! Prompting Install...'; status.style.color = '#32D74B';
                         
                         setTimeout(() => {
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appSelected)}`;
