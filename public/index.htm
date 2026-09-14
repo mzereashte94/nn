@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root { 
-            --app-blue: #0A84FF; /* Official iOS Blue */
+            --app-blue: #0A84FF;
             --bg-deep: #000000; 
             --card-base: #151517; 
             --card-glass: rgba(28, 28, 30, 0.8);
@@ -24,7 +24,7 @@
             background-color: var(--bg-deep); 
             color: var(--text-light); 
             margin: 0; 
-            height: 100dvh; /* قوفڵدانی شاشە - بێ جوڵە */
+            height: 100dvh; 
             display: flex; justify-content: center; align-items: center;
             overflow: hidden; 
             background-image: radial-gradient(circle at 50% 0%, rgba(10, 132, 255, 0.15) 0%, transparent 50%);
@@ -36,12 +36,12 @@
             padding: 16px 20px 24px 20px;
         }
 
-        /* سەرەوە - Header */
+        /* Header */
         .title-box { text-align: center; margin-bottom: 16px; margin-top: 8px; }
         .title-text { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; color: #fff; line-height: 1.1; }
         .title-badge { display: inline-block; background: rgba(255,255,255,0.08); border: 1px solid var(--border-line); color: var(--text-gray); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
 
-        /* تابەکان - Switcher */
+        /* Switcher */
         .segment-bg {
             display: flex; background: var(--card-base); border-radius: 12px; padding: 4px; position: relative; margin-bottom: 16px; border: 1px solid var(--border-line);
         }
@@ -53,11 +53,10 @@
             position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: #3A3A3C; border-radius: 9px; z-index: 1; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* بۆشاییەکان */
         .view-section { display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s; height: 100%; }
         .view-active { display: flex; opacity: 1; }
 
-        /* بەشی VIP */
+        /* VIP UI */
         .panel { background: var(--card-glass); border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--border-line); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
         
         .vip-app-btn {
@@ -82,7 +81,7 @@
         }
         .go-btn:active { opacity: 0.8; transform: scale(0.98); }
 
-        /* بەشی Free (کۆنترۆڵەکان) */
+        /* Free UI Controls */
         .select-native {
             width: 100%; background: var(--card-base) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2398989D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center; background-size: 14px; border: 1px solid var(--border-line); border-radius: 14px; padding: 14px 16px; color: white; font-size: 14px; font-weight: 500; outline: none; appearance: none; margin-bottom: 12px;
         }
@@ -93,48 +92,50 @@
         }
         .mini-btn:active { background: #2C2C2E; }
 
-        /* گەورەترین چارەسەر: BENTO GRID بۆ ئەپەکان */
+        /* APP LIBRARY - FIXED SIZE GRID */
         .library-box {
-            flex: 1; background: var(--card-glass); border-radius: 20px; padding: 16px; border: 1px solid var(--border-line); display: flex; flex-direction: column; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            flex: 1; background: var(--card-glass); border-radius: 20px; padding: 16px 10px; border: 1px solid var(--border-line); display: flex; flex-direction: column; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }
-        .lib-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 14px; text-align: left; padding-left: 4px; }
+        .lib-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; text-align: left; padding-left: 8px; }
         
         .bento-grid {
-            display: flex; flex-direction: column; gap: 12px; flex: 1;
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; align-items: flex-start;
         }
-        .bento-row { display: flex; gap: 12px; flex: 1; }
         
-        /* کارتەکانی ئەپەکان - پڕکردنەوەی هەموو بۆشاییەک */
+        /* قەبارەی ئەپەکان بەیەک ئەندازەیە (Fixed Layout) */
         .app-bento-card {
-            flex: 1; background: var(--card-base); border: 1px solid var(--border-line); border-radius: 18px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; position: relative; transition: 0.2s;
+            width: 30%; /* دەیکات بە ٣ ئەپ لە یەک ڕیزدا */
+            max-width: 105px;
+            background: var(--card-base); 
+            border: 1px solid var(--border-line); 
+            border-radius: 16px; 
+            padding: 14px 8px; 
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
         }
-        .app-bento-card:active { border-color: rgba(255,255,255,0.2); }
         
-        .app-img-box { width: 50px; height: 50px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 6px; }
+        .app-img-box { 
+            width: 54px; height: 54px; border-radius: 12px; position: relative; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden;
+        }
         .app-img-box img { width: 100%; height: 100%; object-fit: cover; }
         
-        .app-text-name { font-size: 12px; font-weight: 700; color: #fff; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; margin-bottom: 8px; }
-
-        /* دوگمەی App Store (دەبێت بە پرۆگرێس) */
-        .store-btn-wrap { width: 100%; padding: 0 6px; height: 28px; position: relative; }
+        /* پرۆگرێسەکە ڕێک لەسەر لۆگۆکەیە */
+        .progress-overlay {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.65); display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); z-index: 2;
+        }
+        .pct-val { font-size: 13px; font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
         
+        .success-overlay {
+            position: absolute; inset: 0; background: rgba(50, 215, 75, 0.85); display: none; justify-content: center; align-items: center; color: #fff; z-index: 3;
+        }
+
+        .app-text-name { font-size: 11px; font-weight: 700; color: #fff; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; }
+
         .store-get-btn {
-            width: 100%; height: 100%; background: rgba(255,255,255,0.1); color: var(--app-blue); border: none; border-radius: 14px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s;
+            width: 100%; background: rgba(255,255,255,0.08); color: var(--app-blue); border: none; border-radius: 12px; font-size: 12px; font-weight: 700; padding: 6px 0; cursor: pointer; transition: 0.2s;
         }
-        .store-get-btn:active { background: rgba(255,255,255,0.2); }
+        .store-get-btn:active { background: rgba(255,255,255,0.15); }
 
-        /* UI پرۆگرێس (ڕێک لە شوێنی دوگمەکە) */
-        .store-progress-ui {
-            position: absolute; inset: 0; margin: 0 6px; background: #2C2C2E; border-radius: 14px; display: none; align-items: center; justify-content: center; overflow: hidden;
-        }
-        .store-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: var(--app-blue); transition: 0.2s ease; z-index: 1; }
-        .store-pct { position: relative; z-index: 2; font-size: 11px; font-weight: 800; color: #fff; }
-        
-        .store-done-ui {
-            position: absolute; inset: 0; margin: 0 6px; background: rgba(50, 215, 75, 0.15); border: 1px solid rgba(50, 215, 75, 0.3); border-radius: 14px; display: none; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #32D74B;
-        }
-
-        /* Modal (VIP Sheet) */
+        /* Modal VIP */
         .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 50; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
         .modal-bg.show { opacity: 1; pointer-events: auto; }
         
@@ -175,7 +176,6 @@
         <!-- VIP View -->
         <form id="formVIP" class="view-section">
             <div class="panel">
-                
                 <div class="vip-app-btn" onclick="openSheet()">
                     <div class="flex items-center gap-4">
                         <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-11 h-11 rounded-xl object-cover border border-[var(--border-line)]">
@@ -208,13 +208,11 @@
                 <button type="submit" id="submitBtn" class="go-btn">Start Engine</button>
                 <div id="vipProgressWrapper" class="vip-loader-box"><div id="vipProgressFill" class="vip-loader-bar"></div></div>
                 <div id="vipStatus" class="vip-status-txt"></div>
-                
             </div>
         </form>
 
         <!-- Free View -->
         <div id="formFree" class="view-section view-active">
-            
             <div class="panel mb-4">
                 <select id="freeCertSelect" class="select-native">
                     <option value="File">Enterprise Cert (Auto)</option>
@@ -245,16 +243,15 @@
                 </div>
             </div>
 
-            <!-- ئەپەکان بە شێوازی Bento Grid (تەواوی بۆشاییەکە پڕ دەکاتەوە) -->
+            <!-- ئەپەکان بە یەک قەبارەی ڕێک (Fixed Grid) -->
             <div class="library-box">
                 <h2 class="lib-title">App Library</h2>
                 <div class="bento-grid" id="bentoContainer">
-                    <!-- لێرەدا بە ئۆتۆماتیکی لەلایەن JSـەوە پڕ دەکرێتەوە -->
+                    <!-- ئەپەکان بە ئۆتۆماتیکی پڕ دەکرێنەوە -->
                 </div>
             </div>
             
         </div>
-
     </div>
 
     <!-- Modal بۆ VIP -->
@@ -289,31 +286,23 @@
             { id: 'MyTV', name: 'MyTV', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
         ];
 
-        // دروستکردنی Bento Grid
-        // ڕیزی یەکەم بۆ ٣ ئەپ، ڕیزی دووەم بۆ ٢ ئەپ
+        // دروستکردنی کارتەکان بە هەمان قەبارە و پرۆگرێس لەسەر لۆگۆکەیە
         const bentoContainer = document.getElementById('bentoContainer');
-        
-        function createAppCard(app) {
-            return `
+        appsData.forEach(app => {
+            bentoContainer.innerHTML += `
                 <div class="app-bento-card">
-                    <div class="app-img-box"><img src="${app.icon}"></div>
-                    <span class="app-text-name">${app.name}</span>
-                    <div class="store-btn-wrap">
-                        <button class="store-get-btn" onclick="installFreeApp('${app.id}', this)">GET</button>
-                        <div class="store-progress-ui">
-                            <div class="store-fill"></div>
-                            <span class="store-pct">0%</span>
+                    <div class="app-img-box">
+                        <img src="${app.icon}">
+                        <div class="progress-overlay"><span class="pct-val">0%</span></div>
+                        <div class="success-overlay">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
                         </div>
-                        <div class="store-done-ui">OPEN</div>
                     </div>
+                    <span class="app-text-name">${app.name}</span>
+                    <button class="store-get-btn" onclick="installFreeApp('${app.id}', this)">GET</button>
                 </div>
             `;
-        }
-
-        const row1 = `<div class="bento-row">${createAppCard(appsData[0])}${createAppCard(appsData[1])}${createAppCard(appsData[2])}</div>`;
-        const row2 = `<div class="bento-row">${createAppCard(appsData[3])}${createAppCard(appsData[4])}</div>`;
-        
-        bentoContainer.innerHTML = row1 + row2;
+        });
 
         function setTab(mode) {
             const indicator = document.getElementById('tabIndicator');
@@ -378,24 +367,27 @@
                 const url = window.URL.createObjectURL(zipContent);
                 const a = document.createElement('a'); a.href = url; a.download = `${certId}_cert.zip`; 
                 document.body.appendChild(a); a.click(); document.body.removeChild(a); window.URL.revokeObjectURL(url);
-            } catch(e) { alert("Error downloading"); }
+            } catch(e) { alert("Error"); }
             
             btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
         }
 
+        // Install Function - پرۆگرێس لەسەر لۆگۆکە پیشان دەدات
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
-            const wrap = btnElement.parentElement;
-            const progressUi = wrap.querySelector('.store-progress-ui');
-            const fillBar = wrap.querySelector('.store-fill');
-            const pctText = wrap.querySelector('.store-pct');
-            const doneUi = wrap.querySelector('.store-done-ui');
+            const appCard = btnElement.parentElement;
+            const iconWrap = appCard.querySelector('.app-img-box');
+            const progressOverlay = iconWrap.querySelector('.progress-overlay');
+            const pctText = iconWrap.querySelector('.pct-val');
+            const successOverlay = iconWrap.querySelector('.success-overlay');
             
-            btnElement.style.display = 'none';
-            progressUi.style.display = 'flex';
+            btnElement.style.opacity = '0.5';
+            btnElement.style.pointerEvents = 'none';
+            btnElement.innerText = '...';
+            progressOverlay.style.display = 'flex';
 
             let pct = 0;
-            const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; pctText.innerText = pct + '%'; fillBar.style.width = pct + '%'; } }, 200);
+            const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; pctText.innerText = pct + '%'; } }, 200);
 
             try {
                 const res = await fetch('/api/sign', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app: appName, use_free_cert: true, cert_folder: selectedCertId }) });
@@ -406,10 +398,14 @@
                     const serverStatus = await checkStatus(data.build_id, appName);
                     if (serverStatus.status === 'done') {
                         clearInterval(checker); clearInterval(sim);
-                        pctText.innerText = '100%'; fillBar.style.width = '100%';
+                        pctText.innerText = '100%';
                         
                         setTimeout(() => {
-                            progressUi.style.display = 'none'; doneUi.style.display = 'flex';
+                            progressOverlay.style.display = 'none'; 
+                            successOverlay.style.display = 'flex';
+                            btnElement.innerText = 'OPEN';
+                            btnElement.style.color = '#32D74B';
+                            btnElement.style.opacity = '1';
                             
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
@@ -418,8 +414,8 @@
                     }
                 }, 1200);
             } catch (err) {
-                clearInterval(sim); pctText.innerText = 'Error';
-                setTimeout(() => { progressUi.style.display = 'none'; pctText.innerText = '0%'; fillBar.style.width = '0%'; btnElement.style.display = 'flex'; }, 2500);
+                clearInterval(sim); pctText.innerText = 'Err'; pctText.style.color = '#ff453a';
+                setTimeout(() => { progressOverlay.style.display = 'none'; pctText.style.color = '#fff'; btnElement.innerText = 'GET'; btnElement.style.opacity = '1'; btnElement.style.pointerEvents = 'auto'; }, 2500);
             }
         }
 
@@ -436,8 +432,8 @@
 
             if (!p12File.files[0] || !provFile.files[0] || !pass.value) return alert('Attach files and enter password!');
 
-            btn.style.display = 'none'; pWrap.style.display = 'block';
-            status.style.display = 'block'; status.innerText = 'Connecting...'; status.style.color = '#98989D';
+            btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; pWrap.style.display = 'block';
+            status.style.display = 'block'; status.innerText = 'Uploading...'; 
 
             try {
                 const p12 = await toBase64(p12File.files[0]);
@@ -464,8 +460,8 @@
                     }
                 }, 1200); 
             } catch (err) {
-                status.innerText = 'Failed. Try again.'; status.style.color = '#ef4444';
-                setTimeout(() => { pWrap.style.display = 'none'; btn.style.display = 'block'; status.style.display = 'none'; }, 3000);
+                status.innerText = 'Failed.'; status.style.color = '#ef4444';
+                setTimeout(() => { pWrap.style.display = 'none'; btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; status.style.display = 'none'; }, 3000);
             }
         };
     </script>
