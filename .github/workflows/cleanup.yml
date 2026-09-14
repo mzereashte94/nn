@@ -1,48 +1,53 @@
-name: 🧹 Auto Cleanup Background
+name: 🧹 Ultra Strong Auto Cleanup
 
 on:
-  workflow_run:
-    # لێرەدا دەبێت ناوەکە ڕێک ناوی کۆدی سایینەرەکەت بێت
-    workflows: ["Premium Cloud Signer Engine (Ultra Fast)"]
-    types:
-      - completed
-  workflow_dispatch:
+  schedule:
+    # هەر ٥ خولەک جارێک سێرڤەرەکە خەبەر دەکاتەوە بۆ پشکنین
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # بۆ ئەوەی بتوانیت بە دەستی خۆیشت کاری پێ بکەیت
 
 jobs:
-  cleanup:
+  force-cleanup:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       actions: write
     steps:
-      - name: ⏳ Wait 5 Minutes
-        run: |
-          echo "Waiting 5 minutes to let user download the app..."
-          sleep 300
-
-      - name: 🧹 Delete Old Cloud Build Releases
+      - name: 🗑️ Force Delete Releases Older Than 10 Mins
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -euo pipefail
-          CURRENT_TIME=$(date -u +%s)
+          echo "Starting ultra-strong cleanup process..."
           
-          echo "Checking for old releases to delete..."
+          # وەرگرتنی کاتی ئێستا بە سانیە
+          NOW=$(date +%s)
           
-          # دەرهێنانی هەموو ڕیلیزەکان جگە لە V1
-          gh api repos/${{ github.repository }}/releases --paginate --jq '.[] | select(.tag_name != "V1") | .tag_name + "|" + .created_at' | while IFS='|' read -r TAG CREATED_AT; do
-            if [ -z "$TAG" ]; then continue; fi
+          # هێنانەخوارەوەی لیستی هەموو ڕیلیزەکان، بەدەر لە V1
+          RELEASES=$(gh api repos/${{ github.repository }}/releases --paginate -q '.[] | select(.tag_name != "V1") | "\(.tag_name)|\(.created_at)"')
+          
+          if [ -z "$RELEASES" ]; then
+            echo "No releases found to clean up."
+            exit 0
+          fi
+          
+          for release in $RELEASES; do
+            # جیاکردنەوەی تاگ و بەرواری دروستبوون
+            TAG=$(echo "$release" | cut -d'|' -f1)
+            CREATED_AT=$(echo "$release" | cut -d'|' -f2)
             
-            RELEASE_TIME=$(date -u -d "$CREATED_AT" +%s)
-            DIFF=$(( (CURRENT_TIME - RELEASE_TIME) / 60 ))
+            # گۆڕینی بەرواری ڕیلیزەکە بۆ سانیە بۆ هەژمارکردنی دروست
+            CREATED_TIMESTAMP=$(date -d "$CREATED_AT" +%s)
             
-            # ئەگەر تەمەنی ڕیلیزەکە ٤ خولەک یان زیاتر بوو بیسڕەوە
-            if [ "$DIFF" -ge 4 ]; then
-              echo "Deleting release: $TAG (Age: $DIFF minutes)"
-              gh release delete "$TAG" --cleanup-tag -y || true
+            # هەژمارکردنی تەمەنی ڕیلیزەکە بە خولەک
+            DIFF_MINUTES=$(( (NOW - CREATED_TIMESTAMP) / 60 ))
+            
+            # ئەگەر تەمەنی ١٠ خولەک یان زیاتر بوو، بە زۆر دەیسڕێتەوە
+            if [ "$DIFF_MINUTES" -ge 10 ]; then
+              echo "⚠️ Deleting release '$TAG' (Age: $DIFF_MINUTES minutes)..."
+              gh release delete "$TAG" --cleanup-tag -y || echo "Failed to delete $TAG, moving on..."
             else
-              echo "Keeping release: $TAG (Age: $DIFF minutes - too new)"
+              echo "✅ Keeping release '$TAG' (Age: $DIFF_MINUTES minutes - needs to wait)."
             fi
           done
           
-          echo "✅ Cleanup completed successfully!"
+          echo "Cleanup finished perfectly!"
