@@ -4,213 +4,200 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>AshteMobile | Premium Cloud</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700;800&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root { 
-            --primary: #00f2fe; 
-            --secondary: #4facfe; 
-            --accent: #8E2DE2;
-            --bg-dark: #070913;
-            --glass-bg: rgba(15, 17, 30, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --gold: #F5D061; 
+            --bg-black: #000000;
+            --card-bg: #1C1C1E;
+            --btn-bg: #2C2C2E;
+            --text-gray: #8E8E93;
+            --border: #38383A;
         }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Outfit', 'Cairo', sans-serif; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            background-color: var(--bg-dark); 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Cairo';
+            background-color: var(--bg-black); 
             color: #ffffff; 
             margin: 0; 
             min-height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            overflow-x: hidden; padding: 20px 0;
+            display: flex; justify-content: center;
+            overflow-x: hidden; padding: 20px 0 40px 0;
         }
 
-        /* باکگراوندی درەوشاوەی نیۆن */
-        .neon-bg {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; background: #05060A;
+        .main-app { width: 92%; max-width: 420px; z-index: 10; display: flex; flex-direction: column; gap: 20px; }
+
+        /* لۆگۆ */
+        .header-title { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+        .header-title span { color: var(--gold); }
+        .header-sub { font-size: 12px; font-weight: 600; color: var(--text-gray); letter-spacing: 2px; text-transform: uppercase; }
+
+        /* تابی سەرەوە (Segmented Control) */
+        .ios-segment {
+            display: flex; background: var(--card-bg); border-radius: 12px; padding: 3px; position: relative;
         }
-        .glow { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.4; animation: pulse 12s infinite alternate ease-in-out; }
-        .glow-cyan { width: 350px; height: 350px; background: var(--secondary); top: -10%; left: -10%; }
-        .glow-purple { width: 400px; height: 400px; background: var(--accent); bottom: -15%; right: -10%; animation-delay: -5s; }
-        @keyframes pulse { 0% { transform: scale(1) translate(0, 0); opacity: 0.3; } 100% { transform: scale(1.2) translate(40px, -40px); opacity: 0.6; } }
-
-        .container-wrap { width: 92%; max-width: 420px; z-index: 10; display: flex; flex-direction: column; gap: 16px; }
-
-        /* کارتی شوشەیی (Frosted Glass) */
-        .cyber-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+        .segment-btn {
+            flex: 1; text-align: center; padding: 8px 0; font-size: 13px; font-weight: 600; color: var(--text-gray); cursor: pointer; position: relative; z-index: 2; transition: 0.3s;
+        }
+        .segment-btn.active { color: #000; font-weight: 700; }
+        .segment-slider {
+            position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); background: var(--gold); border-radius: 9px; z-index: 1; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 2px 8px rgba(245, 208, 97, 0.3);
         }
 
-        /* لۆگۆ و ناونیشان */
-        .brand-text {
-            font-size: 32px; font-weight: 800; letter-spacing: -1px;
-            background: linear-gradient(135deg, #fff 20%, var(--primary) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .brand-sub { font-size: 11px; font-weight: 700; color: #8BA1BE; letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
-
-        /* سویچەری مۆدێرن (Pill Toggle) */
-        .pill-switcher {
-            display: flex; background: rgba(0,0,0,0.4); border-radius: 20px; padding: 6px; position: relative; border: 1px solid rgba(255,255,255,0.05); box-shadow: inset 0 4px 10px rgba(0,0,0,0.3);
-        }
-        .pill-tab {
-            flex: 1; text-align: center; padding: 12px 0; font-size: 14px; font-weight: 700; color: #697A94; cursor: pointer; position: relative; z-index: 2; transition: 0.3s;
-        }
-        .pill-tab.active { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
-        .pill-slider {
-            position: absolute; top: 6px; bottom: 6px; left: 6px; width: calc(50% - 6px); background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; z-index: 1; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); box-shadow: 0 4px 15px rgba(0,242,254,0.1);
+        /* کارتەکان (iOS Style) */
+        .ios-card {
+            background: var(--card-bg); border-radius: 18px; padding: 20px;
         }
 
-        /* ئینپوت و درۆپداون */
-        .cyber-input {
-            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; color: white; font-size: 15px; font-weight: 600; outline: none; transition: 0.3s; appearance: none;
+        /* بەشی VIP */
+        .app-select-btn {
+            display: flex; align-items: center; justify-content: space-between; background: var(--btn-bg); border-radius: 14px; padding: 12px 16px; cursor: pointer; transition: 0.2s;
         }
-        .cyber-input:focus { border-color: var(--primary); background: rgba(0,242,254,0.05); box-shadow: 0 0 0 4px rgba(0,242,254,0.1); }
+        .app-select-btn:active { opacity: 0.7; }
         
-        .upload-area {
-            background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.2); border-radius: 20px; padding: 20px; text-align: center; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 8px;
+        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; margin-bottom: 16px; }
+        .upload-box {
+            background: var(--btn-bg); border-radius: 14px; padding: 16px 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; text-align: center; transition: 0.2s; border: 1px solid transparent;
         }
-        .upload-area:active { background: rgba(0,242,254,0.1); border-color: var(--primary); transform: scale(0.98); }
-        .upload-icon { color: var(--primary); }
+        .upload-box:active { background: #3a3a3c; border-color: var(--gold); }
+        .upload-box svg { color: var(--gold); width: 24px; height: 24px; }
 
-        /* دوگمەی سەرەکی (Cyan Glow) */
-        .btn-neon {
-            background: linear-gradient(135deg, var(--secondary), var(--primary)); color: #000; font-weight: 800; font-size: 16px; padding: 16px; border-radius: 18px; width: 100%; border: none; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(0, 242, 254, 0.3); text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: center; align-items: center; gap: 8px;
+        .ios-input {
+            width: 100%; background: var(--btn-bg); border: 1px solid transparent; border-radius: 14px; padding: 14px 16px; color: white; font-size: 15px; outline: none; transition: 0.2s; appearance: none;
         }
-        .btn-neon:active { transform: scale(0.96); box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4); }
+        .ios-input:focus { border-color: var(--gold); }
 
-        .btn-glass {
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; font-weight: 600; font-size: 13px; padding: 12px; border-radius: 14px; display: flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; width: 100%; cursor: pointer; backdrop-filter: blur(10px);
+        .btn-primary {
+            background: var(--gold); color: #000; font-weight: 700; font-size: 16px; padding: 16px; border-radius: 14px; width: 100%; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 16px;
         }
-        .btn-glass:active { background: rgba(255,255,255,0.1); transform: scale(0.96); }
+        .btn-primary:active { transform: scale(0.97); opacity: 0.9; }
+
+        /* بەشی Free Apps (App Store Style) */
+        .native-select {
+            width: 100%; background: var(--btn-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23F5D061' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center; background-size: 16px; border: none; border-radius: 14px; padding: 14px 16px; color: white; font-size: 14px; font-weight: 600; outline: none; appearance: none; margin-bottom: 16px;
+        }
+
+        .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+        .tool-btn {
+            background: var(--btn-bg); color: #fff; font-size: 13px; font-weight: 600; padding: 12px; border-radius: 12px; display: flex; justify-content: center; align-items: center; gap: 6px; text-decoration: none; transition: 0.2s; border: none;
+        }
+        .tool-btn:active { opacity: 0.7; }
+        .tool-btn.gold-text { color: var(--gold); }
 
         /* لیستی ئەپەکان */
-        .app-list-item {
-            display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.03); border-radius: 20px; padding: 14px; margin-bottom: 12px; transition: 0.2s;
+        .app-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .app-row:last-child { border-bottom: none; }
+        .app-icon { width: 56px; height: 56px; border-radius: 14px; object-fit: cover; }
+        
+        /* شوێنی تایبەت بە دوگمە و پرۆگرێس (بۆ ئەوەی نەجوڵێت) */
+        .action-area { width: 72px; height: 32px; display: flex; justify-content: center; align-items: center; }
+        
+        .get-btn {
+            background: var(--btn-bg); color: var(--gold); border: none; width: 100%; height: 100%; border-radius: 16px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s;
         }
-        .app-list-item:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); }
-        .app-list-item:last-child { margin-bottom: 0; }
+        .get-btn:active { background: #3a3a3c; }
+
+        /* پرۆگرێسی ئینستاڵ */
+        .install-progress { display: none; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; gap: 4px; }
+        .pct-text { font-size: 11px; font-weight: 700; color: var(--gold); line-height: 1; }
+        .track-bar { width: 100%; height: 4px; background: var(--btn-bg); border-radius: 4px; overflow: hidden; }
+        .fill-bar { height: 100%; width: 0%; background: var(--gold); transition: 0.2s; }
+        .done-text { display: none; font-size: 12px; font-weight: 700; color: #34C759; }
+
+        /* VIP پرۆگرێس */
+        .vip-progress-bar { width: 100%; height: 6px; background: var(--btn-bg); border-radius: 6px; overflow: hidden; display: none; margin-top: 16px; }
+        .vip-progress-fill { height: 100%; width: 0%; background: var(--gold); transition: 0.3s; }
+        .status-msg { text-align: center; font-size: 13px; font-weight: 600; margin-top: 12px; display: none; }
+
+        /* Bottom Sheet Modal (لیستی ئەپەکان بۆ VIP) */
+        .backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 40; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(4px); }
+        .backdrop.show { opacity: 1; pointer-events: auto; }
         
-        .app-thumb { width: 50px; height: 50px; border-radius: 14px; object-fit: cover; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        
-        .btn-install {
-            background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.3); color: var(--primary); padding: 8px 20px; border-radius: 14px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s;
+        .bottom-sheet {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #1C1C1E; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 24px 20px 40px 20px; z-index: 50; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .btn-install:active { background: var(--primary); color: #000; transform: scale(0.93); }
+        .bottom-sheet.show { transform: translateY(0); }
+        .sheet-handle { width: 40px; height: 5px; background: #48484A; border-radius: 5px; margin: 0 auto 20px auto; }
+        .sheet-item { display: flex; align-items: center; gap: 16px; padding: 14px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s; }
+        .sheet-item:last-child { border-bottom: none; }
+        .sheet-item:active { background: #2C2C2E; border-radius: 12px; }
+        .sheet-item img { width: 40px; height: 40px; border-radius: 10px; }
+        .sheet-item span { font-size: 16px; font-weight: 600; color: #fff; }
 
-        /* پرۆگرێس و دۆخ */
-        .progress-container { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; display: none; margin-top: 16px; }
-        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--secondary), var(--primary)); transition: width 0.3s ease; box-shadow: 0 0 10px var(--primary); }
-        
-        .section-wrap { display: none; opacity: 0; transition: opacity 0.4s; flex-direction: column; gap: 16px; }
-        .section-active { display: flex; opacity: 1; }
-
-        .dl-loader { display: none; flex-direction: column; align-items: center; width: 70px; }
-        .dl-pct { font-size: 12px; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
-        .dl-track { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 4px; }
-        .dl-fill { height: 100%; width: 0%; background: var(--primary); border-radius: 4px; transition: 0.2s; box-shadow: 0 0 8px var(--primary); }
+        .hidden-section { display: none; opacity: 0; transition: opacity 0.3s; }
+        .active-section { display: block; opacity: 1; }
     </style>
 </head>
 <body>
 
-    <div class="neon-bg">
-        <div class="glow glow-cyan"></div>
-        <div class="glow glow-purple"></div>
-    </div>
-
-    <div class="container-wrap">
+    <div class="main-app">
         
-        <!-- لۆگۆ -->
-        <div class="text-center mt-2">
-            <h1 class="brand-text">AshteMobile</h1>
-            <p class="brand-sub">Premium Cloud Signer</p>
+        <!-- Header -->
+        <div class="text-center">
+            <h1 class="header-title">Ashte<span>Mobile</span></h1>
+            <p class="header-sub">Premium Cloud Signer</p>
         </div>
 
-        <!-- تابەکان -->
-        <div class="pill-switcher">
-            <div class="pill-slider" id="tabSlider" style="transform: translateX(100%);"></div>
-            <div class="pill-tab" id="tabPrem" onclick="switchTab('premium')">VIP Signature</div>
-            <div class="pill-tab active" id="tabFree" onclick="switchTab('free')">Free Enterprise</div>
+        <!-- Segmented Control -->
+        <div class="ios-segment">
+            <div class="segment-slider" id="tabSlider" style="transform: translateX(100%);"></div>
+            <div class="segment-btn" id="tabPrem" onclick="switchTab('premium')">VIP Signature</div>
+            <div class="segment-btn active" id="tabFree" onclick="switchTab('free')">Free Enterprise</div>
         </div>
 
         <!-- بەشی VIP -->
-        <form id="signForm" class="section-wrap">
-            
-            <div class="cyber-card !p-4">
-                <label class="text-[12px] font-bold text-[#8BA1BE] block mb-2 px-1">Select App from Cloud</label>
-                <!-- Custom App Selector -->
-                <div class="relative">
-                    <div class="cyber-input flex items-center justify-between cursor-pointer !py-3" id="appSelectTrig">
-                        <div class="flex items-center gap-3">
-                            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-8 h-8 rounded-lg">
-                            <span id="selName">AshteMobile</span>
-                        </div>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        <form id="signForm" class="hidden-section">
+            <div class="ios-card">
+                
+                <!-- دوگمەی کردنەوەی Bottom Sheet -->
+                <div class="app-select-btn" onclick="openSheet()">
+                    <div class="flex items-center gap-3">
+                        <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-9 h-9 rounded-lg object-cover">
+                        <span id="selName" class="text-white font-bold text-[16px]">AshteMobile</span>
                     </div>
-                    <div id="appDropdown" class="absolute left-0 right-0 top-[110%] bg-[#0f111e] border border-[rgba(255,255,255,0.1)] rounded-xl z-50 hidden overflow-hidden shadow-2xl">
-                        <div class="flex items-center gap-3 p-3 border-b border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.05)] cursor-pointer" onclick="selectApp('AshteMobile', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg')">
-                            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" class="w-8 h-8 rounded-lg"> <span class="font-bold">AshteMobile</span>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 border-b border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.05)] cursor-pointer" onclick="selectApp('ipaomtk', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg')">
-                            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg" class="w-8 h-8 rounded-lg"> <span class="font-bold">ipaomtk</span>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 border-b border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.05)] cursor-pointer" onclick="selectApp('Esign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg')">
-                            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg" class="w-8 h-8 rounded-lg"> <span class="font-bold">Esign</span>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 border-b border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.05)] cursor-pointer" onclick="selectApp('Ksign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg')">
-                            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg" class="w-8 h-8 rounded-lg"> <span class="font-bold">Ksign</span>
-                        </div>
-                        <div class="flex items-center gap-3 p-3 hover:bg-[rgba(255,255,255,0.05)] cursor-pointer" onclick="selectApp('MyTV', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg')">
-                            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg" class="w-8 h-8 rounded-lg"> <span class="font-bold">MyTV</span>
-                        </div>
-                    </div>
-                    <input type="hidden" id="appInput" value="AshteMobile">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-gray)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </div>
-            </div>
+                <input type="hidden" id="appInput" value="AshteMobile">
 
-            <div class="cyber-card !p-4">
-                <div class="grid grid-cols-2 gap-3 mb-3">
-                    <div class="upload-area" onclick="document.getElementById('p12File').click()">
-                        <svg class="upload-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-                        <div class="text-[13px] font-bold text-white">Upload P12</div>
-                        <div id="p12Name" class="text-[10px] text-[#8BA1BE]">No file chosen</div>
+                <!-- دوگمەکانی فایل -->
+                <div class="upload-grid">
+                    <div class="upload-box" onclick="document.getElementById('p12File').click()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                        <div>
+                            <div class="text-[14px] font-bold text-white">P12 File</div>
+                            <div id="p12Name" class="text-[11px] text-[var(--text-gray)] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis w-[100px]">Select file</div>
+                        </div>
                         <input type="file" id="p12File" class="hidden" accept=".p12">
                     </div>
-                    <div class="upload-area" onclick="document.getElementById('provFile').click()">
-                        <svg class="upload-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
-                        <div class="text-[13px] font-bold text-white">Upload PROV</div>
-                        <div id="provName" class="text-[10px] text-[#8BA1BE]">No file chosen</div>
+                    <div class="upload-box" onclick="document.getElementById('provFile').click()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+                        <div>
+                            <div class="text-[14px] font-bold text-white">Provision</div>
+                            <div id="provName" class="text-[11px] text-[var(--text-gray)] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis w-[100px]">Select file</div>
+                        </div>
                         <input type="file" id="provFile" class="hidden" accept=".mobileprovision">
                     </div>
                 </div>
 
-                <input type="password" id="password" placeholder="Certificate Password" class="cyber-input text-center mb-3">
+                <!-- پاسۆرد -->
+                <input type="password" id="password" placeholder="Certificate Password" class="ios-input text-center">
                 
-                <button type="submit" id="submitBtn" class="btn-neon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    Start Engine
-                </button>
-                <div id="progressWrapper" class="progress-container"><div id="progressFill" class="progress-bar"></div></div>
-                <div id="status" class="text-center text-[12px] font-bold text-var(--primary) mt-3 hidden"></div>
+                <button type="submit" id="submitBtn" class="btn-primary">Start Signing</button>
+                <div id="vipProgressWrapper" class="vip-progress-bar"><div id="vipProgressFill" class="vip-progress-fill"></div></div>
+                <div id="vipStatus" class="status-msg text-[var(--gold)]"></div>
             </div>
         </form>
 
         <!-- بەشی Free -->
-        <div id="freeSection" class="section-wrap section-active">
-            
-            <div class="cyber-card !p-5">
-                <label class="text-[12px] font-bold text-[#8BA1BE] block mb-2 px-1">Global Enterprise Certs</label>
+        <div id="freeSection" class="active-section">
+            <div class="ios-card">
                 
-                <select id="freeCertSelect" class="cyber-input mb-4 text-center !py-3">
-                    <option value="File">File (Auto)</option>
+                <select id="freeCertSelect" class="native-select">
+                    <option value="File">Enterprise Cert (Auto)</option>
                     <option value="moving2">2 Moving Increasingly</option>
                     <option value="aramco">Aramco Services Company</option>
                     <option value="beijing_xibei">Beijing Xibei</option>
@@ -220,61 +207,78 @@
                     <option value="luoyang">Luoyang Postal</option>
                     <option value="moving">Moving Increasingly</option>
                     <option value="powerchin">Powerchin</option>
-                    <option value="qingdao">Qingdao Rural Commercial Bank</option>
-                    <option value="vietnam">Vietnam Rubber</option>
-                    <option value="xl_axia">XL AXIATA, PT TBK</option>
                 </select>
 
-                <div class="flex gap-3">
-                    <a href="https://ashtemobile.site/ashtemobile.mobileconfig" class="btn-glass flex-1">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <div class="tools-grid">
+                    <a href="https://ashtemobile.site/ashtemobile.mobileconfig" class="tool-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         Block Revokes
                     </a>
-                    <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="btn-glass flex-1 !text-[var(--primary)] !border-[rgba(0,242,254,0.3)]">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="tool-btn gold-text">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                         Get Cert ZIP
                     </button>
                 </div>
-            </div>
-            
-            <div class="cyber-card !p-4">
-                <h3 class="text-[14px] font-bold text-white mb-3 ml-2 flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-[var(--primary)] animate-pulse"></div> App Library
-                </h3>
-                <div id="appsListContainer"></div>
+
+                <h3 class="text-[17px] font-bold text-white mb-4">App Library</h3>
+                <div id="appsListContainer" class="flex flex-col"></div>
+                
             </div>
         </div>
 
     </div>
 
+    <!-- Bottom Sheet Modal (هیچ کێشەیەکی تێکەڵبوونی نابێت) -->
+    <div class="backdrop" id="sheetBackdrop" onclick="closeSheet()"></div>
+    <div class="bottom-sheet" id="appSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-item" onclick="selectApp('AshteMobile', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg')">
+            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg"> <span>AshteMobile</span>
+        </div>
+        <div class="sheet-item" onclick="selectApp('ipaomtk', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg')">
+            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg"> <span>ipaomtk</span>
+        </div>
+        <div class="sheet-item" onclick="selectApp('Esign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg')">
+            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg"> <span>Esign</span>
+        </div>
+        <div class="sheet-item" onclick="selectApp('Ksign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg')">
+            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg"> <span>Ksign</span>
+        </div>
+        <div class="sheet-item" onclick="selectApp('MyTV', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg')">
+            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg"> <span>MyTV</span>
+        </div>
+    </div>
+
     <script>
         // داتای ئەپەکان
         const appsData = [
-            { id: 'AshteMobile', name: 'AshteMobile', sub: 'Cloud Tool', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
-            { id: 'ipaomtk', name: 'ipaomtk', sub: 'Utility', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' },
-            { id: 'Esign', name: 'Esign', sub: 'Signer', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
-            { id: 'Ksign', name: 'Ksign', sub: 'Signer', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
-            { id: 'MyTV', name: 'MyTV', sub: 'Media', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
+            { id: 'AshteMobile', name: 'AshteMobile', dev: 'Ashte Cloud', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
+            { id: 'ipaomtk', name: 'ipaomtk', dev: 'Utilities', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' },
+            { id: 'Esign', name: 'Esign', dev: 'Signer Tool', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
+            { id: 'Ksign', name: 'Ksign', dev: 'Signer Tool', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
+            { id: 'MyTV', name: 'MyTV', dev: 'Entertainment', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
         ];
 
-        // دروستکردنی لیستی ئەپەکان
+        // دروستکردنی لیستی ئەپەکان بێ کێشەی جوڵە
         const appsListContainer = document.getElementById('appsListContainer');
         appsData.forEach(app => {
             appsListContainer.innerHTML += `
-                <div class="app-list-item">
+                <div class="app-row">
                     <div class="flex items-center gap-3">
-                        <img src="${app.icon}" class="app-thumb">
+                        <img src="${app.icon}" class="app-icon">
                         <div class="flex flex-col">
-                            <span class="text-[15px] font-bold text-white">${app.name}</span>
-                            <span class="text-[12px] font-semibold text-[#8BA1BE]">${app.sub}</span>
+                            <span class="text-[16px] font-bold text-white leading-tight">${app.name}</span>
+                            <span class="text-[13px] font-medium text-[var(--text-gray)] mt-0.5">${app.dev}</span>
                         </div>
                     </div>
-                    <div>
-                        <button class="btn-install" onclick="installFreeApp('${app.id}', this)">INSTALL</button>
-                        <div class="dl-loader">
-                            <span class="dl-pct">0%</span>
-                            <div class="dl-track"><div class="dl-fill"></div></div>
+                    <!-- شوێنی جێگیرکراو بۆ دوگمە و پرۆگرێس -->
+                    <div class="action-area">
+                        <button class="get-btn" onclick="installFreeApp('${app.id}', this)">GET</button>
+                        <div class="install-progress">
+                            <span class="pct-text">0%</span>
+                            <div class="track-bar"><div class="fill-bar"></div></div>
                         </div>
+                        <div class="done-text">Done</div>
                     </div>
                 </div>
             `;
@@ -292,39 +296,37 @@
                 tabSlider.style.transform = 'translateX(0)';
                 tabPrem.classList.add('active'); tabFree.classList.remove('active');
                 
-                secFree.classList.remove('section-active');
-                setTimeout(() => {
-                    secFree.style.display = 'none'; formVIP.style.display = 'flex';
-                    setTimeout(() => formVIP.classList.add('section-active'), 20);
-                }, 300);
+                secFree.style.display = 'none'; secFree.classList.remove('active-section');
+                formVIP.style.display = 'block'; setTimeout(() => formVIP.classList.add('active-section'), 20);
             } else {
                 tabSlider.style.transform = 'translateX(100%)';
                 tabFree.classList.add('active'); tabPrem.classList.remove('active');
                 
-                formVIP.classList.remove('section-active');
-                setTimeout(() => {
-                    formVIP.style.display = 'none'; secFree.style.display = 'flex';
-                    setTimeout(() => secFree.classList.add('section-active'), 20);
-                }, 300);
+                formVIP.style.display = 'none'; formVIP.classList.remove('active-section');
+                secFree.style.display = 'block'; setTimeout(() => secFree.classList.add('active-section'), 20);
             }
         }
 
-        // Dropdown ی ئەپەکان بۆ VIP
-        const appSelectTrig = document.getElementById('appSelectTrig');
-        const appDropdown = document.getElementById('appDropdown');
-        appSelectTrig.onclick = (e) => { e.stopPropagation(); appDropdown.style.display = appDropdown.style.display === 'block' ? 'none' : 'block'; };
-        document.onclick = () => appDropdown.style.display = 'none';
+        // کۆنترۆڵی Bottom Sheet
+        const sheetBackdrop = document.getElementById('sheetBackdrop');
+        const appSheet = document.getElementById('appSheet');
         
+        function openSheet() {
+            sheetBackdrop.classList.add('show'); appSheet.classList.add('show');
+        }
+        function closeSheet() {
+            sheetBackdrop.classList.remove('show'); appSheet.classList.remove('show');
+        }
         function selectApp(id, img) {
             document.getElementById('selImg').src = img;
             document.getElementById('selName').innerText = id;
             document.getElementById('appInput').value = id;
+            closeSheet();
         }
 
         // ناوی فایلەکان
-        const truncate = (str, n) => str.length > n ? str.substr(0, n - 1) + '...' : str;
-        document.getElementById('p12File').onchange = e => { if(e.target.files[0]) document.getElementById('p12Name').innerText = truncate(e.target.files[0].name, 20); };
-        document.getElementById('provFile').onchange = e => { if(e.target.files[0]) document.getElementById('provName').innerText = truncate(e.target.files[0].name, 20); };
+        document.getElementById('p12File').onchange = e => { if(e.target.files[0]) document.getElementById('p12Name').innerText = e.target.files[0].name; };
+        document.getElementById('provFile').onchange = e => { if(e.target.files[0]) document.getElementById('provName').innerText = e.target.files[0].name; };
         
         const toBase64 = file => new Promise((resolve, reject) => {
             const reader = new FileReader(); reader.readAsDataURL(file);
@@ -342,7 +344,7 @@
             const btn = document.getElementById('dlCertBtn');
             const originalText = btn.innerHTML;
             
-            btn.innerHTML = 'Fetching...'; btn.style.opacity = '0.5'; btn.disabled = true;
+            btn.innerHTML = 'Loading...'; btn.style.opacity = '0.5'; btn.disabled = true;
 
             try {
                 const zip = new JSZip();
@@ -355,23 +357,25 @@
                 const url = window.URL.createObjectURL(zipContent);
                 const a = document.createElement('a'); a.href = url; a.download = `${certId}_cert.zip`; 
                 document.body.appendChild(a); a.click(); document.body.removeChild(a); window.URL.revokeObjectURL(url);
-            } catch(e) { alert("Error downloading files."); }
+            } catch(e) { alert("Download Failed"); }
             
             btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
         }
 
-        // ئینستاڵی Free
+        // ئینستاڵی Free (کێشەی پرۆگرێس چارەسەر کرا)
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
-            const loaderEl = btnElement.nextElementSibling;
-            const pctText = loaderEl.querySelector('.dl-pct');
-            const fillBar = loaderEl.querySelector('.dl-fill');
+            const actionArea = btnElement.parentElement;
+            const progressEl = actionArea.querySelector('.install-progress');
+            const pctText = actionArea.querySelector('.pct-text');
+            const fillBar = actionArea.querySelector('.fill-bar');
+            const doneText = actionArea.querySelector('.done-text');
             
             btnElement.style.display = 'none';
-            loaderEl.style.display = 'flex';
+            progressEl.style.display = 'flex';
 
             let pct = 0;
-            const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; pctText.innerText = pct + '%'; fillBar.style.width = pct + '%'; } }, 250);
+            const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; pctText.innerText = pct + '%'; fillBar.style.width = pct + '%'; } }, 200);
 
             try {
                 const res = await fetch('/api/sign', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app: appName, use_free_cert: true, cert_folder: selectedCertId }) });
@@ -385,6 +389,9 @@
                         pctText.innerText = '100%'; fillBar.style.width = '100%';
                         
                         setTimeout(() => {
+                            progressEl.style.display = 'none';
+                            doneText.style.display = 'block';
+                            
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
                             setTimeout(() => { window.location.href = "https://t.me/ashtemobile"; }, 3000);
@@ -392,18 +399,18 @@
                     }
                 }, 1200);
             } catch (err) {
-                clearInterval(sim); pctText.innerText = 'Error'; pctText.style.color = '#ff453a'; fillBar.style.background = '#ff453a';
-                setTimeout(() => { loaderEl.style.display = 'none'; pctText.style.color = 'var(--primary)'; fillBar.style.background = 'var(--primary)'; btnElement.style.display = 'block'; }, 2000);
+                clearInterval(sim); pctText.innerText = 'Fail'; pctText.style.color = '#ff453a'; fillBar.style.background = '#ff453a';
+                setTimeout(() => { progressEl.style.display = 'none'; pctText.style.color = 'var(--gold)'; fillBar.style.background = 'var(--gold)'; btnElement.style.display = 'block'; }, 2500);
             }
         }
 
         // فۆرمی VIP
         document.getElementById('signForm').onsubmit = async (e) => {
             e.preventDefault();
-            const status = document.getElementById('status');
+            const status = document.getElementById('vipStatus');
             const btn = document.getElementById('submitBtn');
-            const pWrap = document.getElementById('progressWrapper');
-            const pFill = document.getElementById('progressFill');
+            const pWrap = document.getElementById('vipProgressWrapper');
+            const pFill = document.getElementById('vipProgressFill');
             const p12File = document.getElementById('p12File');
             const provFile = document.getElementById('provFile');
             const pass = document.getElementById('password');
@@ -412,8 +419,8 @@
             if (!p12File.files[0] || !provFile.files[0] || !pass.value) return alert('Files & Password are required!');
 
             btn.style.display = 'none'; pWrap.style.display = 'block';
-            status.style.display = 'block'; status.innerText = 'Connecting to Server...';
-            status.style.color = 'var(--primary)';
+            status.style.display = 'block'; status.innerText = 'Connecting...';
+            status.style.color = 'var(--gold)';
 
             try {
                 const p12 = await toBase64(p12File.files[0]);
@@ -423,14 +430,14 @@
                 if(!res.ok) throw new Error('Error');
                 const data = await res.json();
 
-                status.innerText = 'Signing Process Started...';
+                status.innerText = 'Signing...';
                 let sim = 0; const anim = setInterval(() => { if (sim < 95) sim += 5; pFill.style.width = sim + '%'; }, 300);
 
                 const checker = setInterval(async () => {
                     const serverStatus = await checkStatus(data.build_id, appSelected);
                     if (serverStatus.status === 'done') {
                         clearInterval(checker); clearInterval(anim); pFill.style.width = '100%';
-                        status.innerText = 'Engine Complete! Installing...';
+                        status.innerText = 'Success! Installing...';
                         
                         setTimeout(() => {
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appSelected)}`;
@@ -440,7 +447,7 @@
                     }
                 }, 1200); 
             } catch (err) {
-                status.innerText = 'Connection Failed. Try again.'; status.style.color = '#ff453a';
+                status.innerText = 'Failed. Try again.'; status.style.color = '#ff453a';
                 setTimeout(() => { pWrap.style.display = 'none'; btn.style.display = 'flex'; status.style.display = 'none'; }, 3000);
             }
         };
