@@ -4,25 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>AshteMobile | Premium Cloud</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root { 
-            --gold: #E5C07B; 
-            --gold-light: #F9E2AF; 
-            --gold-dark: #C69A4A; 
-            --bg-color: #030305;
-            --card-bg: rgba(20, 20, 22, 0.65);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --accent-glow: rgba(229, 192, 123, 0.15);
+            --gold: #e5be59; 
+            --gold-light: #fef0cd; 
+            --gold-dark: #a17c22; 
+            --bg-base: #060608;
+            --card-bg: rgba(18, 18, 22, 0.72);
+            --card-border: rgba(229, 190, 89, 0.18);
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            font-family: 'Inter', 'Cairo', sans-serif; 
-            background-color: var(--bg-color); 
+            font-family: 'Cairo', sans-serif; 
+            background-color: var(--bg-base); 
             color: #ffffff; 
             margin: 0; 
             min-height: 100dvh;
@@ -30,102 +29,105 @@
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
+            padding: 16px 0;
         }
 
-        /* Ambient Background (Aurora Effect) */
+        /* باکگراوندی ئەنیمەیشنی تەم و بریقەدار */
         .ambient-bg {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; background: #000;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;
         }
         .orb {
-            position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.4; animation: float 20s infinite ease-in-out alternate;
+            position: absolute; border-radius: 50%; filter: blur(95px); opacity: 0.32; animation: floatAnim 16s infinite ease-in-out alternate;
         }
-        .orb-1 { width: 60vw; height: 60vw; background: #2a2010; top: -10%; left: -10%; }
-        .orb-2 { width: 50vw; height: 50vw; background: #1a1608; bottom: 10%; right: -10%; animation-delay: -5s; }
-        .orb-3 { width: 40vw; height: 40vw; background: #0a0a0c; top: 40%; left: 30%; animation-duration: 25s; }
-        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(30px, -50px) scale(1.1); } }
+        .orb-1 { width: 340px; height: 340px; background: #96701b; top: -5%; right: -10%; }
+        .orb-2 { width: 300px; height: 300px; background: #453408; bottom: 5%; left: -10%; animation-delay: -6s; }
+        @keyframes floatAnim { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(40px) scale(1.1); } }
 
-        /* Bento Box Grid & Glass Cards */
-        .main-container {
-            width: 100%; max-width: 440px; padding: 20px; display: flex; flex-direction: column; gap: 16px; z-index: 10;
-        }
-
-        .glass-card {
+        /* کارتی سەرەکی VisionOS */
+        .glass-container {
+            width: 92%;
+            max-width: 410px;
             background: var(--card-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
             border: 1px solid var(--card-border);
-            border-radius: 28px;
-            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
-            padding: 24px;
-            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.12);
+            padding: 22px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
         }
 
-        /* Segmented Control */
-        .segmented-control {
-            display: flex; background: rgba(0,0,0,0.4); border-radius: 20px; padding: 4px; position: relative; border: 1px solid var(--card-border);
+        /* تابی سەرەوە (iOS Switcher) */
+        .tab-switcher {
+            display: flex; background: rgba(0,0,0,0.45); border-radius: 18px; padding: 4px; border: 1px solid rgba(255,255,255,0.06); position: relative;
         }
-        .segment-btn {
-            flex: 1; text-align: center; padding: 12px 0; font-size: 13px; font-weight: 600; color: #888; cursor: pointer; position: relative; z-index: 2; transition: 0.3s; border-radius: 16px;
+        .tab-btn {
+            flex: 1; text-align: center; padding: 10px 0; font-size: 13px; font-weight: 700; color: #8a8a93; cursor: pointer; position: relative; z-index: 2; transition: color 0.3s;
         }
-        .segment-btn.active { color: #fff; }
-        .segment-indicator {
-            position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: rgba(255,255,255,0.1); border-radius: 16px; z-index: 1; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        .tab-btn.active { color: #fff; }
+        .tab-slider {
+            position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: rgba(229, 190, 89, 0.15); border: 1px solid rgba(229, 190, 89, 0.3); border-radius: 14px; z-index: 1; transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* Inputs & Uploads */
-        .bento-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        
-        .upload-box {
-            background: rgba(255, 255, 255, 0.03); border: 1px dashed rgba(255,255,255,0.15); border-radius: 20px; padding: 16px 12px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+        /* بەشەکان */
+        .section-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 22px;
+            padding: 14px;
         }
-        .upload-box:hover, .upload-box:active { background: rgba(255,255,255,0.06); border-color: var(--gold); }
-        .upload-icon { color: var(--gold); }
-        
-        .modern-input {
-            width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--card-border); border-radius: 18px; padding: 16px; color: white; font-size: 14px; outline: none; transition: 0.3s; font-family: inherit;
-        }
-        .modern-input:focus { border-color: var(--gold); background: rgba(0,0,0,0.5); box-shadow: 0 0 0 4px var(--accent-glow); }
 
-        /* Custom Select */
-        .select-wrapper { position: relative; }
-        .select-trigger {
-            background: rgba(255, 255, 255, 0.04); border: 1px solid var(--card-border); border-radius: 20px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 14px; font-weight: 600;
+        /* سێلێکت و ئینپوت */
+        .custom-select { position: relative; }
+        .select-selected {
+            background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(229, 190, 89, 0.25); border-radius: 18px; padding: 11px 16px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.9rem; cursor: pointer;
         }
-        .select-trigger img { width: 28px; height: 28px; border-radius: 8px; object-fit: cover; }
-        
-        /* Buttons */
-        .btn-primary {
-            background: linear-gradient(135deg, var(--gold-light), var(--gold-dark)); color: #000; font-weight: 700; font-size: 15px; padding: 16px; border-radius: 20px; width: 100%; border: none; cursor: pointer; transition: 0.3s transform; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(198, 154, 74, 0.2);
+        .select-items {
+            position: absolute; background: rgba(18, 18, 20, 0.98); backdrop-filter: blur(25px); border: 1px solid rgba(229, 190, 89, 0.3); border-radius: 18px; top: calc(100% + 6px); left: 0; right: 0; z-index: 99; display: none; max-height: 230px; overflow-y: auto;
         }
-        .btn-primary:active { transform: scale(0.96); }
-        
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid var(--card-border); padding: 14px; border-radius: 18px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: 0.3s;
-        }
-        .btn-secondary:active { background: rgba(255,255,255,0.1); transform: scale(0.96); }
+        .select-items div { padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.9rem; cursor: pointer; }
+        .select-items div:hover { background: rgba(229, 190, 89, 0.1); }
+        .select-items img, .select-selected img, .app-icon-img { width: 34px; height: 34px; border-radius: 10px; object-fit: cover; }
 
-        /* App List */
-        .app-list { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
-        .app-item {
-            display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.03); border-radius: 20px; transition: 0.3s;
+        /* ئەپلۆدی فایل بە ستایلی Bento */
+        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .upload-card {
+            background: rgba(255, 255, 255, 0.02); border: 1px dashed rgba(229, 190, 89, 0.3); border-radius: 18px; padding: 14px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; text-align: center; transition: 0.2s;
         }
-        .app-item:hover { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); }
-        .app-info { display: flex; align-items: center; gap: 12px; }
-        .app-icon { width: 44px; height: 44px; border-radius: 12px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        
-        .btn-get {
-            background: rgba(255,255,255,0.1); color: var(--gold); border: none; padding: 6px 16px; border-radius: 14px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.3s;
-        }
-        .btn-get:active { background: var(--gold); color: #000; transform: scale(0.92); }
+        .upload-card:active { background: rgba(229, 190, 89, 0.08); border-color: var(--gold); }
 
-        /* Progress */
-        .progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; display: none; margin-top: 16px; }
-        .progress-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.3s ease; }
+        .gold-input {
+            width: 100%; background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(229, 190, 89, 0.25); border-radius: 16px; padding: 12px; color: white; text-align: center; font-size: 0.95rem; outline: none; transition: 0.3s;
+        }
+        .gold-input:focus { border-color: var(--gold); background: rgba(0,0,0,0.6); box-shadow: 0 0 0 3px rgba(229, 190, 89, 0.15); }
+
+        /* دوگمەی سەرەکی */
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: #070707; font-weight: 800; font-size: 0.95rem; padding: 14px; border-radius: 18px; width: 100%; border: none; cursor: pointer; transition: 0.2s transform; box-shadow: 0 8px 18px rgba(161, 124, 34, 0.25);
+        }
+        .btn-gold:active { transform: scale(0.97); }
+
+        /* دوگمەی ئەپەکان و پێرست */
+        .free-app-item {
+            display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.04); border-radius: 18px; padding: 10px 14px; transition: 0.2s;
+        }
+        .free-app-item:active { background: rgba(255,255,255,0.04); }
+        .install-action-btn {
+            background: rgba(229, 190, 89, 0.12); color: var(--gold); border: 1px solid rgba(229, 190, 89, 0.35); padding: 7px 18px; border-radius: 14px; font-weight: 800; font-size: 0.8rem; cursor: pointer; transition: 0.2s;
+        }
+        .install-action-btn:active { background: var(--gold); color: #000; transform: scale(0.92); }
+
+        /* پرۆگرێس و دۆخ */
+        .app-progress-container { display: none; flex-direction: column; align-items: center; width: 75px; }
+        .app-pct-text { font-size: 0.8rem; font-weight: 800; color: var(--gold); margin-bottom: 3px; }
+        .app-mini-bar { width: 100%; height: 5px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+        .app-mini-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.2s ease; }
+        .success-badge { display: none; color: #4ade80; font-size: 0.8rem; font-weight: 800; align-items: center; gap: 4px; background: rgba(74, 222, 128, 0.1); padding: 5px 12px; border-radius: 12px; border: 1px solid rgba(74, 222, 128, 0.25); }
         
-        /* Utilities */
-        .hidden-section { display: none; opacity: 0; transition: opacity 0.4s; }
-        .active-section { display: flex; flex-direction: column; opacity: 1; gap: 16px; }
-        .text-gradient { background: linear-gradient(135deg, #fff, #a1a1aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .progress-wrapper { width: 100%; background: rgba(255, 255, 255, 0.08); border-radius: 8px; height: 6px; overflow: hidden; display: none; margin-top: 12px; }
+        .progress-fill { width: 0%; height: 100%; background: var(--gold); transition: width 0.2s ease-out; }
     </style>
 </head>
 <body>
@@ -133,144 +135,103 @@
     <div class="ambient-bg">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
     </div>
 
-    <div class="main-container">
+    <div class="glass-container">
         
-        <!-- Header -->
-        <div class="text-center mt-2 mb-2">
-            <h1 class="text-3xl font-black tracking-tight" style="color: var(--gold);">AshteMobile</h1>
-            <p class="text-[11px] text-gray-400 mt-1 uppercase tracking-[0.2em] font-bold">Premium Cloud Signer</p>
+        <!-- لۆگۆ و ناونیشان -->
+        <div class="text-center">
+            <h1 class="text-2xl font-black tracking-tight" style="color: var(--gold);">AshteMobile</h1>
+            <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-0.5">Premium Cloud Signer</p>
         </div>
 
-        <!-- Mode Switcher -->
-        <div class="segmented-control" id="modeSwitcher">
-            <div class="segment-indicator" id="segmentIndicator" style="transform: translateX(100%);"></div>
-            <div class="segment-btn" id="btnPremium" onclick="switchMode('premium')">Premium Cert</div>
-            <div class="segment-btn active" id="btnFree" onclick="switchMode('free')">Free Cert</div>
+        <!-- تابەکان (Free / VIP) -->
+        <div class="tab-switcher">
+            <div class="tab-slider" id="tabSlider" style="transform: translateX(100%);"></div>
+            <div class="tab-btn" id="tabPrem" onclick="setMode('premium')">VIP Cert</div>
+            <div class="tab-btn active" id="tabFree" onclick="setMode('free')">Free Cert</div>
         </div>
 
-        <!-- Premium Section -->
-        <div id="premiumSection" class="glass-card hidden-section">
-            
-            <div class="select-wrapper">
-                <label class="text-[12px] font-bold text-gray-400 ml-1 mb-2 block">Select App to Sign</label>
-                <div class="select-trigger" id="selectedApp">
-                    <div class="flex items-center gap-3">
-                        <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="triggerIcon" alt="icon">
-                        <span id="triggerText">AshteMobile</span>
+        <!-- VIP Section (فایلی تایبەت) -->
+        <form id="signForm" class="space-y-3" style="display: none; opacity: 0; transition: opacity 0.3s;">
+            <div class="custom-select" id="customSelect">
+                <div class="select-selected" id="selectedApp">
+                    <div class="flex items-center gap-2">
+                        <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selectAppImg" alt="icon">
+                        <span id="selectAppName" class="text-gray-200">AshteMobile</span>
                     </div>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
                 </div>
-                <!-- Native Select Hidden for Logic -->
-                <select id="appInput" class="hidden">
-                    <option value="AshteMobile" data-icon="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg">AshteMobile</option>
-                    <option value="ipaomtk" data-icon="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg">ipaomtk</option>
-                    <option value="Esign" data-icon="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg">Esign</option>
-                    <option value="Ksign" data-icon="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg">Ksign</option>
-                    <option value="MyTV" data-icon="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg">MyTV</option>
-                </select>
+                <div class="select-items" id="appOptions">
+                    <div data-value="AshteMobile" data-img="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg"><img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg">AshteMobile</div>
+                    <div data-value="ipaomtk" data-img="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg"><img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg">ipaomtk</div>
+                    <div data-value="Esign" data-img="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg"><img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg">Esign</div>
+                    <div data-value="Ksign" data-img="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg"><img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg">Ksign</div>
+                    <div data-value="MyTV" data-img="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg"><img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg">MyTV</div>
+                </div>
+                <input type="hidden" id="appInput" value="AshteMobile" required>
             </div>
 
-            <div class="bento-row">
-                <div class="upload-box" onclick="document.getElementById('p12File').click()">
-                    <svg class="upload-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-                    <span class="text-[13px] font-bold text-gray-200">P12 File</span>
-                    <span id="p12Name" class="text-[10px] text-gray-500">Tap to browse</span>
+            <div class="upload-grid">
+                <div class="upload-card" onclick="document.getElementById('p12File').click()">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                    <span class="text-[12px] font-bold text-gray-200">P12 File</span>
+                    <span id="p12Name" class="text-[10px] text-gray-400 truncate max-w-[120px]">Choose file</span>
                     <input type="file" id="p12File" class="hidden" accept=".p12">
                 </div>
-                <div class="upload-box" onclick="document.getElementById('provFile').click()">
-                    <svg class="upload-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
-                    <span class="text-[13px] font-bold text-gray-200">MobileProv</span>
-                    <span id="provName" class="text-[10px] text-gray-500">Tap to browse</span>
+                <div class="upload-card" onclick="document.getElementById('provFile').click()">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+                    <span class="text-[12px] font-bold text-gray-200">Provision</span>
+                    <span id="provName" class="text-[10px] text-gray-400 truncate max-w-[120px]">Choose file</span>
                     <input type="file" id="provFile" class="hidden" accept=".mobileprovision">
                 </div>
             </div>
 
-            <input type="password" id="password" placeholder="Certificate Password" class="modern-input">
-            
-            <div>
-                <button type="button" id="submitBtn" class="btn-primary" onclick="startPremiumSign()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    Start Signing
-                </button>
-                <div id="progressWrapper" class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
-                <div id="status" class="text-center text-[12px] font-bold hidden text-[var(--gold)] mt-3"></div>
-            </div>
-        </div>
+            <input type="password" id="password" placeholder="Certificate Password" class="gold-input">
+            <button type="submit" id="submitBtn" class="btn-gold mt-2">Start Signing</button>
+            <div id="progressWrapper" class="progress-wrapper"><div id="progressFill" class="progress-fill"></div></div>
+            <div id="status" class="text-center text-[11px] font-bold hidden text-[var(--gold)] mt-2"></div>
+        </form>
 
-        <!-- Free Certificate Section -->
-        <div id="freeAppsSection" class="active-section">
-            <div class="glass-card !p-5">
-                <label class="text-[12px] font-bold text-gray-400 ml-1 mb-2 block">Choose Enterprise Certificate</label>
-                <select id="freeCertSelect" class="modern-input !bg-[rgba(255,255,255,0.03)] !font-semibold mb-4" style="appearance: none;">
-                    <option value="File">File (Default)</option>
+        <!-- Free Section (ئەپەکانی سێرڤەر) -->
+        <div id="freeAppsSection" class="flex flex-col gap-3" style="display: flex; opacity: 1; transition: opacity 0.3s;">
+            <div class="section-box">
+                <label class="text-[11px] font-bold text-gray-400 block mb-2">Select Certificate:</label>
+                <select id="freeCertSelect" class="w-full bg-[rgba(0,0,0,0.5)] border border-[rgba(229,190,89,0.25)] rounded-xl p-2.5 text-[13px] text-white outline-none mb-3 font-semibold text-center">
+                    <option value="File">File</option>
                     <option value="moving2">2 Moving Increasingly</option>
                     <option value="aramco">Aramco Services Company</option>
                     <option value="beijing_xibei">Beijing Xibei</option>
                     <option value="beijing_zhizhangyi">Beijing Zhizhangyi Inc</option>
                     <option value="bzi_boc">BZI BOC</option>
-                    <option value="china_telecom">China Telecom</option>
-                    <option value="luoyang">Luoyang Postal</option>
+                    <option value="china_telecom">China Telecom Corporation Limited</option>
+                    <option value="luoyang">Luoyang Postal Administration</option>
                     <option value="moving">Moving Increasingly</option>
                     <option value="powerchin">Powerchin</option>
+                    <option value="qingdao">Qingdao Rural Commercial Bank Co., Ltd</option>
+                    <option value="vietnam">Vietnam Rubber</option>
+                    <option value="xl_axia">XL AXIATA, PT TBK</option>
                 </select>
 
-                <div class="bento-row">
-                    <a href="https://ashtemobile.site/ashtemobile.mobileconfig" class="btn-secondary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="https://ashtemobile.site/ashtemobile.mobileconfig" class="flex items-center justify-center gap-1.5 rounded-xl p-2.5 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)] text-[12px] font-bold text-gray-200 no-underline active:scale-95 transition">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         DNS Block
                     </a>
-                    <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="btn-secondary !text-[var(--gold)] !border-[var(--card-border)]">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="flex items-center justify-center gap-1.5 rounded-xl p-2.5 bg-[rgba(229,190,89,0.15)] border border-[rgba(229,190,89,0.3)] text-[12px] font-bold text-[var(--gold)] cursor-pointer active:scale-95 transition">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                         ZIP Cert
                     </button>
                 </div>
             </div>
             
-            <div class="glass-card !p-4">
-                <h3 class="text-[14px] font-bold text-white mb-3 ml-2">Available Apps</h3>
-                <div id="appsListContainer" class="app-list"></div>
-            </div>
+            <div id="appsListContainer" class="flex flex-col gap-2"></div>
         </div>
+
     </div>
 
     <script>
-        // Tab Switcher Logic
-        function switchMode(mode) {
-            const btnPrem = document.getElementById('btnPremium');
-            const btnFree = document.getElementById('btnFree');
-            const indicator = document.getElementById('segmentIndicator');
-            const secPrem = document.getElementById('premiumSection');
-            const secFree = document.getElementById('freeAppsSection');
-
-            if(mode === 'premium') {
-                btnPrem.classList.add('active'); btnFree.classList.remove('active');
-                indicator.style.transform = 'translateX(0)';
-                
-                secFree.classList.remove('active-section');
-                secFree.classList.add('hidden-section');
-                setTimeout(() => {
-                    secFree.style.display = 'none';
-                    secPrem.style.display = 'flex';
-                    setTimeout(() => { secPrem.classList.remove('hidden-section'); secPrem.classList.add('active-section'); }, 10);
-                }, 300);
-            } else {
-                btnFree.classList.add('active'); btnPrem.classList.remove('active');
-                indicator.style.transform = 'translateX(100%)';
-                
-                secPrem.classList.remove('active-section');
-                secPrem.classList.add('hidden-section');
-                setTimeout(() => {
-                    secPrem.style.display = 'none';
-                    secFree.style.display = 'flex';
-                    setTimeout(() => { secFree.classList.remove('hidden-section'); secFree.classList.add('active-section'); }, 10);
-                }, 300);
-            }
-        }
-
-        // Generate App List
+        // داتای ئەپەکان
         const appsData = [
             { id: 'AshteMobile', name: 'AshteMobile', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
             { id: 'ipaomtk', name: 'ipaomtk', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' },
@@ -279,41 +240,64 @@
             { id: 'MyTV', name: 'MyTV', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
         ];
 
+        // دروستکردنی لیستی ئەپەکان
         const appsListContainer = document.getElementById('appsListContainer');
         appsData.forEach(app => {
             appsListContainer.innerHTML += `
-                <div class="app-item">
-                    <div class="app-info">
-                        <img src="${app.icon}" class="app-icon" alt="${app.name}">
-                        <div>
-                            <div class="text-[14px] font-bold text-gray-100">${app.name}</div>
-                            <div class="text-[11px] text-gray-500 mt-0.5">Cloud Signed</div>
-                        </div>
+                <div class="free-app-item">
+                    <div class="flex items-center gap-3">
+                        <img src="${app.icon}" class="app-icon-img" alt="${app.id}">
+                        <span class="text-[13px] font-bold text-gray-200">${app.name}</span>
                     </div>
-                    <div class="action-area" id="action-${app.id}">
-                        <button class="btn-get" onclick="installFreeApp('${app.id}', this)">GET</button>
+                    <button class="install-action-btn" onclick="installFreeApp('${app.id}', this)">
+                        Install
+                    </button>
+                    <div class="app-progress-container">
+                        <span class="app-pct-text">0%</span>
+                        <div class="app-mini-bar"><div class="app-mini-fill"></div></div>
+                    </div>
+                    <div class="success-badge">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Ready
                     </div>
                 </div>
             `;
         });
 
-        // Custom Select Logic for Premium
-        const selectedAppTrigger = document.getElementById('selectedApp');
-        const appInput = document.getElementById('appInput');
-        
-        selectedAppTrigger.onclick = () => {
-            // Simple logic to rotate options since custom dropdowns on mobile can be annoying.
-            // This cycles through the native select options.
-            let nextIndex = appInput.selectedIndex + 1;
-            if (nextIndex >= appInput.options.length) nextIndex = 0;
-            appInput.selectedIndex = nextIndex;
-            
-            const opt = appInput.options[appInput.selectedIndex];
-            document.getElementById('triggerIcon').src = opt.getAttribute('data-icon');
-            document.getElementById('triggerText').innerText = opt.text;
-        };
+        // گۆڕینی دۆخ لە نێوان VIP و Free
+        function setMode(mode) {
+            const tabSlider = document.getElementById('tabSlider');
+            const tabPrem = document.getElementById('tabPrem');
+            const tabFree = document.getElementById('tabFree');
+            const formVIP = document.getElementById('signForm');
+            const secFree = document.getElementById('freeAppsSection');
 
-        // File Names Truncate
+            if(mode === 'premium') {
+                tabSlider.style.transform = 'translateX(0)';
+                tabPrem.classList.add('active');
+                tabFree.classList.remove('active');
+                
+                secFree.style.opacity = '0';
+                setTimeout(() => {
+                    secFree.style.display = 'none';
+                    formVIP.style.display = 'block';
+                    setTimeout(() => formVIP.style.opacity = '1', 20);
+                }, 200);
+            } else {
+                tabSlider.style.transform = 'translateX(100%)';
+                tabFree.classList.add('active');
+                tabPrem.classList.remove('active');
+                
+                formVIP.style.opacity = '0';
+                setTimeout(() => {
+                    formVIP.style.display = 'none';
+                    secFree.style.display = 'flex';
+                    setTimeout(() => secFree.style.opacity = '1', 20);
+                }, 200);
+            }
+        }
+
+        // کورتکردنەوەی ناوی فایل
         const truncate = (str, n) => str.length > n ? str.substr(0, n - 1) + '...' : str;
         document.getElementById('p12File').onchange = e => { if(e.target.files[0]) document.getElementById('p12Name').innerText = truncate(e.target.files[0].name, 15); };
         document.getElementById('provFile').onchange = e => { if(e.target.files[0]) document.getElementById('provName').innerText = truncate(e.target.files[0].name, 15); };
@@ -323,46 +307,74 @@
             reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = error => reject(error);
         });
 
-        // Mock API Check for UI
+        // پشکنینی سێرڤەر بۆ فایلەکان
         async function checkStatus(buildId, appName) {
             try {
                 const res = await fetch(`/api/status?build_id=${buildId}&app=${appName}`);
                 return await res.json();
-            } catch (e) { return { status: 'processing' }; } // Fallback for UI testing
+            } catch (e) { return { status: 'processing' }; }
         }
 
-        // ZIP Download
+        // دابەزاندنی فایلەکان وەک ZIP
         async function downloadCertFiles() {
             const certId = document.getElementById('freeCertSelect').value;
             const baseUrl = `https://raw.githubusercontent.com/mzereashte94/nn/main/cert/${certId}`;
             const btn = document.getElementById('dlCertBtn');
             const originalText = btn.innerHTML;
             
-            btn.innerHTML = 'Loading...'; btn.style.opacity = '0.5'; btn.disabled = true;
+            btn.innerHTML = 'Preparing...';
+            btn.style.opacity = '0.6';
+            btn.disabled = true;
 
             try {
                 const zip = new JSZip();
                 const files = ['cert.p12', 'profile.mobileprovision', 'pass.txt'];
                 for (const file of files) {
                     const res = await fetch(`${baseUrl}/${file}?v=${Date.now()}`); 
-                    if(res.ok) zip.file(file, await res.blob());
+                    if(res.ok) {
+                        const blob = await res.blob();
+                        zip.file(file, blob);
+                    }
                 }
                 const zipContent = await zip.generateAsync({type:"blob"});
                 const url = window.URL.createObjectURL(zipContent);
-                const a = document.createElement('a'); a.href = url; a.download = `${certId}_certificate.zip`; 
-                document.body.appendChild(a); a.click(); document.body.removeChild(a); window.URL.revokeObjectURL(url);
-            } catch(e) { alert("Failed to download."); }
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${certId}_certificate.zip`; 
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            } catch(e) {
+                alert("Failed to download certificate files.");
+            }
             
-            btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+            btn.disabled = false;
         }
 
-        // Free Install Logic
+        // تەواوی فەنکشنی دابەزاندن و Install بۆ بەشی Free
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
-            const actionArea = btnElement.parentElement;
-            
+            const itemContainer = btnElement.parentElement;
+            const progressContainer = itemContainer.querySelector('.app-progress-container');
+            const pctText = itemContainer.querySelector('.app-pct-text');
+            const fillBar = itemContainer.querySelector('.app-mini-fill');
+            const successBadge = itemContainer.querySelector('.success-badge');
+
             btnElement.style.display = 'none';
-            actionArea.innerHTML = `<div class="text-[12px] font-bold text-[var(--gold)] flex items-center gap-2"><div class="w-3 h-3 border-2 border-[var(--gold)] border-t-transparent rounded-full animate-spin"></div> Loading</div>`;
+            progressContainer.style.display = 'flex';
+
+            let pct = 0;
+            const simInterval = setInterval(() => {
+                if (pct < 95) {
+                    pct += Math.floor(Math.random() * 6) + 2; 
+                    if (pct > 95) pct = 95;
+                    pctText.innerText = pct + '%'; 
+                    fillBar.style.width = pct + '%';
+                }
+            }, 200);
 
             try {
                 const res = await fetch('/api/sign', {
@@ -371,22 +383,75 @@
                     body: JSON.stringify({ app: appName, use_free_cert: true, cert_folder: selectedCertId })
                 });
                 
-                const data = await (res.ok ? res.json() : { build_id: 'mock' });
-                
-                setTimeout(() => {
-                    actionArea.innerHTML = `<div class="text-[12px] font-bold text-green-400">Ready ✓</div>`;
-                    // Redirect logic here...
-                    setTimeout(() => { window.location.href = "https://t.me/ashtemobile"; }, 2000);
-                }, 2500);
+                if(!res.ok) throw new Error('Sign request failed');
+                const data = await res.json();
+                const buildId = data.build_id;
 
+                const checker = setInterval(async () => {
+                    const serverStatus = await checkStatus(buildId, appName);
+                    if (serverStatus.status === 'done') {
+                        clearInterval(checker); 
+                        clearInterval(simInterval);
+                        
+                        pctText.innerText = '100%'; 
+                        fillBar.style.width = '100%';
+                        
+                        setTimeout(() => {
+                            progressContainer.style.display = 'none';
+                            successBadge.style.display = 'flex';
+                            
+                            // بانگکردنی ڕاستەوخۆی پرۆتۆکۆڵی ئەپڵ بۆ Install بوون لەسەر ئایفۆن
+                            const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
+                            window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
+                            
+                            setTimeout(() => { 
+                                successBadge.style.display = 'none';
+                                btnElement.style.display = 'flex';
+                                pctText.innerText = '0%'; 
+                                fillBar.style.width = '0%';
+                                window.location.href = "https://t.me/ashtemobile";
+                            }, 3000);
+
+                        }, 500);
+                    }
+                }, 1200);
             } catch (err) {
-                actionArea.innerHTML = `<div class="text-[12px] font-bold text-red-400">Failed</div>`;
-                setTimeout(() => { actionArea.innerHTML = ''; actionArea.appendChild(btnElement); btnElement.style.display = 'block'; }, 2000);
+                clearInterval(simInterval);
+                pctText.innerText = 'Failed'; 
+                pctText.style.color = '#ef4444'; 
+                fillBar.style.background = '#ef4444';
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                    btnElement.style.display = 'flex';
+                    pctText.style.color = 'var(--gold)'; 
+                    fillBar.style.background = 'var(--gold)';
+                }, 2500);
             }
         }
 
-        // Premium Sign Logic
-        async function startPremiumSign() {
+        // کۆنترۆڵکردنی درۆپداونی VIP
+        const selectedApp = document.getElementById('selectedApp');
+        const appOptions = document.getElementById('appOptions');
+        const appInput = document.getElementById('appInput');
+
+        selectedApp.onclick = e => { 
+            e.stopPropagation(); 
+            appOptions.style.display = appOptions.style.display === 'block' ? 'none' : 'block'; 
+        };
+        
+        document.querySelectorAll('.select-items div').forEach(opt => {
+            opt.onclick = function() { 
+                document.getElementById('selectAppImg').src = this.getAttribute('data-img');
+                document.getElementById('selectAppName').innerText = this.innerText.trim();
+                appInput.value = this.getAttribute('data-value'); 
+                appOptions.style.display = 'none'; 
+            };
+        });
+        document.onclick = () => appOptions.style.display = 'none';
+
+        // فۆرمی VIP Sign
+        document.getElementById('signForm').onsubmit = async (e) => {
+            e.preventDefault();
             const status = document.getElementById('status');
             const btn = document.getElementById('submitBtn');
             const progressWrapper = document.getElementById('progressWrapper');
@@ -394,18 +459,15 @@
             const p12File = document.getElementById('p12File');
             const provFile = document.getElementById('provFile');
             const passwordInput = document.getElementById('password');
-            const appSelected = document.getElementById('appInput').value;
 
             if (!p12File.files[0] || !provFile.files[0] || !passwordInput.value) {
-                alert('Please attach certificate files and password!'); return;
+                return alert('تکایە فایلەکانی سێرتیفیکەیت و پاسۆرد دیاری بکە!');
             }
 
-            btn.style.display = 'none';
-            progressWrapper.style.display = 'block';
-            status.classList.remove('hidden'); status.innerText = 'Uploading and Signing...';
-
-            let progress = 0;
-            const anim = setInterval(() => { progress += 5; if(progress>90) progress=90; progressFill.style.width = progress+'%'; }, 300);
+            btn.disabled = true; 
+            btn.innerText = 'Connecting...';
+            status.classList.remove('hidden'); 
+            status.innerText = 'Connecting to engine...';
 
             try {
                 const p12 = await toBase64(p12File.files[0]);
@@ -414,21 +476,48 @@
                 const res = await fetch('/api/sign', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ app: appSelected, p12, prov, password: passwordInput.value })
+                    body: JSON.stringify({ app: appInput.value, p12, prov, password: passwordInput.value })
                 });
 
-                clearInterval(anim);
-                progressFill.style.width = '100%';
-                status.innerText = '✅ Signed successfully! Installing...';
-                
-                setTimeout(() => { window.location.href = "https://t.me/ashtemobile"; }, 2000);
+                if(!res.ok) throw new Error('Error in signing');
+                const data = await res.json();
+                const buildId = data.build_id;
 
+                progressWrapper.style.display = 'block'; 
+                btn.style.display = 'none'; 
+                status.innerText = 'Signing in progress...';
+                
+                let simulatedProgress = 0;
+                const animationInterval = setInterval(() => {
+                    if (simulatedProgress < 95) simulatedProgress += Math.random() * 6 + 1;
+                    if (simulatedProgress > 95) simulatedProgress = 95;
+                    progressFill.style.width = simulatedProgress + '%';
+                }, 250);
+
+                const checker = setInterval(async () => {
+                    const serverStatus = await checkStatus(buildId, appInput.value);
+                    if (serverStatus.status === 'done') {
+                        clearInterval(checker); 
+                        clearInterval(animationInterval);
+                        progressFill.style.width = '100%'; 
+                        status.innerText = '✅ Signed successfully! Installing...';
+                        
+                        setTimeout(() => {
+                            const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appInput.value)}`;
+                            window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
+                            
+                            setTimeout(() => { window.location.href = "https://t.me/ashtemobile"; }, 3000);
+                        }, 800); 
+                    }
+                }, 1200); 
             } catch (err) {
-                clearInterval(anim);
-                status.innerText = '❌ Failed, try again.';
-                setTimeout(() => { progressWrapper.style.display='none'; btn.style.display='flex'; status.classList.add('hidden'); }, 3000);
+                status.innerText = '❌ Signing failed, try again.'; 
+                progressWrapper.style.display = 'none';
+                btn.style.display = 'block'; 
+                btn.disabled = false; 
+                btn.innerText = 'Start Signing';
             }
-        }
+        };
     </script>
 </body>
 </html>
