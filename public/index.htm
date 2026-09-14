@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AshteMobile | Premium Cloud</title>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700;800&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
+    <title>AshteMobile | Cloud Signer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root { 
-            --gold: #F5D061; 
-            --bg-black: #000000;
-            --card-bg: #1C1C1E;
-            --btn-bg: #2C2C2E;
-            --text-gray: #8E8E93;
-            --border: #38383A;
+            --ios-blue: #0A84FF; 
+            --ios-bg: #000000;
+            --ios-card: #1C1C1E;
+            --ios-separator: #38383A;
+            --ios-text-sec: #8E8E93;
+            --ios-btn-gray: #2C2C2E;
         }
         
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Cairo';
-            background-color: var(--bg-black); 
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Cairo';
+            background-color: var(--ios-bg); 
             color: #ffffff; 
             margin: 0; 
             min-height: 100vh;
@@ -29,106 +29,110 @@
             overflow-x: hidden; padding: 20px 0 40px 0;
         }
 
-        .main-app { width: 92%; max-width: 420px; z-index: 10; display: flex; flex-direction: column; gap: 20px; }
+        .main-app { width: 92%; max-width: 420px; display: flex; flex-direction: column; gap: 24px; }
 
-        /* لۆگۆ */
-        .header-title { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
-        .header-title span { color: var(--gold); }
-        .header-sub { font-size: 12px; font-weight: 600; color: var(--text-gray); letter-spacing: 2px; text-transform: uppercase; }
+        /* لۆگۆ وەکو Large Title ی ئایفۆن */
+        .large-title { font-size: 34px; font-weight: 800; color: #fff; letter-spacing: 0.5px; margin-top: 10px; }
+        .sub-title { font-size: 13px; font-weight: 500; color: var(--ios-text-sec); margin-top: 2px; }
 
-        /* تابی سەرەوە (Segmented Control) */
+        /* Segmented Control (تابی سەرەوە) */
         .ios-segment {
-            display: flex; background: var(--card-bg); border-radius: 12px; padding: 3px; position: relative;
+            display: flex; background: var(--ios-card); border-radius: 9px; padding: 2px; position: relative;
         }
         .segment-btn {
-            flex: 1; text-align: center; padding: 8px 0; font-size: 13px; font-weight: 600; color: var(--text-gray); cursor: pointer; position: relative; z-index: 2; transition: 0.3s;
+            flex: 1; text-align: center; padding: 6px 0; font-size: 13px; font-weight: 500; color: #fff; cursor: pointer; position: relative; z-index: 2;
         }
-        .segment-btn.active { color: #000; font-weight: 700; }
+        .segment-btn.active { font-weight: 600; color: #fff; }
         .segment-slider {
-            position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); background: var(--gold); border-radius: 9px; z-index: 1; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 2px 8px rgba(245, 208, 97, 0.3);
+            position: absolute; top: 2px; bottom: 2px; left: 2px; width: calc(50% - 2px); background: #636366; border-radius: 7px; z-index: 1; transition: transform 0.25s ease-out; box-shadow: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04);
         }
 
-        /* کارتەکان (iOS Style) */
-        .ios-card {
-            background: var(--card-bg); border-radius: 18px; padding: 20px;
+        /* کارتی ئایفۆن (Inset Grouped) */
+        .ios-list-group {
+            background: var(--ios-card); border-radius: 12px; overflow: hidden;
         }
+        .ios-list-item {
+            display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--ios-separator);
+        }
+        .ios-list-item:last-child { border-bottom: none; }
 
         /* بەشی VIP */
-        .app-select-btn {
-            display: flex; align-items: center; justify-content: space-between; background: var(--btn-bg); border-radius: 14px; padding: 12px 16px; cursor: pointer; transition: 0.2s;
+        .list-btn {
+            display: flex; align-items: center; justify-content: space-between; background: var(--ios-card); border-radius: 12px; padding: 12px 16px; cursor: pointer; transition: 0.2s; margin-bottom: 16px;
         }
-        .app-select-btn:active { opacity: 0.7; }
+        .list-btn:active { opacity: 0.6; }
         
-        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; margin-bottom: 16px; }
+        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
         .upload-box {
-            background: var(--btn-bg); border-radius: 14px; padding: 16px 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; text-align: center; transition: 0.2s; border: 1px solid transparent;
+            background: var(--ios-card); border-radius: 12px; padding: 16px 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; text-align: center;
         }
-        .upload-box:active { background: #3a3a3c; border-color: var(--gold); }
-        .upload-box svg { color: var(--gold); width: 24px; height: 24px; }
+        .upload-box:active { opacity: 0.6; }
+        .upload-box svg { color: var(--ios-blue); width: 26px; height: 26px; }
 
         .ios-input {
-            width: 100%; background: var(--btn-bg); border: 1px solid transparent; border-radius: 14px; padding: 14px 16px; color: white; font-size: 15px; outline: none; transition: 0.2s; appearance: none;
+            width: 100%; background: var(--ios-card); border: none; border-radius: 12px; padding: 16px; color: white; font-size: 16px; outline: none; appearance: none;
         }
-        .ios-input:focus { border-color: var(--gold); }
+        .ios-input::placeholder { color: var(--ios-text-sec); }
 
         .btn-primary {
-            background: var(--gold); color: #000; font-weight: 700; font-size: 16px; padding: 16px; border-radius: 14px; width: 100%; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 16px;
+            background: var(--ios-blue); color: #fff; font-weight: 600; font-size: 17px; padding: 16px; border-radius: 14px; width: 100%; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 16px;
         }
-        .btn-primary:active { transform: scale(0.97); opacity: 0.9; }
+        .btn-primary:active { background: #0070E0; transform: scale(0.98); }
 
-        /* بەشی Free Apps (App Store Style) */
+        /* بەشی Free */
+        .section-header { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 10px; margin-left: 4px; }
+        
         .native-select {
-            width: 100%; background: var(--btn-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23F5D061' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center; background-size: 16px; border: none; border-radius: 14px; padding: 14px 16px; color: white; font-size: 14px; font-weight: 600; outline: none; appearance: none; margin-bottom: 16px;
+            width: 100%; background: var(--ios-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center; background-size: 16px; border: none; border-radius: 12px; padding: 16px; color: white; font-size: 16px; font-weight: 500; outline: none; appearance: none; margin-bottom: 16px;
         }
 
         .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
         .tool-btn {
-            background: var(--btn-bg); color: #fff; font-size: 13px; font-weight: 600; padding: 12px; border-radius: 12px; display: flex; justify-content: center; align-items: center; gap: 6px; text-decoration: none; transition: 0.2s; border: none;
+            background: var(--ios-btn-gray); color: #fff; font-size: 14px; font-weight: 600; padding: 12px; border-radius: 12px; display: flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; border: none; cursor: pointer;
         }
-        .tool-btn:active { opacity: 0.7; }
-        .tool-btn.gold-text { color: var(--gold); }
+        .tool-btn:active { background: #3a3a3c; }
+        .tool-btn.blue-text { color: var(--ios-blue); }
 
-        /* لیستی ئەپەکان */
-        .app-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        /* لیستی ئەپەکان وەک App Store */
+        .app-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--ios-separator); }
         .app-row:last-child { border-bottom: none; }
-        .app-icon { width: 56px; height: 56px; border-radius: 14px; object-fit: cover; }
+        .app-icon { width: 60px; height: 60px; border-radius: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
         
-        /* شوێنی تایبەت بە دوگمە و پرۆگرێس (بۆ ئەوەی نەجوڵێت) */
-        .action-area { width: 72px; height: 32px; display: flex; justify-content: center; align-items: center; }
+        .action-area { width: 74px; height: 30px; display: flex; justify-content: center; align-items: center; }
         
         .get-btn {
-            background: var(--btn-bg); color: var(--gold); border: none; width: 100%; height: 100%; border-radius: 16px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s;
+            background: var(--ios-btn-gray); color: var(--ios-blue); border: none; width: 100%; height: 100%; border-radius: 15px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s;
         }
         .get-btn:active { background: #3a3a3c; }
 
-        /* پرۆگرێسی ئینستاڵ */
-        .install-progress { display: none; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; gap: 4px; }
-        .pct-text { font-size: 11px; font-weight: 700; color: var(--gold); line-height: 1; }
-        .track-bar { width: 100%; height: 4px; background: var(--btn-bg); border-radius: 4px; overflow: hidden; }
-        .fill-bar { height: 100%; width: 0%; background: var(--gold); transition: 0.2s; }
-        .done-text { display: none; font-size: 12px; font-weight: 700; color: #34C759; }
+        /* پرۆگرێس */
+        .install-progress { display: none; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; gap: 5px; }
+        .pct-text { font-size: 12px; font-weight: 600; color: var(--ios-blue); line-height: 1; }
+        .track-bar { width: 100%; height: 4px; background: var(--ios-btn-gray); border-radius: 4px; overflow: hidden; }
+        .fill-bar { height: 100%; width: 0%; background: var(--ios-blue); transition: 0.2s; }
+        .done-text { display: none; font-size: 13px; font-weight: 600; color: #32D74B; }
 
-        /* VIP پرۆگرێس */
-        .vip-progress-bar { width: 100%; height: 6px; background: var(--btn-bg); border-radius: 6px; overflow: hidden; display: none; margin-top: 16px; }
-        .vip-progress-fill { height: 100%; width: 0%; background: var(--gold); transition: 0.3s; }
-        .status-msg { text-align: center; font-size: 13px; font-weight: 600; margin-top: 12px; display: none; }
+        .vip-progress-bar { width: 100%; height: 6px; background: var(--ios-btn-gray); border-radius: 6px; overflow: hidden; display: none; margin-top: 16px; }
+        .vip-progress-fill { height: 100%; width: 0%; background: var(--ios-blue); transition: 0.3s; }
+        .status-msg { text-align: center; font-size: 14px; font-weight: 500; margin-top: 12px; display: none; color: var(--ios-text-sec); }
 
-        /* Bottom Sheet Modal (لیستی ئەپەکان بۆ VIP) */
-        .backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 40; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(4px); }
+        /* Bottom Sheet (ئایفۆن ستایل) */
+        .backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 40; opacity: 0; pointer-events: none; transition: 0.3s; }
         .backdrop.show { opacity: 1; pointer-events: auto; }
         
         .bottom-sheet {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: #1C1C1E; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 24px 20px 40px 20px; z-index: 50; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #1C1C1E; border-top-left-radius: 12px; border-top-right-radius: 12px; padding: 14px 16px 40px 16px; z-index: 50; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .bottom-sheet.show { transform: translateY(0); }
-        .sheet-handle { width: 40px; height: 5px; background: #48484A; border-radius: 5px; margin: 0 auto 20px auto; }
-        .sheet-item { display: flex; align-items: center; gap: 16px; padding: 14px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s; }
+        .sheet-handle { width: 36px; height: 5px; background: #555555; border-radius: 5px; margin: 0 auto 16px auto; }
+        
+        .sheet-item { display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-bottom: 1px solid var(--ios-separator); cursor: pointer; }
         .sheet-item:last-child { border-bottom: none; }
-        .sheet-item:active { background: #2C2C2E; border-radius: 12px; }
-        .sheet-item img { width: 40px; height: 40px; border-radius: 10px; }
-        .sheet-item span { font-size: 16px; font-weight: 600; color: #fff; }
+        .sheet-item:active { background: var(--ios-btn-gray); }
+        .sheet-item img { width: 44px; height: 44px; border-radius: 10px; }
+        .sheet-item span { font-size: 17px; font-weight: 500; color: #fff; }
 
-        .hidden-section { display: none; opacity: 0; transition: opacity 0.3s; }
+        .hidden-section { display: none; opacity: 0; transition: opacity 0.2s; }
         .active-section { display: block; opacity: 1; }
     </style>
 </head>
@@ -136,142 +140,139 @@
 
     <div class="main-app">
         
-        <!-- Header -->
-        <div class="text-center">
-            <h1 class="header-title">Ashte<span>Mobile</span></h1>
-            <p class="header-sub">Premium Cloud Signer</p>
+        <!-- Header (iOS Settings Style) -->
+        <div>
+            <h1 class="large-title">AshteMobile</h1>
+            <p class="sub-title">Cloud Signature Service</p>
         </div>
 
         <!-- Segmented Control -->
         <div class="ios-segment">
             <div class="segment-slider" id="tabSlider" style="transform: translateX(100%);"></div>
-            <div class="segment-btn" id="tabPrem" onclick="switchTab('premium')">VIP Signature</div>
-            <div class="segment-btn active" id="tabFree" onclick="switchTab('free')">Free Enterprise</div>
+            <div class="segment-btn" id="tabPrem" onclick="switchTab('premium')">VIP Signer</div>
+            <div class="segment-btn active" id="tabFree" onclick="switchTab('free')">Free Certs</div>
         </div>
 
         <!-- بەشی VIP -->
         <form id="signForm" class="hidden-section">
-            <div class="ios-card">
-                
-                <!-- دوگمەی کردنەوەی Bottom Sheet -->
-                <div class="app-select-btn" onclick="openSheet()">
-                    <div class="flex items-center gap-3">
-                        <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-9 h-9 rounded-lg object-cover">
-                        <span id="selName" class="text-white font-bold text-[16px]">AshteMobile</span>
-                    </div>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-gray)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            
+            <div class="list-btn" onclick="openSheet()">
+                <div class="flex items-center gap-4">
+                    <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-10 h-10 rounded-lg object-cover">
+                    <span id="selName" class="text-white font-medium text-[17px]">AshteMobile</span>
                 </div>
-                <input type="hidden" id="appInput" value="AshteMobile">
-
-                <!-- دوگمەکانی فایل -->
-                <div class="upload-grid">
-                    <div class="upload-box" onclick="document.getElementById('p12File').click()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-                        <div>
-                            <div class="text-[14px] font-bold text-white">P12 File</div>
-                            <div id="p12Name" class="text-[11px] text-[var(--text-gray)] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis w-[100px]">Select file</div>
-                        </div>
-                        <input type="file" id="p12File" class="hidden" accept=".p12">
-                    </div>
-                    <div class="upload-box" onclick="document.getElementById('provFile').click()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
-                        <div>
-                            <div class="text-[14px] font-bold text-white">Provision</div>
-                            <div id="provName" class="text-[11px] text-[var(--text-gray)] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis w-[100px]">Select file</div>
-                        </div>
-                        <input type="file" id="provFile" class="hidden" accept=".mobileprovision">
-                    </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[15px] text-[var(--ios-text-sec)]">Select</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ios-text-sec)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
                 </div>
-
-                <!-- پاسۆرد -->
-                <input type="password" id="password" placeholder="Certificate Password" class="ios-input text-center">
-                
-                <button type="submit" id="submitBtn" class="btn-primary">Start Signing</button>
-                <div id="vipProgressWrapper" class="vip-progress-bar"><div id="vipProgressFill" class="vip-progress-fill"></div></div>
-                <div id="vipStatus" class="status-msg text-[var(--gold)]"></div>
             </div>
+            <input type="hidden" id="appInput" value="AshteMobile">
+
+            <div class="upload-grid">
+                <div class="upload-box" onclick="document.getElementById('p12File').click()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                    <div>
+                        <div class="text-[15px] font-medium text-white">Certificate</div>
+                        <div id="p12Name" class="text-[12px] text-[var(--ios-text-sec)] mt-1 whitespace-nowrap overflow-hidden text-ellipsis w-[120px]">Upload .p12</div>
+                    </div>
+                    <input type="file" id="p12File" class="hidden" accept=".p12">
+                </div>
+                <div class="upload-box" onclick="document.getElementById('provFile').click()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+                    <div>
+                        <div class="text-[15px] font-medium text-white">Provision</div>
+                        <div id="provName" class="text-[12px] text-[var(--ios-text-sec)] mt-1 whitespace-nowrap overflow-hidden text-ellipsis w-[120px]">Upload .prov</div>
+                    </div>
+                    <input type="file" id="provFile" class="hidden" accept=".mobileprovision">
+                </div>
+            </div>
+
+            <input type="password" id="password" placeholder="Certificate Password" class="ios-input">
+            
+            <button type="submit" id="submitBtn" class="btn-primary">Sign App</button>
+            <div id="vipProgressWrapper" class="vip-progress-bar"><div id="vipProgressFill" class="vip-progress-fill"></div></div>
+            <div id="vipStatus" class="status-msg"></div>
+            
         </form>
 
         <!-- بەشی Free -->
         <div id="freeSection" class="active-section">
-            <div class="ios-card">
-                
-                <select id="freeCertSelect" class="native-select">
-                    <option value="File">Enterprise Cert (Auto)</option>
-                    <option value="moving2">2 Moving Increasingly</option>
-                    <option value="aramco">Aramco Services Company</option>
-                    <option value="beijing_xibei">Beijing Xibei</option>
-                    <option value="beijing_zhizhangyi">Beijing Zhizhangyi Inc</option>
-                    <option value="bzi_boc">BZI BOC</option>
-                    <option value="china_telecom">China Telecom</option>
-                    <option value="luoyang">Luoyang Postal</option>
-                    <option value="moving">Moving Increasingly</option>
-                    <option value="powerchin">Powerchin</option>
-                </select>
+            
+            <h2 class="section-header">Certificates</h2>
+            <select id="freeCertSelect" class="native-select">
+                <option value="File">Enterprise Cert (Auto)</option>
+                <option value="moving2">2 Moving Increasingly</option>
+                <option value="aramco">Aramco Services Company</option>
+                <option value="beijing_xibei">Beijing Xibei</option>
+                <option value="beijing_zhizhangyi">Beijing Zhizhangyi Inc</option>
+                <option value="bzi_boc">BZI BOC</option>
+                <option value="china_telecom">China Telecom</option>
+                <option value="luoyang">Luoyang Postal</option>
+                <option value="moving">Moving Increasingly</option>
+                <option value="powerchin">Powerchin</option>
+            </select>
 
-                <div class="tools-grid">
-                    <a href="https://ashtemobile.site/ashtemobile.mobileconfig" class="tool-btn">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        Block Revokes
-                    </a>
-                    <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="tool-btn gold-text">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                        Get Cert ZIP
-                    </button>
-                </div>
-
-                <h3 class="text-[17px] font-bold text-white mb-4">App Library</h3>
-                <div id="appsListContainer" class="flex flex-col"></div>
-                
+            <div class="tools-grid">
+                <a href="https://ashtemobile.site/ashtemobile.mobileconfig" class="tool-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    DNS Block
+                </a>
+                <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="tool-btn blue-text">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    Download ZIP
+                </button>
             </div>
+
+            <h2 class="section-header">Apps</h2>
+            <div id="appsListContainer" class="flex flex-col mb-4"></div>
+            
         </div>
 
     </div>
 
-    <!-- Bottom Sheet Modal (هیچ کێشەیەکی تێکەڵبوونی نابێت) -->
+    <!-- Bottom Sheet Modal بۆ هەڵبژاردنی ئەپەکان -->
     <div class="backdrop" id="sheetBackdrop" onclick="closeSheet()"></div>
     <div class="bottom-sheet" id="appSheet">
         <div class="sheet-handle"></div>
-        <div class="sheet-item" onclick="selectApp('AshteMobile', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg')">
-            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg"> <span>AshteMobile</span>
-        </div>
-        <div class="sheet-item" onclick="selectApp('ipaomtk', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg')">
-            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg"> <span>ipaomtk</span>
-        </div>
-        <div class="sheet-item" onclick="selectApp('Esign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg')">
-            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg"> <span>Esign</span>
-        </div>
-        <div class="sheet-item" onclick="selectApp('Ksign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg')">
-            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg"> <span>Ksign</span>
-        </div>
-        <div class="sheet-item" onclick="selectApp('MyTV', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg')">
-            <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg"> <span>MyTV</span>
+        <div class="ios-list-group">
+            <div class="sheet-item" onclick="selectApp('AshteMobile', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg"> <span>AshteMobile</span>
+            </div>
+            <div class="sheet-item" onclick="selectApp('ipaomtk', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg"> <span>ipaomtk</span>
+            </div>
+            <div class="sheet-item" onclick="selectApp('Esign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg"> <span>Esign</span>
+            </div>
+            <div class="sheet-item" onclick="selectApp('Ksign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg"> <span>Ksign</span>
+            </div>
+            <div class="sheet-item" onclick="selectApp('MyTV', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg"> <span>MyTV</span>
+            </div>
         </div>
     </div>
 
     <script>
-        // داتای ئەپەکان
         const appsData = [
-            { id: 'AshteMobile', name: 'AshteMobile', dev: 'Ashte Cloud', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
+            { id: 'AshteMobile', name: 'AshteMobile', dev: 'Utilities', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
             { id: 'ipaomtk', name: 'ipaomtk', dev: 'Utilities', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' },
-            { id: 'Esign', name: 'Esign', dev: 'Signer Tool', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
-            { id: 'Ksign', name: 'Ksign', dev: 'Signer Tool', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
+            { id: 'Esign', name: 'Esign', dev: 'Developer Tools', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
+            { id: 'Ksign', name: 'Ksign', dev: 'Developer Tools', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
             { id: 'MyTV', name: 'MyTV', dev: 'Entertainment', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
         ];
 
-        // دروستکردنی لیستی ئەپەکان بێ کێشەی جوڵە
         const appsListContainer = document.getElementById('appsListContainer');
         appsData.forEach(app => {
             appsListContainer.innerHTML += `
                 <div class="app-row">
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-4">
                         <img src="${app.icon}" class="app-icon">
                         <div class="flex flex-col">
-                            <span class="text-[16px] font-bold text-white leading-tight">${app.name}</span>
-                            <span class="text-[13px] font-medium text-[var(--text-gray)] mt-0.5">${app.dev}</span>
+                            <span class="text-[17px] font-medium text-white">${app.name}</span>
+                            <span class="text-[13px] text-[var(--ios-text-sec)] mt-1">${app.dev}</span>
                         </div>
                     </div>
-                    <!-- شوێنی جێگیرکراو بۆ دوگمە و پرۆگرێس -->
                     <div class="action-area">
                         <button class="get-btn" onclick="installFreeApp('${app.id}', this)">GET</button>
                         <div class="install-progress">
@@ -284,7 +285,6 @@
             `;
         });
 
-        // گۆڕینی تابەکان
         function switchTab(mode) {
             const tabSlider = document.getElementById('tabSlider');
             const tabPrem = document.getElementById('tabPrem');
@@ -307,24 +307,16 @@
             }
         }
 
-        // کۆنترۆڵی Bottom Sheet
         const sheetBackdrop = document.getElementById('sheetBackdrop');
         const appSheet = document.getElementById('appSheet');
         
-        function openSheet() {
-            sheetBackdrop.classList.add('show'); appSheet.classList.add('show');
-        }
-        function closeSheet() {
-            sheetBackdrop.classList.remove('show'); appSheet.classList.remove('show');
-        }
+        function openSheet() { sheetBackdrop.classList.add('show'); appSheet.classList.add('show'); }
+        function closeSheet() { sheetBackdrop.classList.remove('show'); appSheet.classList.remove('show'); }
         function selectApp(id, img) {
-            document.getElementById('selImg').src = img;
-            document.getElementById('selName').innerText = id;
-            document.getElementById('appInput').value = id;
-            closeSheet();
+            document.getElementById('selImg').src = img; document.getElementById('selName').innerText = id;
+            document.getElementById('appInput').value = id; closeSheet();
         }
 
-        // ناوی فایلەکان
         document.getElementById('p12File').onchange = e => { if(e.target.files[0]) document.getElementById('p12Name').innerText = e.target.files[0].name; };
         document.getElementById('provFile').onchange = e => { if(e.target.files[0]) document.getElementById('provName').innerText = e.target.files[0].name; };
         
@@ -337,7 +329,6 @@
             try { const res = await fetch(`/api/status?build_id=${buildId}&app=${appName}`); return await res.json(); } catch(e) { return { status: 'processing' }; }
         }
 
-        // دابەزاندنی ZIP
         async function downloadCertFiles() {
             const certId = document.getElementById('freeCertSelect').value;
             const baseUrl = `https://raw.githubusercontent.com/mzereashte94/nn/main/cert/${certId}`;
@@ -362,7 +353,6 @@
             btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
         }
 
-        // ئینستاڵی Free (کێشەی پرۆگرێس چارەسەر کرا)
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
             const actionArea = btnElement.parentElement;
@@ -371,8 +361,7 @@
             const fillBar = actionArea.querySelector('.fill-bar');
             const doneText = actionArea.querySelector('.done-text');
             
-            btnElement.style.display = 'none';
-            progressEl.style.display = 'flex';
+            btnElement.style.display = 'none'; progressEl.style.display = 'flex';
 
             let pct = 0;
             const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; pctText.innerText = pct + '%'; fillBar.style.width = pct + '%'; } }, 200);
@@ -389,8 +378,7 @@
                         pctText.innerText = '100%'; fillBar.style.width = '100%';
                         
                         setTimeout(() => {
-                            progressEl.style.display = 'none';
-                            doneText.style.display = 'block';
+                            progressEl.style.display = 'none'; doneText.style.display = 'block';
                             
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
@@ -399,12 +387,11 @@
                     }
                 }, 1200);
             } catch (err) {
-                clearInterval(sim); pctText.innerText = 'Fail'; pctText.style.color = '#ff453a'; fillBar.style.background = '#ff453a';
-                setTimeout(() => { progressEl.style.display = 'none'; pctText.style.color = 'var(--gold)'; fillBar.style.background = 'var(--gold)'; btnElement.style.display = 'block'; }, 2500);
+                clearInterval(sim); pctText.innerText = 'Error'; pctText.style.color = '#FF453A'; fillBar.style.background = '#FF453A';
+                setTimeout(() => { progressEl.style.display = 'none'; pctText.style.color = 'var(--ios-blue)'; fillBar.style.background = 'var(--ios-blue)'; btnElement.style.display = 'block'; }, 2500);
             }
         }
 
-        // فۆرمی VIP
         document.getElementById('signForm').onsubmit = async (e) => {
             e.preventDefault();
             const status = document.getElementById('vipStatus');
@@ -416,11 +403,10 @@
             const pass = document.getElementById('password');
             const appSelected = document.getElementById('appInput').value;
 
-            if (!p12File.files[0] || !provFile.files[0] || !pass.value) return alert('Files & Password are required!');
+            if (!p12File.files[0] || !provFile.files[0] || !pass.value) return alert('Please attach files and enter password');
 
             btn.style.display = 'none'; pWrap.style.display = 'block';
-            status.style.display = 'block'; status.innerText = 'Connecting...';
-            status.style.color = 'var(--gold)';
+            status.style.display = 'block'; status.innerText = 'Uploading...'; status.style.color = 'var(--ios-text-sec)';
 
             try {
                 const p12 = await toBase64(p12File.files[0]);
@@ -437,7 +423,7 @@
                     const serverStatus = await checkStatus(data.build_id, appSelected);
                     if (serverStatus.status === 'done') {
                         clearInterval(checker); clearInterval(anim); pFill.style.width = '100%';
-                        status.innerText = 'Success! Installing...';
+                        status.innerText = 'Success! Installing...'; status.style.color = '#32D74B';
                         
                         setTimeout(() => {
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appSelected)}`;
@@ -447,7 +433,7 @@
                     }
                 }, 1200); 
             } catch (err) {
-                status.innerText = 'Failed. Try again.'; status.style.color = '#ff453a';
+                status.innerText = 'Failed. Try again.'; status.style.color = '#FF453A';
                 setTimeout(() => { pWrap.style.display = 'none'; btn.style.display = 'flex'; status.style.display = 'none'; }, 3000);
             }
         };
