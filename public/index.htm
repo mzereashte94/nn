@@ -4,156 +4,149 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>AshteMobile | Cloud Engine</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700;800&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root { 
-            --app-blue: #0A84FF;
+            --apple-blue: #0A84FF;
+            --apple-green: #32D74B;
             --bg-deep: #000000; 
-            --card-base: #151517; 
-            --card-glass: rgba(28, 28, 30, 0.8);
-            --border-line: rgba(255, 255, 255, 0.1);
+            --card-base: #1C1C1E; 
+            --card-inner: #2C2C2E;
+            --border-line: rgba(255, 255, 255, 0.08);
             --text-light: #FFFFFF;
-            --text-gray: #98989D;
+            --text-gray: #8E8E93;
         }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', 'Cairo', sans-serif; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Cairo';
             background-color: var(--bg-deep); 
             color: var(--text-light); 
             margin: 0; 
-            height: 100dvh; 
-            display: flex; justify-content: center; align-items: center;
+            height: 100dvh; /* قوفڵدانی شاشە بۆ نەهێشتنی سکڕۆڵ */
+            display: flex; justify-content: center; align-items: flex-start;
             overflow: hidden; 
-            background-image: radial-gradient(circle at 50% 0%, rgba(10, 132, 255, 0.15) 0%, transparent 50%);
         }
 
         .main-frame { 
             width: 100%; height: 100%; max-width: 420px; 
             display: flex; flex-direction: column; 
-            padding: 16px 20px 24px 20px;
+            padding: 12px 16px; gap: 12px;
         }
 
         /* Header */
-        .title-box { text-align: center; margin-bottom: 16px; margin-top: 8px; }
-        .title-text { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; color: #fff; line-height: 1.1; }
-        .title-badge { display: inline-block; background: rgba(255,255,255,0.08); border: 1px solid var(--border-line); color: var(--text-gray); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .title-box { text-align: center; margin-bottom: 4px; margin-top: 8px; }
+        .title-text { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
+        .title-badge { display: inline-block; background: var(--card-base); color: var(--text-gray); font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 10px; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
 
         /* Switcher */
         .segment-bg {
-            display: flex; background: var(--card-base); border-radius: 12px; padding: 4px; position: relative; margin-bottom: 16px; border: 1px solid var(--border-line);
+            display: flex; background: var(--card-base); border-radius: 10px; padding: 3px; position: relative;
         }
         .seg-btn {
-            flex: 1; text-align: center; padding: 10px 0; font-size: 13px; font-weight: 600; color: var(--text-gray); cursor: pointer; position: relative; z-index: 2; transition: 0.3s;
+            flex: 1; text-align: center; padding: 8px 0; font-size: 13px; font-weight: 600; color: var(--text-gray); cursor: pointer; position: relative; z-index: 2; transition: 0.3s;
         }
-        .seg-btn.active { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        .seg-btn.active { color: #fff; }
         .seg-indicator {
-            position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: #3A3A3C; border-radius: 9px; z-index: 1; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); background: #3A3A3C; border-radius: 8px; z-index: 1; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 1px 4px rgba(0,0,0,0.2);
         }
 
-        .view-section { display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s; height: 100%; }
+        .view-section { display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s; gap: 12px; }
         .view-active { display: flex; opacity: 1; }
 
-        /* VIP UI */
-        .panel { background: var(--card-glass); border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--border-line); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        /* Controls Card (Free Section) */
+        .controls-card { background: var(--card-base); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+        
+        .select-native {
+            width: 100%; background: var(--card-inner) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center; background-size: 14px; border: none; border-radius: 10px; padding: 12px 14px; color: white; font-size: 14px; font-weight: 600; outline: none; appearance: none;
+        }
+        
+        .action-row { display: flex; gap: 8px; }
+        .mini-btn {
+            flex: 1; background: var(--card-inner); border: none; color: #fff; font-size: 13px; font-weight: 600; padding: 10px; border-radius: 10px; display: flex; justify-content: center; align-items: center; gap: 6px; text-decoration: none; cursor: pointer; transition: 0.2s;
+        }
+        .mini-btn:active { opacity: 0.7; }
+        .mini-btn.blue-text { color: var(--apple-blue); }
+
+        /* لیستی ئەپەکان - 100% পڕۆفیشناڵ و بێ بۆشایی */
+        .app-list-card {
+            background: var(--card-base); border-radius: 16px; padding: 8px 16px; display: flex; flex-direction: column;
+        }
+        
+        .app-item {
+            display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-line);
+        }
+        .app-item:last-child { border-bottom: none; }
+        
+        .app-info-wrap { display: flex; align-items: center; gap: 12px; }
+        .app-icon { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(255,255,255,0.05); }
+        .app-titles { display: flex; flex-direction: column; }
+        .app-name { font-size: 15px; font-weight: 600; color: #fff; letter-spacing: -0.3px; }
+        .app-dev { font-size: 12px; font-weight: 500; color: var(--text-gray); }
+
+        /* دوگمەی ئینستاڵ - ڕێک وەک ئەپ ستۆر */
+        .btn-zone { width: 72px; height: 28px; position: relative; }
+        
+        .get-btn {
+            width: 100%; height: 100%; background: var(--card-inner); color: var(--apple-blue); border: none; border-radius: 14px; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center;
+        }
+        .get-btn:active { background: #3A3A3C; }
+
+        /* پرۆگرێس لەناو خودی دوگمەکەدایە، وێنەکە تێک نادات! */
+        .progress-btn {
+            position: absolute; inset: 0; background: var(--card-inner); border-radius: 14px; display: none; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .progress-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: var(--apple-blue); opacity: 0.2; transition: 0.2s ease; }
+        .progress-text { position: relative; font-size: 11px; font-weight: 700; color: var(--apple-blue); z-index: 2; }
+        
+        .open-btn {
+            position: absolute; inset: 0; width: 100%; height: 100%; background: rgba(50, 215, 75, 0.15); color: var(--apple-green); border: none; border-radius: 14px; font-size: 13px; font-weight: 700; display: none; justify-content: center; align-items: center;
+        }
+
+        /* VIP Section */
+        .vip-card { background: var(--card-base); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
         
         .vip-app-btn {
-            display: flex; align-items: center; justify-content: space-between; background: var(--card-base); border-radius: 16px; padding: 12px 16px; cursor: pointer; border: 1px solid var(--border-line); transition: 0.2s;
+            display: flex; align-items: center; justify-content: space-between; background: var(--card-inner); border-radius: 12px; padding: 10px 14px; cursor: pointer;
         }
-        .vip-app-btn:active { background: #2C2C2E; }
         
-        .upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .file-box {
-            background: var(--card-base); border: 1px dashed #48484A; border-radius: 16px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; text-align: center; transition: 0.2s;
+            background: var(--card-inner); border-radius: 12px; padding: 14px 8px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; text-align: center; border: 1px dashed transparent;
         }
-        .file-box:active { border-color: var(--app-blue); background: rgba(10, 132, 255, 0.1); }
-        .file-box svg { color: var(--app-blue); width: 22px; height: 22px; }
+        .file-box:active { border-color: var(--apple-blue); }
+        .file-box svg { color: var(--apple-blue); width: 20px; height: 20px; }
 
         .auth-input {
-            width: 100%; background: var(--card-base); border: 1px solid var(--border-line); border-radius: 14px; padding: 14px; color: white; font-size: 14px; outline: none; text-align: center; transition: 0.2s;
+            width: 100%; background: var(--card-inner); border: none; border-radius: 10px; padding: 12px; color: white; font-size: 14px; outline: none; text-align: center;
         }
-        .auth-input:focus { border-color: var(--app-blue); }
 
         .go-btn {
-            background: var(--app-blue); color: #fff; font-weight: 600; font-size: 16px; padding: 14px; border-radius: 14px; width: 100%; border: none; cursor: pointer; transition: 0.2s;
+            background: var(--apple-blue); color: #fff; font-weight: 600; font-size: 15px; padding: 12px; border-radius: 10px; width: 100%; border: none; cursor: pointer; margin-top: 4px;
         }
-        .go-btn:active { opacity: 0.8; transform: scale(0.98); }
+        .go-btn:active { opacity: 0.8; }
 
-        /* Free UI Controls */
-        .select-native {
-            width: 100%; background: var(--card-base) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2398989D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center; background-size: 14px; border: 1px solid var(--border-line); border-radius: 14px; padding: 14px 16px; color: white; font-size: 14px; font-weight: 500; outline: none; appearance: none; margin-bottom: 12px;
-        }
-        
-        .action-row { display: flex; gap: 10px; }
-        .mini-btn {
-            flex: 1; background: var(--card-base); border: 1px solid var(--border-line); color: #fff; font-size: 13px; font-weight: 600; padding: 12px; border-radius: 14px; display: flex; justify-content: center; align-items: center; gap: 6px; text-decoration: none; cursor: pointer; transition: 0.2s;
-        }
-        .mini-btn:active { background: #2C2C2E; }
-
-        /* APP LIBRARY - FIXED SIZE GRID */
-        .library-box {
-            flex: 1; background: var(--card-glass); border-radius: 20px; padding: 16px 10px; border: 1px solid var(--border-line); display: flex; flex-direction: column; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        }
-        .lib-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; text-align: left; padding-left: 8px; }
-        
-        .bento-grid {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; align-items: flex-start;
-        }
-        
-        /* قەبارەی ئەپەکان بەیەک ئەندازەیە (Fixed Layout) */
-        .app-bento-card {
-            width: 30%; /* دەیکات بە ٣ ئەپ لە یەک ڕیزدا */
-            max-width: 105px;
-            background: var(--card-base); 
-            border: 1px solid var(--border-line); 
-            border-radius: 16px; 
-            padding: 14px 8px; 
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-        }
-        
-        .app-img-box { 
-            width: 54px; height: 54px; border-radius: 12px; position: relative; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden;
-        }
-        .app-img-box img { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* پرۆگرێسەکە ڕێک لەسەر لۆگۆکەیە */
-        .progress-overlay {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.65); display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); z-index: 2;
-        }
-        .pct-val { font-size: 13px; font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
-        
-        .success-overlay {
-            position: absolute; inset: 0; background: rgba(50, 215, 75, 0.85); display: none; justify-content: center; align-items: center; color: #fff; z-index: 3;
-        }
-
-        .app-text-name { font-size: 11px; font-weight: 700; color: #fff; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; }
-
-        .store-get-btn {
-            width: 100%; background: rgba(255,255,255,0.08); color: var(--app-blue); border: none; border-radius: 12px; font-size: 12px; font-weight: 700; padding: 6px 0; cursor: pointer; transition: 0.2s;
-        }
-        .store-get-btn:active { background: rgba(255,255,255,0.15); }
-
-        /* Modal VIP */
-        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 50; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+        /* Modal Sheet */
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 50; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(4px); }
         .modal-bg.show { opacity: 1; pointer-events: auto; }
         
         .sheet {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: #1C1C1E; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 12px 16px 36px 16px; z-index: 60; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); border-top: 1px solid var(--border-line);
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #1C1C1E; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 12px 16px 36px 16px; z-index: 60; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .sheet.show { transform: translateY(0); }
         .sheet-pill { width: 36px; height: 5px; background: #48484A; border-radius: 5px; margin: 0 auto 16px auto; }
         
-        .sheet-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid var(--border-line); cursor: pointer; transition: 0.2s; }
+        .sheet-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid var(--border-line); cursor: pointer; }
         .sheet-row:last-child { border-bottom: none; }
-        .sheet-row:active { background: #2C2C2E; border-radius: 16px; }
-        .sheet-row img { width: 42px; height: 42px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .sheet-row img { width: 40px; height: 40px; border-radius: 10px; }
         .sheet-row span { font-size: 15px; font-weight: 600; color: #fff; }
-
-        .vip-loader-box { width: 100%; height: 5px; background: var(--card-base); border-radius: 5px; overflow: hidden; display: none; margin-top: 12px; }
-        .vip-loader-bar { height: 100%; width: 0%; background: var(--app-blue); transition: 0.3s; }
-        .vip-status-txt { text-align: center; font-size: 12px; font-weight: 600; margin-top: 8px; display: none; color: var(--text-gray); }
+        
+        .vip-loader-box { width: 100%; height: 4px; background: var(--card-inner); border-radius: 4px; overflow: hidden; display: none; }
+        .vip-loader-bar { height: 100%; width: 0%; background: var(--apple-blue); transition: 0.3s; }
+        .vip-status-txt { text-align: center; font-size: 12px; font-weight: 500; color: var(--text-gray); display: none; }
     </style>
 </head>
 <body>
@@ -175,16 +168,16 @@
 
         <!-- VIP View -->
         <form id="formVIP" class="view-section">
-            <div class="panel">
+            <div class="vip-card">
                 <div class="vip-app-btn" onclick="openSheet()">
-                    <div class="flex items-center gap-4">
-                        <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-11 h-11 rounded-xl object-cover border border-[var(--border-line)]">
+                    <div class="flex items-center gap-3">
+                        <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-10 h-10 rounded-lg object-cover">
                         <div class="flex flex-col">
-                            <span class="text-[10px] text-[var(--text-gray)] font-bold uppercase tracking-wider mb-0.5">App to Sign</span>
-                            <span id="selName" class="text-white font-bold text-[16px] leading-none">AshteMobile</span>
+                            <span class="text-[10px] text-[var(--text-gray)] font-bold uppercase tracking-wider">App to Sign</span>
+                            <span id="selName" class="text-white font-bold text-[15px]">AshteMobile</span>
                         </div>
                     </div>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-gray)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-gray)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
                 </div>
                 <input type="hidden" id="appInput" value="AshteMobile">
 
@@ -203,7 +196,7 @@
                     </div>
                 </div>
 
-                <input type="password" id="password" placeholder="Certificate Password" class="auth-input">
+                <input type="password" id="password" placeholder="Password" class="auth-input">
                 
                 <button type="submit" id="submitBtn" class="go-btn">Start Engine</button>
                 <div id="vipProgressWrapper" class="vip-loader-box"><div id="vipProgressFill" class="vip-loader-bar"></div></div>
@@ -213,7 +206,8 @@
 
         <!-- Free View -->
         <div id="formFree" class="view-section view-active">
-            <div class="panel mb-4">
+            
+            <div class="controls-card">
                 <select id="freeCertSelect" class="select-native">
                     <option value="File">Enterprise Cert (Auto)</option>
                     <option value="aramco">Aramco Services Company</option>
@@ -233,22 +227,19 @@
 
                 <div class="action-row">
                     <a href="https://ashtemobile.site/ashtemobile.mobileconfig" class="mini-btn">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                         Block DNS
                     </a>
-                    <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="mini-btn" style="color: var(--app-blue); border-color: rgba(10, 132, 255, 0.2);">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="mini-btn blue-text">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
                         Get ZIP
                     </button>
                 </div>
             </div>
 
-            <!-- ئەپەکان بە یەک قەبارەی ڕێک (Fixed Grid) -->
-            <div class="library-box">
-                <h2 class="lib-title">App Library</h2>
-                <div class="bento-grid" id="bentoContainer">
-                    <!-- ئەپەکان بە ئۆتۆماتیکی پڕ دەکرێنەوە -->
-                </div>
+            <!-- ئەپەکان بە شێوازی لیستی ستوونی (بێ بۆشایی، بێ سکڕۆڵ) -->
+            <div class="app-list-card" id="appListContainer">
+                <!-- ڕاستەوخۆ بە JS پڕ دەکرێتەوە -->
             </div>
             
         </div>
@@ -279,27 +270,34 @@
 
     <script>
         const appsData = [
-            { id: 'AshteMobile', name: 'AshteMobile', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
-            { id: 'ipaomtk', name: 'ipaomtk', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' },
-            { id: 'Esign', name: 'Esign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
-            { id: 'Ksign', name: 'Ksign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
-            { id: 'MyTV', name: 'MyTV', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
+            { id: 'AshteMobile', name: 'AshteMobile', sub: 'Cloud Tool', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
+            { id: 'ipaomtk', name: 'ipaomtk', sub: 'Utility', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' },
+            { id: 'Esign', name: 'Esign', sub: 'Signer App', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
+            { id: 'Ksign', name: 'Ksign', sub: 'Signer App', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
+            { id: 'MyTV', name: 'MyTV', sub: 'Entertainment', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
         ];
 
-        // دروستکردنی کارتەکان بە هەمان قەبارە و پرۆگرێس لەسەر لۆگۆکەیە
-        const bentoContainer = document.getElementById('bentoContainer');
+        // دروستکردنی لیستی ئەپەکان بە شێوازی Compact (وەک App Store)
+        const appListContainer = document.getElementById('appListContainer');
         appsData.forEach(app => {
-            bentoContainer.innerHTML += `
-                <div class="app-bento-card">
-                    <div class="app-img-box">
-                        <img src="${app.icon}">
-                        <div class="progress-overlay"><span class="pct-val">0%</span></div>
-                        <div class="success-overlay">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            appListContainer.innerHTML += `
+                <div class="app-item">
+                    <div class="app-info-wrap">
+                        <img src="${app.icon}" class="app-icon">
+                        <div class="app-titles">
+                            <span class="app-name">${app.name}</span>
+                            <span class="app-dev">${app.sub}</span>
                         </div>
                     </div>
-                    <span class="app-text-name">${app.name}</span>
-                    <button class="store-get-btn" onclick="installFreeApp('${app.id}', this)">GET</button>
+                    <!-- لێرەدا پرۆگرێسەکە ڕێک دەچێتە ناو دوگمەی GET نەک سەر وێنەکە -->
+                    <div class="btn-zone">
+                        <button class="get-btn" onclick="installFreeApp('${app.id}', this)">GET</button>
+                        <div class="progress-btn">
+                            <div class="progress-fill"></div>
+                            <span class="progress-text">0%</span>
+                        </div>
+                        <button class="open-btn">OPEN</button>
+                    </div>
                 </div>
             `;
         });
@@ -367,27 +365,25 @@
                 const url = window.URL.createObjectURL(zipContent);
                 const a = document.createElement('a'); a.href = url; a.download = `${certId}_cert.zip`; 
                 document.body.appendChild(a); a.click(); document.body.removeChild(a); window.URL.revokeObjectURL(url);
-            } catch(e) { alert("Error"); }
+            } catch(e) { alert("Error downloading"); }
             
             btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
         }
 
-        // Install Function - پرۆگرێس لەسەر لۆگۆکە پیشان دەدات
+        // Install Function - پرۆگرێسەکە ڕێک لەناو دوگمەکەدایە وەکو ئایفۆن
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
-            const appCard = btnElement.parentElement;
-            const iconWrap = appCard.querySelector('.app-img-box');
-            const progressOverlay = iconWrap.querySelector('.progress-overlay');
-            const pctText = iconWrap.querySelector('.pct-val');
-            const successOverlay = iconWrap.querySelector('.success-overlay');
+            const btnZone = btnElement.parentElement;
+            const progressBtn = btnZone.querySelector('.progress-btn');
+            const progressFill = btnZone.querySelector('.progress-fill');
+            const progressText = btnZone.querySelector('.progress-text');
+            const openBtn = btnZone.querySelector('.open-btn');
             
-            btnElement.style.opacity = '0.5';
-            btnElement.style.pointerEvents = 'none';
-            btnElement.innerText = '...';
-            progressOverlay.style.display = 'flex';
+            btnElement.style.display = 'none';
+            progressBtn.style.display = 'flex';
 
             let pct = 0;
-            const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; pctText.innerText = pct + '%'; } }, 200);
+            const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; progressText.innerText = pct + '%'; progressFill.style.width = pct + '%'; } }, 200);
 
             try {
                 const res = await fetch('/api/sign', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app: appName, use_free_cert: true, cert_folder: selectedCertId }) });
@@ -398,14 +394,11 @@
                     const serverStatus = await checkStatus(data.build_id, appName);
                     if (serverStatus.status === 'done') {
                         clearInterval(checker); clearInterval(sim);
-                        pctText.innerText = '100%';
+                        progressText.innerText = '100%'; progressFill.style.width = '100%';
                         
                         setTimeout(() => {
-                            progressOverlay.style.display = 'none'; 
-                            successOverlay.style.display = 'flex';
-                            btnElement.innerText = 'OPEN';
-                            btnElement.style.color = '#32D74B';
-                            btnElement.style.opacity = '1';
+                            progressBtn.style.display = 'none'; 
+                            openBtn.style.display = 'flex';
                             
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
@@ -414,8 +407,8 @@
                     }
                 }, 1200);
             } catch (err) {
-                clearInterval(sim); pctText.innerText = 'Err'; pctText.style.color = '#ff453a';
-                setTimeout(() => { progressOverlay.style.display = 'none'; pctText.style.color = '#fff'; btnElement.innerText = 'GET'; btnElement.style.opacity = '1'; btnElement.style.pointerEvents = 'auto'; }, 2500);
+                clearInterval(sim); progressText.innerText = 'Error'; progressText.style.color = '#ef4444';
+                setTimeout(() => { progressBtn.style.display = 'none'; progressText.style.color = 'var(--apple-blue)'; progressFill.style.width = '0%'; btnElement.style.display = 'flex'; }, 2500);
             }
         }
 
