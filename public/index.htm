@@ -369,6 +369,7 @@
             btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
         }
 
+        // Install Function بە ڕیسێتەوە بۆ دۆخی ئاسایی
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
             const appCard = btnElement.parentElement;
@@ -377,6 +378,7 @@
             const pctText = iconWrap.querySelector('.pct-val');
             const successOverlay = iconWrap.querySelector('.success-overlay');
             
+            // قوفڵدانی دوگمە لە کاتی لۆدینگ
             btnElement.style.opacity = '0.5';
             btnElement.style.pointerEvents = 'none';
             btnElement.innerText = '...';
@@ -399,16 +401,23 @@
                         setTimeout(() => {
                             progressOverlay.style.display = 'none'; 
                             successOverlay.style.display = 'flex';
-                            btnElement.innerText = 'OPEN';
-                            btnElement.style.color = '#32D74B';
-                            btnElement.style.opacity = '1';
                             
+                            // بانگکردنی مانیفێستی ئەپڵ بۆ دابەزاندن
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
                             
+                            // دوای ٢.٥ چرکە بەتەواوی شاشەکە ڕیسێت دەکاتەوە و دەیبات بۆ تێلیگرام
                             setTimeout(() => {
+                                // سفرکردنەوەی UI بۆ ئەوەی بەکارهێنەر بتوانێت شەهادەی تر بەکاربێنێت
+                                successOverlay.style.display = 'none';
+                                btnElement.innerText = 'GET';
+                                btnElement.style.opacity = '1';
+                                btnElement.style.pointerEvents = 'auto'; // کردنەوەی قوفڵەکە
+                                pctText.innerText = '0%';
+                                
+                                // ڕۆیشتن بۆ تێلیگرام
                                 window.location.href = "https://t.me/ashtemobile";
-                            }, 3000);
+                            }, 2500);
 
                         }, 500);
                     }
@@ -419,6 +428,7 @@
             }
         }
 
+        // بەشی VIP بە هەمان شێوەی ڕیسێتەوە
         document.getElementById('signForm').onsubmit = async (e) => {
             e.preventDefault();
             const status = document.getElementById('vipStatus');
@@ -433,7 +443,7 @@
             if (!p12File.files[0] || !provFile.files[0] || !pass.value) return alert('Attach files and enter password!');
 
             btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; pWrap.style.display = 'block';
-            status.style.display = 'block'; status.innerText = 'Uploading...'; 
+            status.style.display = 'block'; status.innerText = 'Uploading to Engine...'; 
 
             try {
                 const p12 = await toBase64(p12File.files[0]);
@@ -443,25 +453,37 @@
                 if(!res.ok) throw new Error('Error');
                 const data = await res.json();
 
-                status.innerText = 'Signing...';
+                status.innerText = 'Signing Certificate...';
                 let sim = 0; const anim = setInterval(() => { if (sim < 95) sim += 5; pFill.style.width = sim + '%'; }, 300);
 
                 const checker = setInterval(async () => {
                     const serverStatus = await checkStatus(data.build_id, appSelected);
                     if (serverStatus.status === 'done') {
                         clearInterval(checker); clearInterval(anim); pFill.style.width = '100%';
-                        status.innerText = 'Success! Installing...'; status.style.color = '#32D74B';
+                        status.innerText = 'Success! Prompting Install...'; status.style.color = '#32D74B';
                         
                         setTimeout(() => {
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appSelected)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
                             
-                            setTimeout(() => { window.location.href = "https://t.me/ashtemobile"; }, 3000);
+                            // ڕیسێت کردنەوەی UI و ڕۆیشتن بۆ تێلیگرام
+                            setTimeout(() => {
+                                pWrap.style.display = 'none'; 
+                                btn.style.display = 'block'; 
+                                btn.style.pointerEvents = 'auto';
+                                btn.style.opacity = '1';
+                                status.style.display = 'none'; 
+                                status.style.color = 'var(--text-gray)';
+                                pFill.style.width = '0%';
+                                
+                                window.location.href = "https://t.me/ashtemobile";
+                            }, 2500);
+
                         }, 800); 
                     }
                 }, 1200); 
             } catch (err) {
-                status.innerText = 'Failed.'; status.style.color = '#ef4444';
+                status.innerText = 'Connection Failed. Try again.'; status.style.color = '#ef4444';
                 setTimeout(() => { pWrap.style.display = 'none'; btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; status.style.display = 'none'; }, 3000);
             }
         };
