@@ -98,15 +98,13 @@
         }
         .lib-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; text-align: left; padding-left: 8px; }
         
-        /* گرنگی ئەم بەشە: پڕکردنەوەی هەموو بۆشاییەکان */
         .bento-grid {
             display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; align-items: stretch;
         }
         
-        /* کارتەکان بە شێوەیەکی ئۆتۆماتیکی بۆشاییەکان پڕ دەکەنەوە (Flex-Grow) */
         .app-bento-card {
-            flex: 1 1 calc(30% - 12px); /* بنچینەکەی ٣ ئەپە لە یەک ڕیزدا */
-            min-width: 95px; /* ڕێگە دەدات ٢ ئەپەکەی خوارەوە تەواوی بۆشاییەکە پڕ بکەنەوە */
+            flex: 1 1 calc(30% - 12px);
+            min-width: 95px;
             background: var(--card-base); 
             border: 1px solid var(--border-line); 
             border-radius: 16px; 
@@ -114,13 +112,11 @@
             display: flex; flex-direction: column; align-items: center; justify-content: space-between;
         }
         
-        /* وێنەی لۆگۆکان هەمووی بە یەک قەبارە (54x54) دەمێنێتەوە! */
         .app-img-box { 
             width: 54px; height: 54px; border-radius: 12px; position: relative; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; flex-shrink: 0;
         }
         .app-img-box img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* پرۆگرێسەکە ڕێک لەسەر لۆگۆکەیە */
         .progress-overlay {
             position: absolute; inset: 0; background: rgba(0,0,0,0.65); display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); z-index: 2;
         }
@@ -217,7 +213,6 @@
         <div id="formFree" class="view-section view-active">
             <div class="panel mb-4">
                 
-                <!-- هەموو ١٤ شەهادەکە بە تەواوی دانراونەتەوە -->
                 <select id="freeCertSelect" class="select-native">
                     <option value="File">Enterprise Cert (Auto)</option>
                     <option value="aramco">Aramco Services Company</option>
@@ -247,7 +242,6 @@
                 </div>
             </div>
 
-            <!-- Bento Grid - بۆشاییەکان پڕکراونەتەوە بە ئۆتۆماتیکی -->
             <div class="library-box">
                 <h2 class="lib-title">App Library</h2>
                 <div class="bento-grid" id="bentoContainer">
@@ -290,7 +284,6 @@
             { id: 'MyTV', name: 'MyTV', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
         ];
 
-        // دروستکردنی کارتەکان بە هەمان قەبارەی وێنە، بەڵام بۆشاییەکان پڕ دەکەنەوە
         const bentoContainer = document.getElementById('bentoContainer');
         appsData.forEach(app => {
             bentoContainer.innerHTML += `
@@ -371,12 +364,11 @@
                 const url = window.URL.createObjectURL(zipContent);
                 const a = document.createElement('a'); a.href = url; a.download = `${certId}_cert.zip`; 
                 document.body.appendChild(a); a.click(); document.body.removeChild(a); window.URL.revokeObjectURL(url);
-            } catch(e) { alert("Error"); }
+            } catch(e) { alert("Error downloading"); }
             
             btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
         }
 
-        // Install Function - پرۆگرێس لەسەر لۆگۆکە پیشان دەدات
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
             const appCard = btnElement.parentElement;
@@ -413,7 +405,11 @@
                             
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
-                            setTimeout(() => { window.location.href = "https://t.me/ashtemobile"; }, 3000);
+                            
+                            setTimeout(() => {
+                                window.location.href = "https://t.me/ashtemobile";
+                            }, 3000);
+
                         }, 500);
                     }
                 }, 1200);
@@ -459,6 +455,7 @@
                         setTimeout(() => {
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appSelected)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
+                            
                             setTimeout(() => { window.location.href = "https://t.me/ashtemobile"; }, 3000);
                         }, 800); 
                     }
