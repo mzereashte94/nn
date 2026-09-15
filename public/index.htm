@@ -92,7 +92,7 @@
         }
         .mini-btn:active { background: #2C2C2E; }
 
-        /* APP LIBRARY - FIXED & FILLED GRID */
+        /* APP LIBRARY */
         .library-box {
             flex: 1; background: var(--card-glass); border-radius: 20px; padding: 16px 12px; border: 1px solid var(--border-line); display: flex; flex-direction: column; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }
@@ -213,43 +213,43 @@
         <div id="formFree" class="view-section view-active">
             <div class="panel mb-4">
                 
-                <!-- هەموو ٣٥ شەهادەکە لێرەدان بە تەواوی -->
+                <!-- هەموو ٣٧ شەهادەکە بە تەواوی دانراونەتەوە -->
                 <select id="freeCertSelect" class="select-native">
                     <option value="File">Enterprise Cert (Auto)</option>
                     <option value="Bureau">Bureau</option>
-                    <option value="CITICPrudential">CITIC Prudential</option>
-                    <option value="ChinaEverbri">China Everbright</option>
-                    <option value="ChinaMobile">China Mobile</option>
-                    <option value="FPTSoftware">FPT Software</option>
+                    <option value="CITICPrudential">CITICPrudential</option>
+                    <option value="ChinaEverbri">ChinaEverbri</option>
+                    <option value="ChinaMobile">ChinaMobile</option>
+                    <option value="FPTSoftware">FPTSoftware</option>
                     <option value="Guangzhou">Guangzhou</option>
-                    <option value="HDFC2">HDFC 2</option>
-                    <option value="HDFCLife">HDFC Life</option>
+                    <option value="HDFC2">HDFC2</option>
+                    <option value="HDFCLife">HDFCLife</option>
                     <option value="Manulife">Manulife</option>
-                    <option value="MiguDigital">Migu Digital</option>
-                    <option value="MylanInc">Mylan Inc</option>
+                    <option value="MiguDigital">MiguDigital</option>
+                    <option value="MylanInc">MylanInc</option>
                     <option value="Planning">Planning</option>
                     <option value="SANY">SANY</option>
                     <option value="SHANGHAI">SHANGHAI</option>
                     <option value="STOCK">STOCK</option>
                     <option value="Shanghai">Shanghai</option>
-                    <option value="ShanghaiForeign">Shanghai Foreign</option>
+                    <option value="ShanghaiForeign">ShanghaiForeign</option>
                     <option value="Social">Social</option>
                     <option value="Sunshine">Sunshine</option>
                     <option value="Tianwen">Tianwen</option>
                     <option value="XCMG">XCMG</option>
-                    <option value="aramco">Aramco Services Company</option>
-                    <option value="beijing_xibei">Beijing Xibei</option>
-                    <option value="beijing_zhizhangyi">Beijing Zhizhangyi Inc</option>
-                    <option value="bzi_boc">BZI BOC</option>
-                    <option value="china_telecom">China Telecom</option>
-                    <option value="jiangsu">Jiangsu</option>
-                    <option value="luoyang">Luoyang Postal</option>
-                    <option value="moving">Moving Increasingly</option>
-                    <option value="moving2">2 Moving Increasingly</option>
-                    <option value="powerchin">Powerchin</option>
-                    <option value="qingdao">Qingdao Rural Commercial Bank</option>
-                    <option value="vietnam">Vietnam Rubber</option>
-                    <option value="xl_axia">XL AXIATA, PT TBK</option>
+                    <option value="aramco">aramco</option>
+                    <option value="beijing_xibei">beijing_xibei</option>
+                    <option value="beijing_zhizhangyi">beijing_zhizhangyi</option>
+                    <option value="bzi_boc">bzi_boc</option>
+                    <option value="china_telecom">china_telecom</option>
+                    <option value="jiangsu">jiangsu</option>
+                    <option value="luoyang">luoyang</option>
+                    <option value="moving">moving</option>
+                    <option value="moving2">moving2</option>
+                    <option value="powerchin">powerchin</option>
+                    <option value="qingdao">qingdao</option>
+                    <option value="vietnam">vietnam</option>
+                    <option value="xl_axia">xl_axia</option>
                 </select>
 
                 <div class="action-row">
@@ -391,7 +391,7 @@
             btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
         }
 
-        // Install Function بە ڕیسێتەوە بۆ دۆخی ئاسایی
+        // Install Function بە ڕیسێتەوە بۆ دۆخی ئاسایی و ڕۆیشتن بۆ تێلیگرام
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
             const appCard = btnElement.parentElement;
@@ -400,7 +400,6 @@
             const pctText = iconWrap.querySelector('.pct-val');
             const successOverlay = iconWrap.querySelector('.success-overlay');
             
-            // قوفڵدانی دوگمە لە کاتی لۆدینگ
             btnElement.style.opacity = '0.5';
             btnElement.style.pointerEvents = 'none';
             btnElement.innerText = '...';
@@ -424,20 +423,16 @@
                             progressOverlay.style.display = 'none'; 
                             successOverlay.style.display = 'flex';
                             
-                            // بانگکردنی مانیفێستی ئەپڵ بۆ دابەزاندن
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
                             
-                            // دوای ٢.٥ چرکە بەتەواوی شاشەکە ڕیسێت دەکاتەوە و دەیبات بۆ تێلیگرام
                             setTimeout(() => {
-                                // سفرکردنەوەی UI بۆ ئەوەی بەکارهێنەر بتوانێت شەهادەی تر بەکاربێنێت
                                 successOverlay.style.display = 'none';
                                 btnElement.innerText = 'GET';
                                 btnElement.style.opacity = '1';
-                                btnElement.style.pointerEvents = 'auto'; // کردنەوەی قوفڵەکە
+                                btnElement.style.pointerEvents = 'auto';
                                 pctText.innerText = '0%';
                                 
-                                // ڕۆیشتن بۆ تێلیگرام
                                 window.location.href = "https://t.me/ashtemobile";
                             }, 2500);
 
@@ -450,7 +445,6 @@
             }
         }
 
-        // بەشی VIP بە هەمان شێوەی ڕیسێتەوە
         document.getElementById('signForm').onsubmit = async (e) => {
             e.preventDefault();
             const status = document.getElementById('vipStatus');
@@ -475,7 +469,7 @@
                 if(!res.ok) throw new Error('Error');
                 const data = await res.json();
 
-                status.innerText = 'Signing...';
+                status.innerText = 'Signing Certificate...';
                 let sim = 0; const anim = setInterval(() => { if (sim < 95) sim += 5; pFill.style.width = sim + '%'; }, 300);
 
                 const checker = setInterval(async () => {
@@ -488,7 +482,6 @@
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appSelected)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
                             
-                            // ڕیسێت کردنەوەی UI و ڕۆیشتن بۆ تێلیگرام
                             setTimeout(() => {
                                 pWrap.style.display = 'none'; 
                                 btn.style.display = 'block'; 
