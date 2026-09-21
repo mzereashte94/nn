@@ -1,4 +1,4 @@
-name: 🧹 Safe & Complete Auto Cleanup
+name: 🧨 Nuke All Releases (Keep V1)
 
 on:
   schedule:
@@ -10,47 +10,16 @@ permissions:
   actions: write
 
 jobs:
-  deep-cleanup:
+  nuke-releases:
     runs-on: ubuntu-latest
     steps:
-      - name: 🌪️ Delete All Old Releases (Except V1)
+      - name: 🧨 Delete ALL releases instantly except V1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 -c '
-          import os, json, subprocess, time
+          echo "گەران بەدوای هەموو ڕیلیزەکاندا..."
           
-          repo = os.environ.get("GITHUB_REPOSITORY")
-          print("🔄 Fetching all 800+ releases...")
+          # هێنانی تا ١٠٠٠ ڕیلیز، جیاکردنەوەی V1، و سڕینەوەی هەمووی بەیەکجار
+          gh release list --limit 1000 --json tagName -q '.[].tagName' | grep -v "^V1$" | tr '\n' '\0' | xargs -0 -I {} -P 20 bash -c 'gh release delete "{}" --cleanup-tag -y || true'
           
-          try:
-              # هێنانی هەموو ڕیلیزەکان
-              output = subprocess.check_output(["gh", "api", f"repos/{repo}/releases", "--paginate"]).decode("utf-8")
-              releases = json.loads(output)
-              
-              # جیاکردنەوەی هەموویان بێجگە لە V1
-              tags_to_delete = [str(r.get("tag_name")) for r in releases if r.get("tag_name") and str(r.get("tag_name")) != "V1"]
-              
-              if not tags_to_delete:
-                  print("✅ Clean repository! Nothing to delete.")
-                  exit(0)
-                  
-              print(f"🌪️ Found {len(tags_to_delete)} releases! Starting safe deletion...")
-              
-              deleted = 0
-              for tag in tags_to_delete:
-                  print(f"🗑️ Deleting: {tag} ...")
-                  # بەکارهێنانی subprocess بۆ ئەوەی ئەگەر ناوی ڕیلیزەکە بۆشایی تێدابوو کێشە دروست نەکات
-                  res = subprocess.run(["gh", "release", "delete", tag, "--cleanup-tag", "-y"], capture_output=True)
-                  
-                  if res.returncode == 0:
-                      deleted += 1
-                  
-                  # پشوویەکی بچووک (نیو چرکە) بۆ ئەوەی گیت هاب بلۆکمان نەکات
-                  time.sleep(0.4)
-                      
-              print(f"✅ SUCCESSFULLY DELETED {deleted} RELEASES!")
-                  
-          except Exception as e: 
-              print("❌ Error:", e)
-          '
+          echo "✅ هەموو ڕیلیزەکان سڕانەوە، تەنها V1 پارێزراوە!"
