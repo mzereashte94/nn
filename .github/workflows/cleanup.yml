@@ -1,64 +1,51 @@
-name: 🧹 Ultra Auto Cleanup
+name: 🧹 Ultra Auto Cleanup (Force)
 
 on:
-  workflow_run:
-    workflows: ["signer.yml"]
-    types:
-      - completed
   schedule:
-    - cron: '*/10 * * * *'
-  workflow_dispatch:
+    - cron: '*/15 * * * *' # هەر ١٥ خولەک جارێک خۆی کار دەکات
+  workflow_dispatch: # دەتوانیت بە دەستیش کاری پێ بکەیت
 
 permissions:
   contents: write
   actions: write
 
 jobs:
-  smart-cleanup:
+  force-cleanup:
     runs-on: ubuntu-latest
     steps:
-      - name: ⏳ Wait 10 Minutes (If triggered by Signer)
-        if: ${{ github.event_name == 'workflow_run' }}
-        run: |
-          echo "Waiting 10 minutes to allow user to download..."
-          sleep 600
-
-      - name: 🧹 Smart Cleanup Engine (Python)
+      - name: 🧹 Delete ALL Releases Except V1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 -c '
           import os, json, subprocess
-          from datetime import datetime, timezone
           
           repo = os.environ.get("GITHUB_REPOSITORY")
-          print("🔄 Checking for old temporary releases...")
+          print("🔄 Scanning all releases to delete everything except V1...")
           
           try:
               output = subprocess.check_output(["gh", "api", f"repos/{repo}/releases", "--paginate"]).decode("utf-8")
               releases = json.loads(output)
-              now = datetime.now(timezone.utc)
               deleted = 0
               
               for r in releases:
                   tag = r.get("tag_name", "")
                   
-                  # دەست بۆ V1 نابات، بەڵام ئەوانەی بە Cloud Build دەست پێدەکەن دەسڕێتەوە
-                  if tag == "V1" or not str(tag).startswith("Cloud Build"): 
+                  # پاراستنی V1 لە سڕینەوە (هەرگیز دەستی لێ نادات)
+                  if tag == "V1":
+                      print("🛡️ Skipping V1 (Safe - Apps kept)")
                       continue
                   
-                  created = datetime.strptime(r.get("created_at"), "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
-                  mins = (now - created).total_seconds() / 60.0
-                  
-                  # ئەگەر تەمەنی لە ١٠ خولەک زیاتر بوو، دەیسڕێتەوە
-                  if mins >= 10:
-                      print(f"🗑️ Deleting: {tag} (Age: {mins:.1f} minutes)")
-                      os.system(f"gh release delete {tag} --cleanup-tag -y")
-                      deleted += 1
+                  # سڕینەوەی بێبەزەییانەی هەر ڕیلیزێکی تر
+                  print(f"🗑️ Deleting release and tag: {tag}")
+                  os.system(f"gh release delete \"{tag}\" --cleanup-tag -y")
+                  deleted += 1
                       
               if deleted == 0: 
-                  print("✅ No old temporary releases found.")
+                  print("✅ Clean repository! Nothing to delete.")
+              else:
+                  print(f"✅ Successfully deleted {deleted} old releases.")
                   
           except Exception as e: 
-              print("❌ Error during cleanup:", e)
+              print("❌ Error:", e)
           '
