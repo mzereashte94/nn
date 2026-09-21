@@ -2,7 +2,7 @@ name: 🧹 Ultra Auto Cleanup
 
 on:
   workflow_run:
-    workflows: ["Premium Cloud Signer Engine (Ultra Fast)"]
+    workflows: ["signer.yml"]
     types:
       - completed
   schedule:
@@ -43,8 +43,8 @@ jobs:
               for r in releases:
                   tag = r.get("tag_name", "")
                   
-                  # تەنها ڕیلیزە کاتییەکان دەسڕێتەوە کە بە build دەست پێدەکەن، دەست بۆ V1 نابات
-                  if tag == "V1" or not str(tag).startswith("build-"): 
+                  # دەست بۆ V1 نابات، بەڵام ئەوانەی بە Cloud Build دەست پێدەکەن دەسڕێتەوە
+                  if tag == "V1" or not str(tag).startswith("Cloud Build"): 
                       continue
                   
                   created = datetime.strptime(r.get("created_at"), "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
