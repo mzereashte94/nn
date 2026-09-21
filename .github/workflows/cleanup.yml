@@ -1,50 +1,53 @@
-name: 🧹 Ultra Auto Cleanup (Force)
+name: 🚀 Ultra Fast Auto Cleanup
 
 on:
   schedule:
-    - cron: '*/15 * * * *' # هەر ١٥ خولەک جارێک خۆی کار دەکات
-  workflow_dispatch: # دەتوانیت بە دەستیش کاری پێ بکەیت
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
   actions: write
 
 jobs:
-  force-cleanup:
+  instant-cleanup:
     runs-on: ubuntu-latest
     steps:
-      - name: 🧹 Delete ALL Releases Except V1
+      - name: 🌪️ Delete All Releases At Once (Except V1)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 -c '
           import os, json, subprocess
+          import concurrent.futures
           
           repo = os.environ.get("GITHUB_REPOSITORY")
-          print("🔄 Scanning all releases to delete everything except V1...")
+          print("🔄 Scanning all releases...")
           
           try:
+              # هێنانی هەموو ڕیلیزەکان
               output = subprocess.check_output(["gh", "api", f"repos/{repo}/releases", "--paginate"]).decode("utf-8")
               releases = json.loads(output)
-              deleted = 0
               
-              for r in releases:
-                  tag = r.get("tag_name", "")
-                  
-                  # پاراستنی V1 لە سڕینەوە (هەرگیز دەستی لێ نادات)
-                  if tag == "V1":
-                      print("🛡️ Skipping V1 (Safe - Apps kept)")
-                      continue
-                  
-                  # سڕینەوەی بێبەزەییانەی هەر ڕیلیزێکی تر
-                  print(f"🗑️ Deleting release and tag: {tag}")
-                  os.system(f"gh release delete \"{tag}\" --cleanup-tag -y")
-                  deleted += 1
-                      
-              if deleted == 0: 
+              # جیاکردنەوەی هەموو ڕیلیزەکان بێجگە لە V1
+              tags_to_delete = [r.get("tag_name") for r in releases if r.get("tag_name") != "V1"]
+              
+              if not tags_to_delete:
                   print("✅ Clean repository! Nothing to delete.")
-              else:
-                  print(f"✅ Successfully deleted {deleted} old releases.")
+                  exit(0)
+                  
+              print(f"🌪️ Found {len(tags_to_delete)} releases. Deleting ALL AT ONCE...")
+              
+              # فەنکشنی سڕینەوەی خێرا
+              def delete_release(tag):
+                  os.system(f"gh release delete \"{tag}\" --cleanup-tag -y > /dev/null 2>&1")
+                  print(f"🗑️ Deleted: {tag}")
+                  
+              # سڕینەوەی هەموویان لە یەک کاتدا بە خێرایی با
+              with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+                  executor.map(delete_release, tags_to_delete)
+                      
+              print(f"✅ Successfully wiped {len(tags_to_delete)} releases in a few seconds!")
                   
           except Exception as e: 
               print("❌ Error:", e)
