@@ -13,20 +13,13 @@ jobs:
   nuke-releases:
     runs-on: ubuntu-latest
     steps:
-      - name: 🧨 Delete ALL releases instantly except V1
+      - name: 🧨 Delete ALL releases safely except V1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "گەران بەدوای هەموو ڕیلیزەکاندا..."
+          echo "دەستپێکردنی سڕینەوە بە شێوەیەکی سەلامەت..."
           
-          # هێنانی هەموو ڕیلیسەکان و سڕینەوەیان بێ وەستان بە خێراییەکی زۆر
-          gh release list --limit 1000 --json tagName -q '.[].tagName' | grep -v '^V1$' | while read -r tag; do
-            if [ -n "$tag" ]; then
-              gh release delete "$tag" --cleanup-tag -y &
-            fi
-          done
+          # هێنانی ٣٠٠ ڕیلیس و سڕینەوەیان بە شێوەی ٣ دانە لە یەک کاتدا بۆ ئەوەی بلۆک نەبین
+          gh release list --limit 300 --json tagName -q '.[].tagName' | grep -v '^V1$' | xargs -I {} -P 3 bash -c 'gh release delete "{}" --cleanup-tag -y || true'
           
-          # چاوەڕوان بوون تاوەکو هەموو پرۆسەکانی سڕینەوەی بەکۆمەڵ تەواو دەبن
-          wait
-          
-          echo "✅ هەموو ڕیلیسەکان سڕانەوە، تەنها V1 پارێزراوە!"
+          echo "✅ بەشێک لە ڕیلیسەکان سڕانەوە!"
