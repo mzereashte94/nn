@@ -19,7 +19,14 @@ jobs:
         run: |
           echo "گەران بەدوای هەموو ڕیلیزەکاندا..."
           
-          # هێنانی تا ١٠٠٠ ڕیلیز، جیاکردنەوەی V1، و سڕینەوەی هەمووی بەیەکجار
-          gh release list --limit 1000 --json tagName -q '.[].tagName' | grep -v "^V1$" | tr '\n' '\0' | xargs -0 -I {} -P 20 bash -c 'gh release delete "{}" --cleanup-tag -y || true'
+          # هێنانی هەموو ڕیلیسەکان و سڕینەوەیان بێ وەستان بە خێراییەکی زۆر
+          gh release list --limit 1000 --json tagName -q '.[].tagName' | grep -v '^V1$' | while read -r tag; do
+            if [ -n "$tag" ]; then
+              gh release delete "$tag" --cleanup-tag -y &
+            fi
+          done
           
-          echo "✅ هەموو ڕیلیزەکان سڕانەوە، تەنها V1 پارێزراوە!"
+          # چاوەڕوان بوون تاوەکو هەموو پرۆسەکانی سڕینەوەی بەکۆمەڵ تەواو دەبن
+          wait
+          
+          echo "✅ هەموو ڕیلیسەکان سڕانەوە، تەنها V1 پارێزراوە!"
