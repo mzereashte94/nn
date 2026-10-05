@@ -56,39 +56,25 @@
         .title-badge { display: inline-block; background: rgba(10, 132, 255, 0.15); border: 1px solid var(--border-highlight); color: var(--app-blue); font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 12px; text-transform: uppercase; margin-top: 4px; }
 
         /* View Content Area */
-        .view-container {
-            flex: 1; overflow-y: auto; padding: 0 16px 85px 16px;
-        }
+        .view-container { flex: 1; overflow-y: auto; padding: 0 16px 85px 16px; }
         .view-container::-webkit-scrollbar { display: none; }
         
         .main-view { display: none; flex-direction: column; animation: fadeIn 0.4s ease forwards; }
         .main-view.active-view { display: flex; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* UI Elements */
-        .segment-bg {
-            display: flex; background: var(--card-base); border-radius: 14px; padding: 4px; position: relative; margin-bottom: 12px; border: 1px solid var(--border-line); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        }
-        .seg-btn {
-            flex: 1; text-align: center; padding: 10px 0; font-size: 13px; font-weight: 600; color: var(--text-gray); cursor: pointer; position: relative; z-index: 2; transition: 0.3s;
-        }
+        .segment-bg { display: flex; background: var(--card-base); border-radius: 14px; padding: 4px; position: relative; margin-bottom: 12px; border: 1px solid var(--border-line); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .seg-btn { flex: 1; text-align: center; padding: 10px 0; font-size: 13px; font-weight: 600; color: var(--text-gray); cursor: pointer; position: relative; z-index: 2; transition: 0.3s; }
         .seg-btn.active { color: var(--text-light); }
-        .seg-indicator {
-            position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: rgba(99, 99, 102, 0.5); border-radius: 10px; z-index: 1; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        .panel { 
-            background: var(--card-glass); border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--border-line); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); margin-bottom: 12px;
-        }
+        .seg-indicator { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: rgba(99, 99, 102, 0.5); border-radius: 10px; z-index: 1; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        
+        .panel { background: var(--card-glass); border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--border-line); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); margin-bottom: 12px; }
         .upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .file-box { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.15); border-radius: 16px; padding: 14px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; text-align: center; }
         .file-box svg { color: var(--app-blue); width: 22px; height: 22px; }
-        .auth-input, .select-native {
-            width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-line); border-radius: 14px; padding: 12px 14px; color: var(--text-light); font-size: 14px; outline: none; transition: 0.3s;
-        }
+        .auth-input, .select-native { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-line); border-radius: 14px; padding: 12px 14px; color: var(--text-light); font-size: 14px; outline: none; transition: 0.3s; }
         .select-native { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2398989D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; appearance: none; }
         .go-btn { background: linear-gradient(135deg, #0A84FF 0%, #0050A0 100%); color: #fff; font-weight: 700; font-size: 15px; padding: 14px; border-radius: 14px; width: 100%; border: none; cursor: pointer; }
         .action-row { display: flex; gap: 10px; }
@@ -115,14 +101,14 @@
         .remote-app-info { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .remote-app-title { font-size: 16px; font-weight: 700; color: var(--text-light); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
         .remote-app-desc { font-size: 12px; color: var(--text-gray); margin-top: 2px; }
-        .remote-app-get { background: rgba(10, 132, 255, 0.1); color: var(--app-blue); font-weight: 700; font-size: 13px; padding: 6px 16px; border-radius: 14px; text-decoration: none; display: inline-block; }
+        .remote-app-get { background: rgba(10, 132, 255, 0.1); color: var(--app-blue); border: none; font-weight: 700; font-size: 13px; padding: 6px 16px; border-radius: 14px; cursor: pointer; display: inline-block; transition: 0.2s; }
+        .remote-app-get:active { background: rgba(10, 132, 255, 0.2); }
 
         /* Settings UI */
         .profile-card { display: flex; flex-direction: column; align-items: center; padding: 24px 16px; background: var(--card-base); border-radius: 20px; border: 1px solid var(--border-line); margin-bottom: 16px; }
         .profile-card img { width: 80px; height: 80px; border-radius: 20px; margin-bottom: 12px; border: 2px solid var(--app-blue); padding: 2px; }
         .profile-name { font-size: 20px; font-weight: 800; color: var(--text-light); }
         .profile-sub { font-size: 13px; color: var(--text-gray); }
-
         .settings-group { background: var(--card-base); border-radius: 20px; border: 1px solid var(--border-line); overflow: hidden; margin-bottom: 16px; }
         .settings-row { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--border-line); text-decoration: none; color: var(--text-light); cursor: pointer; transition: 0.2s; }
         .settings-row:last-child { border-bottom: none; }
@@ -132,8 +118,6 @@
         .icon-tg { background: #0088CC; }
         .icon-ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); }
         .settings-icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.5; }
-
-        /* Toggle Switch */
         .toggle-switch { width: 44px; height: 24px; background: rgba(120,120,128,0.32); border-radius: 24px; position: relative; transition: 0.3s; }
         .toggle-knob { width: 20px; height: 20px; background: #fff; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         body.light-mode .toggle-switch { background: #34C759; }
@@ -154,7 +138,24 @@
         .nav-item.active { color: var(--app-blue); }
         .nav-item svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.2; }
 
-        /* Toasts and Overlays */
+        /* Sheets (Modals) */
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .modal-bg.show { opacity: 1; pointer-events: auto; }
+        
+        .sheet {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #1C1C1E; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 12px 16px 40px 16px; z-index: 60; transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1); border-top: 1px solid var(--border-line); box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+        }
+        body.light-mode .sheet { background: #F2F2F7; }
+        .sheet.show { transform: translateY(0); }
+        .sheet-pill { width: 40px; height: 5px; background: rgba(120,120,128,0.5); border-radius: 5px; margin: 0 auto 20px auto; }
+        
+        .sheet-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid var(--border-line); cursor: pointer; transition: all 0.2s ease; border-radius: 14px; color: var(--text-light); }
+        .sheet-row:last-child { border-bottom: none; }
+        .sheet-row:active { background: rgba(120,120,128,0.2); transform: scale(0.98); }
+        .sheet-row img { width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(120,120,128,0.2); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .sheet-row span { font-size: 15px; font-weight: 700; }
+
+        /* Toasts */
         .toast-container { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: rgba(28, 28, 30, 0.9); color: white; padding: 12px 20px; border-radius: 40px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); transition: top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .toast-container.show { top: 40px; }
         .toast-icon { width: 18px; height: 18px; }
@@ -213,7 +214,7 @@
                     </div>
                 </div>
 
-                <!-- Free Signer & Apps (Home Screen) -->
+                <!-- Free Signer & Apps -->
                 <div id="formFree" style="display: flex; flex-direction: column;">
                     <div class="panel">
                         <select id="freeCertSelect" class="select-native">
@@ -228,11 +229,10 @@
                         </div>
                     </div>
 
-                    <!-- 6 Static Apps restored here -->
                     <div class="library-box">
                         <h2 class="lib-title">App Library</h2>
                         <div class="bento-grid" id="bentoContainer">
-                            <!-- Injected via JS below -->
+                            <!-- Static Apps Injected Here -->
                         </div>
                     </div>
                 </div>
@@ -273,18 +273,14 @@
                 <div class="settings-group">
                     <a href="https://t.me/ashtemobile" target="_blank" class="settings-row">
                         <div class="settings-left">
-                            <div class="settings-icon icon-tg">
-                                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-                            </div>
+                            <div class="settings-icon icon-tg"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></div>
                             Telegram
                         </div>
                         <svg style="width: 16px; height: 16px; stroke: var(--text-gray);" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 18l6-6-6-6"/></svg>
                     </a>
                     <a href="https://instagram.com/ashtemobile" target="_blank" class="settings-row">
                         <div class="settings-left">
-                            <div class="settings-icon icon-ig">
-                                <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                            </div>
+                            <div class="settings-icon icon-ig"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></div>
                             Instagram
                         </div>
                         <svg style="width: 16px; height: 16px; stroke: var(--text-gray);" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 18l6-6-6-6"/></svg>
@@ -311,6 +307,32 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- NEW: Install Options Action Sheet -->
+    <div class="modal-bg" id="installSheetOverlay" onclick="closeInstallSheet()"></div>
+    <div class="sheet" id="installSheet">
+        <div class="sheet-pill"></div>
+        <h3 style="text-align:center; font-weight: 800; margin-bottom: 16px; font-size: 16px; color: var(--text-light);">Install via...</h3>
+        
+        <div class="flex flex-col gap-2">
+            <div class="sheet-row" onclick="proceedInstall('ashte')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg"> <span>AshteMobile</span>
+            </div>
+            <div class="sheet-row" onclick="proceedInstall('ipaomtk')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg"> <span>IPAOMTK</span>
+            </div>
+            <div class="sheet-row" onclick="proceedInstall('esign')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg"> <span>ESign</span>
+            </div>
+            <div class="sheet-row" onclick="proceedInstall('ksign')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg"> <span>KSign</span>
+            </div>
+            
+            <div class="sheet-row" onclick="proceedInstall('direct')" style="justify-content: center; background: rgba(10, 132, 255, 0.1); color: var(--app-blue); margin-top: 10px; border: 1px solid rgba(10,132,255,0.2);">
+                <span style="font-weight: 800;">Direct Install (Web)</span>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -383,11 +405,10 @@
             `;
         });
 
-        // --- FETCH JSON (CORS PROXY FIX) ---
+        // --- FETCH JSON ---
         async function fetchLibrary() {
             const container = document.getElementById('libraryContainer');
             try {
-                // بەکارهێنانی پرۆکسی بۆ چارەسەری کێشەی CORS و خوێندنەوەی JSON بەبێ کێشە
                 const targetUrl = encodeURIComponent('https://ashtemobile.site/Ashtemobile.json');
                 const proxyUrl = `https://api.allorigins.win/raw?url=${targetUrl}`;
                 
@@ -408,22 +429,66 @@
                     const name = app.name || "Unknown App";
                     const icon = app.iconURL || app.icon || "https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg";
                     const version = app.version || "1.0";
-                    const size = app.size ? (app.size/1048576).toFixed(1) + ' MB' : '';
+                    let sizeText = '';
+                    if (app.size && !isNaN(parseInt(app.size))) { sizeText = '• ' + (parseInt(app.size) / 1048576).toFixed(1) + ' MB'; }
+                    const downloadLink = app.downloadURL || app.url || app.plist || '';
                     
                     container.innerHTML += `
                         <div class="remote-app-card">
                             <img src="${icon}" alt="${name}">
                             <div class="remote-app-info">
                                 <div class="remote-app-title">${name}</div>
-                                <div class="remote-app-desc">v${version} ${size ? '• '+size : ''}</div>
+                                <div class="remote-app-desc">v${version} ${sizeText}</div>
                             </div>
-                            <a href="itms-services://?action=download-manifest&url=${encodeURIComponent(app.downloadURL || '')}" class="remote-app-get">GET</a>
+                            <button onclick="openInstallSheet('${downloadLink}')" class="remote-app-get">GET</button>
                         </div>
                     `;
                 });
                 window.libraryLoaded = true;
             } catch (err) {
-                container.innerHTML = '<div style="text-align:center; padding: 20px; color: #FF453A;">Failed to load JSON (CORS Issue)</div>';
+                container.innerHTML = '<div style="text-align:center; padding: 20px; color: #FF453A;">Failed to load JSON</div>';
+            }
+        }
+
+        // --- CUSTOM INSTALL SHEET LOGIC ---
+        let currentInstallUrl = "";
+
+        function openInstallSheet(url) {
+            if (!url || url === 'undefined') {
+                showToast('لینکی ئەپەکە بوونی نییە!', 'error');
+                return;
+            }
+            currentInstallUrl = url;
+            document.getElementById('installSheetOverlay').classList.add('show');
+            document.getElementById('installSheet').classList.add('show');
+        }
+
+        function closeInstallSheet() {
+            document.getElementById('installSheetOverlay').classList.remove('show');
+            document.getElementById('installSheet').classList.remove('show');
+        }
+
+        function proceedInstall(method) {
+            closeInstallSheet();
+            const safeUrl = encodeURIComponent(currentInstallUrl);
+            
+            if (method === 'ashte') {
+                window.location.href = `ashte://install?url=${safeUrl}`;
+            } else if (method === 'ipaomtk') {
+                window.location.href = `ipaomtk://install?url=${safeUrl}`;
+            } else if (method === 'esign') {
+                window.location.href = `esign://install?url=${safeUrl}`;
+            } else if (method === 'ksign') {
+                window.location.href = `ksign://install?url=${safeUrl}`;
+            } else if (method === 'direct') {
+                // Direct Web Install Logic
+                if (currentInstallUrl.startsWith('itms-services://')) {
+                    window.location.href = currentInstallUrl;
+                } else if (currentInstallUrl.includes('.plist')) {
+                    window.location.href = `itms-services://?action=download-manifest&url=${safeUrl}`;
+                } else {
+                    window.location.href = currentInstallUrl;
+                }
             }
         }
 
@@ -432,10 +497,7 @@
             try { const res = await fetch(`/api/status?build_id=${buildId}&app=${appName}`); return await res.json(); } catch(e) { return { status: 'processing' }; }
         }
 
-        async function downloadCertFiles() {
-            showToast('لە ئامادەکردندایە...', 'success');
-            // لێرە دەتوانیت کۆدی پێشووی دابەزاندنی زیپ دابنێیتەوە
-        }
+        async function downloadCertFiles() { showToast('لە ئامادەکردندایە...', 'success'); }
 
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
