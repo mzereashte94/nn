@@ -76,19 +76,22 @@
         .file-box svg { color: var(--app-blue); width: 22px; height: 22px; }
         .auth-input, .select-native { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-line); border-radius: 14px; padding: 12px 14px; color: var(--text-light); font-size: 14px; outline: none; transition: 0.3s; }
         .select-native { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2398989D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; appearance: none; }
-        .go-btn { background: linear-gradient(135deg, #0A84FF 0%, #0050A0 100%); color: #fff; font-weight: 700; font-size: 15px; padding: 14px; border-radius: 14px; width: 100%; border: none; cursor: pointer; }
+        .go-btn { background: linear-gradient(135deg, #0A84FF 0%, #0050A0 100%); color: #fff; font-weight: 700; font-size: 15px; padding: 14px; border-radius: 14px; width: 100%; border: none; cursor: pointer; transition: 0.2s; }
+        .go-btn:active { transform: scale(0.97); }
         .action-row { display: flex; gap: 10px; }
-        .mini-btn { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border-line); color: var(--text-light); font-size: 13px; font-weight: 600; padding: 12px; border-radius: 14px; display: flex; justify-content: center; align-items: center; gap: 6px; cursor: pointer; }
+        .mini-btn { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border-line); color: var(--text-light); font-size: 13px; font-weight: 600; padding: 12px; border-radius: 14px; display: flex; justify-content: center; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
+        .mini-btn:active { transform: scale(0.97); background: rgba(255,255,255,0.08); }
 
         /* Bento Grid Apps (Home View) */
         .library-box { flex: 1; background: var(--card-glass); border-radius: 20px; padding: 14px; border: 1px solid var(--border-line); display: flex; flex-direction: column; backdrop-filter: blur(25px); }
         .lib-title { font-size: 16px; font-weight: 800; color: var(--text-light); margin-bottom: 12px; text-align: left; padding-left: 6px; letter-spacing: -0.3px; }
         .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .app-bento-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-line); border-radius: 16px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; transition: 0.2s; }
-        .app-img-box { width: 48px; height: 48px; border-radius: 12px; position: relative; margin-bottom: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); overflow: hidden; flex-shrink: 0; }
+        .app-img-box { width: 48px; height: 48px; border-radius: 12px; position: relative; margin-bottom: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); overflow: hidden; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.05); }
         .app-img-box img { width: 100%; height: 100%; object-fit: cover; }
         .app-text-name { font-size: 11px; font-weight: 700; color: var(--text-light); text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; }
-        .store-get-btn { width: 100%; background: rgba(10, 132, 255, 0.1); color: var(--app-blue); border: none; border-radius: 10px; font-size: 12px; font-weight: 800; padding: 6px 0; cursor: pointer; }
+        .store-get-btn { width: 100%; background: rgba(10, 132, 255, 0.1); color: var(--app-blue); border: none; border-radius: 10px; font-size: 12px; font-weight: 800; padding: 6px 0; cursor: pointer; transition: 0.2s; }
+        .store-get-btn:active { transform: scale(0.95); background: rgba(10, 132, 255, 0.2); }
         
         .progress-overlay, .success-overlay { position: absolute; inset: 0; display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 2; border-radius: 12px; }
         .progress-overlay { background: rgba(0,0,0,0.7); }
@@ -139,22 +142,43 @@
         .nav-item.active { color: var(--app-blue); }
         .nav-item svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.2; }
 
-        /* Sheets (Modals) */
+        /* --- NEW MODERN SHEETS (MODALS) --- */
         .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
         .modal-bg.show { opacity: 1; pointer-events: auto; }
         
         .sheet {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: #1C1C1E; border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 12px 16px 40px 16px; z-index: 60; transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1); border-top: 1px solid var(--border-line); box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+            position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(28, 28, 30, 0.95); border-top-left-radius: 30px; border-top-right-radius: 30px; padding: 12px 16px 40px 16px; z-index: 60; transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1); border-top: 1px solid rgba(255,255,255,0.1); box-shadow: 0 -10px 40px rgba(0,0,0,0.5); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
         }
-        body.light-mode .sheet { background: #F2F2F7; }
+        body.light-mode .sheet { background: rgba(242, 242, 247, 0.95); }
         .sheet.show { transform: translateY(0); }
         .sheet-pill { width: 40px; height: 5px; background: rgba(120,120,128,0.5); border-radius: 5px; margin: 0 auto 20px auto; }
         
-        .sheet-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid var(--border-line); cursor: pointer; transition: all 0.2s ease; border-radius: 14px; color: var(--text-light); }
+        .sheet-title {
+            text-align: center; font-weight: 800; margin-bottom: 20px; font-size: 18px; 
+            background: linear-gradient(90deg, #ffffff, #a1a1aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px;
+        }
+
+        .sheet-options-container {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; overflow: hidden; margin-bottom: 16px;
+        }
+
+        .sheet-row { 
+            display: flex; align-items: center; gap: 14px; padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.2s; color: var(--text-light); 
+        }
         .sheet-row:last-child { border-bottom: none; }
-        .sheet-row:active { background: rgba(120,120,128,0.2); transform: scale(0.98); }
-        .sheet-row img { width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(120,120,128,0.2); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        .sheet-row span { font-size: 15px; font-weight: 700; }
+        .sheet-row:active { background: rgba(255,255,255,0.08); }
+        .sheet-row img { width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        .sheet-row-text { flex: 1; display: flex; flex-direction: column; }
+        .sheet-row-title { font-size: 16px; font-weight: 700; color: #fff; }
+        .sheet-row-sub { font-size: 12px; font-weight: 500; color: var(--text-gray); margin-top: 2px; }
+
+        .btn-direct {
+            display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; 
+            background: linear-gradient(135deg, rgba(10, 132, 255, 0.15) 0%, rgba(10, 132, 255, 0.05) 100%); 
+            border: 1px solid rgba(10, 132, 255, 0.3); color: var(--app-blue); padding: 16px; border-radius: 20px; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.2s;
+        }
+        .btn-direct:active { transform: scale(0.97); background: rgba(10, 132, 255, 0.2); }
 
         /* Toasts */
         .toast-container { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: rgba(28, 28, 30, 0.9); color: white; padding: 12px 20px; border-radius: 40px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); transition: top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -196,7 +220,7 @@
                 <!-- VIP Signer -->
                 <div id="formVIP" style="display: none; flex-direction: column;">
                     <div class="panel">
-                        <div class="vip-app-btn" onclick="openAppSheet()" style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); border-radius: 16px; padding: 10px 14px; cursor: pointer; border: 1px solid var(--border-line); margin-bottom: 10px;">
+                        <div class="vip-app-btn" onclick="openAppSheet()" style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); border-radius: 16px; padding: 10px 14px; cursor: pointer; border: 1px solid var(--border-line); margin-bottom: 10px; transition: 0.2s;">
                             <div class="flex items-center gap-3">
                                 <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-10 h-10 rounded-xl object-cover border border-[var(--border-line)] shadow-md">
                                 <div class="flex flex-col">
@@ -324,40 +348,54 @@
     <div class="modal-bg" id="appSheetOverlay" onclick="closeAppSheet()"></div>
     <div class="sheet" id="appSheet">
         <div class="sheet-pill"></div>
-        <div class="flex flex-col gap-1">
+        <h3 class="sheet-title">Select Target App</h3>
+        <div class="sheet-options-container">
             <div class="sheet-row" onclick="selectApp('AshteMobile', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg')">
-                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg"> <span>AshteMobile</span>
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg">
+                <div class="sheet-row-text">
+                    <span class="sheet-row-title">AshteMobile</span>
+                </div>
             </div>
             <div class="sheet-row" onclick="selectApp('ipaomtk', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg')">
-                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg"> <span>ipaomtk</span>
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg">
+                <div class="sheet-row-text"><span class="sheet-row-title">ipaomtk</span></div>
             </div>
             <div class="sheet-row" onclick="selectApp('Esign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg')">
-                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg"> <span>Esign</span>
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg">
+                <div class="sheet-row-text"><span class="sheet-row-title">Esign</span></div>
             </div>
             <div class="sheet-row" onclick="selectApp('Ksign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg')">
-                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg"> <span>Ksign</span>
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg">
+                <div class="sheet-row-text"><span class="sheet-row-title">Ksign</span></div>
             </div>
             <div class="sheet-row" onclick="selectApp('MyTV', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg')">
-                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg"> <span>MyTV</span>
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg">
+                <div class="sheet-row-text"><span class="sheet-row-title">MyTV</span></div>
             </div>
         </div>
     </div>
 
-    <!-- Install Options Action Sheet (Library) -->
+    <!-- NEW MODERN: Install Options Action Sheet (Library) -->
     <div class="modal-bg" id="installSheetOverlay" onclick="closeInstallSheet()"></div>
     <div class="sheet" id="installSheet">
         <div class="sheet-pill"></div>
-        <h3 style="text-align:center; font-weight: 800; margin-bottom: 16px; font-size: 16px; color: var(--text-light);">Install via...</h3>
+        <h3 class="sheet-title">Install Application</h3>
         
-        <div class="flex flex-col gap-2">
+        <div class="sheet-options-container">
             <div class="sheet-row" onclick="proceedInstall('ashte')">
-                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg"> <span>AshteMobile</span>
-            </div>
-            
-            <div class="sheet-row" onclick="proceedInstall('direct')" style="justify-content: center; background: rgba(10, 132, 255, 0.1); color: var(--app-blue); margin-top: 10px; border: 1px solid rgba(10,132,255,0.2);">
-                <span style="font-weight: 800;">Direct Install (Web)</span>
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg">
+                <div class="sheet-row-text">
+                    <span class="sheet-row-title">AshteMobile Engine</span>
+                    <span class="sheet-row-sub">Fast & Secure Install</span>
+                </div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-gray)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
             </div>
         </div>
+
+        <button class="btn-direct" onclick="proceedInstall('direct')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Direct Web Install
+        </button>
     </div>
 
     <script>
