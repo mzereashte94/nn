@@ -51,13 +51,13 @@
         }
 
         /* Top Header */
-        .title-box { text-align: center; padding: 16px 20px 12px 20px; z-index: 10; }
+        .title-box { text-align: center; padding: 12px 20px 8px 20px; z-index: 10; }
         .title-text { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; text-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         .title-badge { display: inline-block; background: rgba(10, 132, 255, 0.15); border: 1px solid var(--border-highlight); color: var(--app-blue); font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 12px; text-transform: uppercase; margin-top: 4px; }
 
         /* View Content Area */
         .view-container {
-            flex: 1; overflow-y: auto; padding: 0 16px 80px 16px;
+            flex: 1; overflow-y: auto; padding: 0 16px 85px 16px;
         }
         .view-container::-webkit-scrollbar { display: none; }
         
@@ -69,7 +69,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Home View Specifics */
+        /* UI Elements */
         .segment-bg {
             display: flex; background: var(--card-base); border-radius: 14px; padding: 4px; position: relative; margin-bottom: 12px; border: 1px solid var(--border-line); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }
@@ -81,23 +81,36 @@
             position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: rgba(99, 99, 102, 0.5); border-radius: 10px; z-index: 1; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .panel { 
-            background: var(--card-glass); border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--border-line); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); margin-bottom: 16px;
+            background: var(--card-glass); border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--border-line); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); margin-bottom: 12px;
         }
         .upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .file-box { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.15); border-radius: 16px; padding: 14px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; text-align: center; }
         .file-box svg { color: var(--app-blue); width: 22px; height: 22px; }
         .auth-input, .select-native {
-            width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-line); border-radius: 14px; padding: 14px; color: var(--text-light); font-size: 14px; outline: none; transition: 0.3s;
+            width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-line); border-radius: 14px; padding: 12px 14px; color: var(--text-light); font-size: 14px; outline: none; transition: 0.3s;
         }
         .select-native { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2398989D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; appearance: none; }
         .go-btn { background: linear-gradient(135deg, #0A84FF 0%, #0050A0 100%); color: #fff; font-weight: 700; font-size: 15px; padding: 14px; border-radius: 14px; width: 100%; border: none; cursor: pointer; }
         .action-row { display: flex; gap: 10px; }
         .mini-btn { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border-line); color: var(--text-light); font-size: 13px; font-weight: 600; padding: 12px; border-radius: 14px; display: flex; justify-content: center; align-items: center; gap: 6px; cursor: pointer; }
 
+        /* Bento Grid Apps (Home View) */
+        .library-box { flex: 1; background: var(--card-glass); border-radius: 20px; padding: 14px; border: 1px solid var(--border-line); display: flex; flex-direction: column; backdrop-filter: blur(25px); }
+        .lib-title { font-size: 16px; font-weight: 800; color: var(--text-light); margin-bottom: 12px; text-align: left; padding-left: 6px; letter-spacing: -0.3px; }
+        .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .app-bento-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-line); border-radius: 16px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; transition: 0.2s; }
+        .app-img-box { width: 48px; height: 48px; border-radius: 12px; position: relative; margin-bottom: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); overflow: hidden; flex-shrink: 0; }
+        .app-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .app-text-name { font-size: 11px; font-weight: 700; color: var(--text-light); text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; }
+        .store-get-btn { width: 100%; background: rgba(10, 132, 255, 0.1); color: var(--app-blue); border: none; border-radius: 10px; font-size: 12px; font-weight: 800; padding: 6px 0; cursor: pointer; }
+        
+        .progress-overlay, .success-overlay { position: absolute; inset: 0; display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 2; border-radius: 12px; }
+        .progress-overlay { background: rgba(0,0,0,0.7); }
+        .success-overlay { background: rgba(48, 209, 88, 0.85); z-index: 3; color: white; }
+        .pct-val { font-size: 12px; font-weight: 800; color: #fff; }
+
         /* Remote Library List UI */
-        .remote-app-card {
-            background: var(--card-base); border: 1px solid var(--border-line); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 14px; margin-bottom: 10px;
-        }
+        .remote-app-card { background: var(--card-base); border: 1px solid var(--border-line); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
         .remote-app-card img { width: 54px; height: 54px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
         .remote-app-info { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .remote-app-title { font-size: 16px; font-weight: 700; color: var(--text-light); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
@@ -105,21 +118,14 @@
         .remote-app-get { background: rgba(10, 132, 255, 0.1); color: var(--app-blue); font-weight: 700; font-size: 13px; padding: 6px 16px; border-radius: 14px; text-decoration: none; display: inline-block; }
 
         /* Settings UI */
-        .profile-card {
-            display: flex; flex-direction: column; align-items: center; padding: 24px 16px; background: var(--card-base); border-radius: 20px; border: 1px solid var(--border-line); margin-bottom: 16px;
-        }
+        .profile-card { display: flex; flex-direction: column; align-items: center; padding: 24px 16px; background: var(--card-base); border-radius: 20px; border: 1px solid var(--border-line); margin-bottom: 16px; }
         .profile-card img { width: 80px; height: 80px; border-radius: 20px; margin-bottom: 12px; border: 2px solid var(--app-blue); padding: 2px; }
         .profile-name { font-size: 20px; font-weight: 800; color: var(--text-light); }
         .profile-sub { font-size: 13px; color: var(--text-gray); }
 
-        .settings-group {
-            background: var(--card-base); border-radius: 20px; border: 1px solid var(--border-line); overflow: hidden; margin-bottom: 16px;
-        }
-        .settings-row {
-            display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--border-line); text-decoration: none; color: var(--text-light); cursor: pointer; transition: 0.2s;
-        }
+        .settings-group { background: var(--card-base); border-radius: 20px; border: 1px solid var(--border-line); overflow: hidden; margin-bottom: 16px; }
+        .settings-row { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--border-line); text-decoration: none; color: var(--text-light); cursor: pointer; transition: 0.2s; }
         .settings-row:last-child { border-bottom: none; }
-        .settings-row:active { background: rgba(255,255,255,0.05); }
         .settings-left { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 600; }
         .settings-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; justify-content: center; align-items: center; color: white; }
         .icon-dark { background: #000; border: 1px solid #333; }
@@ -148,9 +154,21 @@
         .nav-item.active { color: var(--app-blue); }
         .nav-item svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.2; }
 
+        /* Toasts and Overlays */
+        .toast-container { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: rgba(28, 28, 30, 0.9); color: white; padding: 12px 20px; border-radius: 40px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); transition: top 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .toast-container.show { top: 40px; }
+        .toast-icon { width: 18px; height: 18px; }
+        .toast-error .toast-icon { color: #FF453A; }
+        .toast-success .toast-icon { color: #32D74B; }
     </style>
 </head>
 <body>
+
+    <!-- Toast Notification -->
+    <div id="appToast" class="toast-container">
+        <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></svg>
+        <span id="toastMessage">Message</span>
+    </div>
 
     <div class="main-frame">
         
@@ -191,11 +209,11 @@
                             </div>
                         </div>
                         <input type="password" id="password" placeholder="Certificate Password" class="auth-input">
-                        <button type="submit" class="go-btn">Start Signing Engine</button>
+                        <button type="submit" class="go-btn" onclick="startVipSign(event)">Start Signing Engine</button>
                     </div>
                 </div>
 
-                <!-- Free Signer -->
+                <!-- Free Signer & Apps (Home Screen) -->
                 <div id="formFree" style="display: flex; flex-direction: column;">
                     <div class="panel">
                         <select id="freeCertSelect" class="select-native">
@@ -206,7 +224,15 @@
                         </select>
                         <div class="action-row">
                             <a href="https://ashtemobile.site/ashtemobile.mobileconfig" class="mini-btn">DNS Block</a>
-                            <button type="button" class="mini-btn" style="color:var(--app-blue);">Get ZIP</button>
+                            <button type="button" class="mini-btn" style="color:var(--app-blue);" onclick="downloadCertFiles()">Get ZIP</button>
+                        </div>
+                    </div>
+
+                    <!-- 6 Static Apps restored here -->
+                    <div class="library-box">
+                        <h2 class="lib-title">App Library</h2>
+                        <div class="bento-grid" id="bentoContainer">
+                            <!-- Injected via JS below -->
                         </div>
                     </div>
                 </div>
@@ -215,7 +241,7 @@
 
             <!-- ================= LIBRARY VIEW ================= -->
             <div id="view-library" class="main-view">
-                <div style="font-size: 20px; font-weight: 800; margin-bottom: 12px; padding-left: 4px;">App Store</div>
+                <div style="font-size: 20px; font-weight: 800; margin-bottom: 12px; padding-left: 4px;">Remote Store</div>
                 <div id="libraryContainer">
                     <div style="text-align:center; padding: 40px; color: var(--text-gray);">Fetching Apps...</div>
                 </div>
@@ -288,23 +314,34 @@
     </div>
 
     <script>
-        // Navigation Logic
+        // --- TOAST SYSTEM ---
+        function showToast(message, type = 'error') {
+            const toast = document.getElementById('appToast');
+            const icon = toast.querySelector('.toast-icon');
+            document.getElementById('toastMessage').innerText = message;
+            toast.className = 'toast-container'; 
+            if (type === 'error') {
+                toast.classList.add('toast-error');
+                icon.innerHTML = '<circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>';
+            } else {
+                toast.classList.add('toast-success');
+                icon.innerHTML = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>';
+            }
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3500);
+        }
+
+        // --- NAVIGATION LOGIC ---
         function switchNav(tab) {
-            // Update Bottom Nav Icons
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.getElementById('nav-' + tab).classList.add('active');
 
-            // Update Views
             document.querySelectorAll('.main-view').forEach(el => el.classList.remove('active-view'));
             document.getElementById('view-' + tab).classList.add('active-view');
 
-            // Load Library JSON if Library is opened
-            if (tab === 'library' && !window.libraryLoaded) {
-                fetchLibrary();
-            }
+            if (tab === 'library' && !window.libraryLoaded) fetchLibrary();
         }
 
-        // Segment Home (Free/VIP)
         function setSignTab(mode) {
             const ind = document.getElementById('tabIndicator');
             const formV = document.getElementById('formVIP');
@@ -321,14 +358,42 @@
             }
         }
 
-        // Fetch JSON for Library
+        // --- INJECT STATIC APPS INTO HOME ---
+        const appsData = [
+            { id: 'AshteMobile', name: 'AshteMobile', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
+            { id: 'ipaomtk', name: 'ipaomtk', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' },
+            { id: 'Esign', name: 'Esign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
+            { id: 'Ksign', name: 'Ksign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
+            { id: 'MyTV', name: 'MyTV', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' },
+            { id: 'Feather', name: 'Feather', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' } 
+        ];
+
+        const bentoContainer = document.getElementById('bentoContainer');
+        appsData.forEach(app => {
+            bentoContainer.innerHTML += `
+                <div class="app-bento-card">
+                    <div class="app-img-box">
+                        <img src="${app.icon}">
+                        <div class="progress-overlay"><span class="pct-val">0%</span></div>
+                        <div class="success-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                    </div>
+                    <span class="app-text-name">${app.name}</span>
+                    <button class="store-get-btn" onclick="installFreeApp('${app.id}', this)">GET</button>
+                </div>
+            `;
+        });
+
+        // --- FETCH JSON (CORS PROXY FIX) ---
         async function fetchLibrary() {
             const container = document.getElementById('libraryContainer');
             try {
-                const res = await fetch('https://ashtemobile.site/Ashtemobile.json');
+                // بەکارهێنانی پرۆکسی بۆ چارەسەری کێشەی CORS و خوێندنەوەی JSON بەبێ کێشە
+                const targetUrl = encodeURIComponent('https://ashtemobile.site/Ashtemobile.json');
+                const proxyUrl = `https://api.allorigins.win/raw?url=${targetUrl}`;
+                
+                const res = await fetch(proxyUrl);
                 const data = await res.json();
                 
-                // دۆزینەوەی ئەپەکان لەناو JSON ئەگەر بە شێوەی Array بن یان لەناو Object بێت
                 let apps = [];
                 if (data.apps) apps = data.apps;
                 else if (Array.isArray(data)) apps = data;
@@ -358,16 +423,77 @@
                 });
                 window.libraryLoaded = true;
             } catch (err) {
-                container.innerHTML = '<div style="text-align:center; padding: 20px; color: #FF453A;">Failed to load JSON!</div>';
+                container.innerHTML = '<div style="text-align:center; padding: 20px; color: #FF453A;">Failed to load JSON (CORS Issue)</div>';
             }
         }
 
-        // Dark Mode Toggle
-        function toggleDarkMode() {
-            document.body.classList.toggle('light-mode');
+        // --- SIGNING ENGINE & ACTIONS ---
+        async function checkStatus(buildId, appName) {
+            try { const res = await fetch(`/api/status?build_id=${buildId}&app=${appName}`); return await res.json(); } catch(e) { return { status: 'processing' }; }
         }
 
-        // File Inputs Name
+        async function downloadCertFiles() {
+            showToast('لە ئامادەکردندایە...', 'success');
+            // لێرە دەتوانیت کۆدی پێشووی دابەزاندنی زیپ دابنێیتەوە
+        }
+
+        async function installFreeApp(appName, btnElement) {
+            const selectedCertId = document.getElementById('freeCertSelect').value;
+            const appCard = btnElement.parentElement;
+            const iconWrap = appCard.querySelector('.app-img-box');
+            const progressOverlay = iconWrap.querySelector('.progress-overlay');
+            const pctText = iconWrap.querySelector('.pct-val');
+            const successOverlay = iconWrap.querySelector('.success-overlay');
+            
+            btnElement.style.opacity = '0.5'; btnElement.style.pointerEvents = 'none'; btnElement.innerText = 'Wait';
+            progressOverlay.style.display = 'flex';
+
+            let pct = 0;
+            const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; pctText.innerText = pct + '%'; } }, 200);
+
+            try {
+                const res = await fetch('/api/sign', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app: appName, use_free_cert: true, cert_folder: selectedCertId }) });
+                if(!res.ok) throw new Error('Error');
+                const data = await res.json();
+                
+                const checker = setInterval(async () => {
+                    const serverStatus = await checkStatus(data.build_id, appName);
+                    if (serverStatus.status === 'done') {
+                        clearInterval(checker); clearInterval(sim); pctText.innerText = '100%';
+                        setTimeout(() => {
+                            progressOverlay.style.display = 'none'; successOverlay.style.display = 'flex';
+                            showToast('بە سەرکەوتوویی واژۆ کرا', 'success');
+                            const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
+                            window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
+                            
+                            setTimeout(() => {
+                                successOverlay.style.display = 'none'; btnElement.innerText = 'GET';
+                                btnElement.style.opacity = '1'; btnElement.style.pointerEvents = 'auto'; pctText.innerText = '0%';
+                            }, 3000);
+                        }, 500);
+                    }
+                }, 1500);
+            } catch (err) {
+                clearInterval(sim); pctText.innerText = 'Err';
+                showToast('کێشەیەک ڕوویدا، دووبارە هەوڵبدەرەوە', 'error');
+                setTimeout(() => { progressOverlay.style.display = 'none'; btnElement.innerText = 'GET'; btnElement.style.opacity = '1'; btnElement.style.pointerEvents = 'auto'; }, 3000);
+            }
+        }
+
+        async function startVipSign(e) {
+            e.preventDefault();
+            const p12File = document.getElementById('p12File');
+            const provFile = document.getElementById('provFile');
+            const pass = document.getElementById('password');
+
+            if (!p12File.files[0] || !provFile.files[0] || !pass.value) {
+                return showToast('تکایە هەموو فایلەکان و پاسۆرد داخڵ بکە', 'error');
+            }
+            showToast('پرۆسەی واژۆکردن دەستی پێکرد...', 'success');
+        }
+
+        // --- UTILS ---
+        function toggleDarkMode() { document.body.classList.toggle('light-mode'); }
         document.getElementById('p12File').onchange = e => { if(e.target.files[0]) document.getElementById('p12Name').innerText = e.target.files[0].name; };
         document.getElementById('provFile').onchange = e => { if(e.target.files[0]) document.getElementById('provName').innerText = e.target.files[0].name; };
     </script>
