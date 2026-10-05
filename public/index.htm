@@ -96,13 +96,14 @@
         .pct-val { font-size: 12px; font-weight: 800; color: #fff; }
 
         /* Remote Library List UI */
-        .remote-app-card { background: var(--card-base); border: 1px solid var(--border-line); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+        .remote-app-card { background: var(--card-base); border: 1px solid var(--border-line); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 14px; margin-bottom: 10px; transition: 0.2s; }
+        .remote-app-card:active { transform: scale(0.98); }
         .remote-app-card img { width: 54px; height: 54px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
         .remote-app-info { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .remote-app-title { font-size: 16px; font-weight: 700; color: var(--text-light); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
         .remote-app-desc { font-size: 12px; color: var(--text-gray); margin-top: 2px; }
         .remote-app-get { background: rgba(10, 132, 255, 0.1); color: var(--app-blue); border: none; font-weight: 700; font-size: 13px; padding: 6px 16px; border-radius: 14px; cursor: pointer; display: inline-block; transition: 0.2s; }
-        .remote-app-get:active { background: rgba(10, 132, 255, 0.2); }
+        .remote-app-get:active { background: rgba(10, 132, 255, 0.2); transform: scale(0.95); }
 
         /* Settings UI */
         .profile-card { display: flex; flex-direction: column; align-items: center; padding: 24px 16px; background: var(--card-base); border-radius: 20px; border: 1px solid var(--border-line); margin-bottom: 16px; }
@@ -259,9 +260,7 @@
                 <div class="settings-group">
                     <div class="settings-row" onclick="toggleDarkMode()">
                         <div class="settings-left">
-                            <div class="settings-icon icon-dark">
-                                <svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                            </div>
+                            <div class="settings-icon icon-dark"><svg viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
                             Light Mode
                         </div>
                         <div class="toggle-switch"><div class="toggle-knob"></div></div>
@@ -405,7 +404,7 @@
             `;
         });
 
-        // --- FETCH JSON ---
+        // --- FETCH JSON (FIXED SIZE AND MULTIPLE URL KEYS) ---
         async function fetchLibrary() {
             const container = document.getElementById('libraryContainer');
             try {
@@ -429,9 +428,21 @@
                     const name = app.name || "Unknown App";
                     const icon = app.iconURL || app.icon || "https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg";
                     const version = app.version || "1.0";
+                    
+                    // Fixed Size Logic
                     let sizeText = '';
-                    if (app.size && !isNaN(parseInt(app.size))) { sizeText = '• ' + (parseInt(app.size) / 1048576).toFixed(1) + ' MB'; }
-                    const downloadLink = app.downloadURL || app.url || app.plist || '';
+                    if (app.size) {
+                        if (typeof app.size === 'string' && app.size.toLowerCase().includes('mb')) {
+                            sizeText = '• ' + app.size;
+                        } else if (!isNaN(parseInt(app.size))) {
+                            let s = parseInt(app.size);
+                            if (s > 10000) sizeText = '• ' + (s / 1048576).toFixed(1) + ' MB'; // Bytes to MB
+                            else sizeText = '• ' + s + ' MB'; // Already MB
+                        }
+                    }
+                    
+                    // Broad check for download links
+                    const downloadLink = app.downloadURL || app.url || app.plist || app.ipa || app.link || app.ipa_url || app.download_url || app.file || '';
                     
                     container.innerHTML += `
                         <div class="remote-app-card">
@@ -450,7 +461,7 @@
             }
         }
 
-        // --- CUSTOM INSTALL SHEET LOGIC ---
+        // --- CUSTOM INSTALL SHEET LOGIC (WITH NEW SCHEME) ---
         let currentInstallUrl = "";
 
         function openInstallSheet(url) {
@@ -470,24 +481,25 @@
 
         function proceedInstall(method) {
             closeInstallSheet();
-            const safeUrl = encodeURIComponent(currentInstallUrl);
+            const rawUrl = currentInstallUrl;
             
+            // شێوازی نوێی کردنەوەی ئەپەکان وەک داوات کرد: name://install/url
             if (method === 'ashte') {
-                window.location.href = `ashte://install?url=${safeUrl}`;
+                window.location.href = `ashte://install/${rawUrl}`;
             } else if (method === 'ipaomtk') {
-                window.location.href = `ipaomtk://install?url=${safeUrl}`;
+                window.location.href = `ipaomtk://install/${rawUrl}`;
             } else if (method === 'esign') {
-                window.location.href = `esign://install?url=${safeUrl}`;
+                window.location.href = `esign://install/${rawUrl}`;
             } else if (method === 'ksign') {
-                window.location.href = `ksign://install?url=${safeUrl}`;
+                window.location.href = `ksign://install/${rawUrl}`;
             } else if (method === 'direct') {
                 // Direct Web Install Logic
-                if (currentInstallUrl.startsWith('itms-services://')) {
-                    window.location.href = currentInstallUrl;
-                } else if (currentInstallUrl.includes('.plist')) {
-                    window.location.href = `itms-services://?action=download-manifest&url=${safeUrl}`;
+                if (rawUrl.startsWith('itms-services://')) {
+                    window.location.href = rawUrl;
+                } else if (rawUrl.includes('.plist')) {
+                    window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(rawUrl)}`;
                 } else {
-                    window.location.href = currentInstallUrl;
+                    window.location.href = rawUrl;
                 }
             }
         }
