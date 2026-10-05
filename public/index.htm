@@ -308,7 +308,7 @@
 
     </div>
 
-    <!-- NEW: Install Options Action Sheet -->
+    <!-- Install Options Action Sheet -->
     <div class="modal-bg" id="installSheetOverlay" onclick="closeInstallSheet()"></div>
     <div class="sheet" id="installSheet">
         <div class="sheet-pill"></div>
@@ -381,12 +381,7 @@
 
         // --- INJECT STATIC APPS INTO HOME ---
         const appsData = [
-            { id: 'AshteMobile', name: 'AshteMobile', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
-            { id: 'ipaomtk', name: 'ipaomtk', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' },
-            { id: 'Esign', name: 'Esign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
-            { id: 'Ksign', name: 'Ksign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
-            { id: 'MyTV', name: 'MyTV', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' },
-            { id: 'Feather', name: 'Feather', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' } 
+            { id: 'AshteMobile', name: 'AshteMobile', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' }
         ];
 
         const bentoContainer = document.getElementById('bentoContainer');
@@ -404,22 +399,32 @@
             `;
         });
 
-        // --- FETCH JSON (FIXED SIZE AND MULTIPLE URL KEYS) ---
+        // --- FETCH JSON (ROBUST DUAL CHECK) ---
         async function fetchLibrary() {
             const container = document.getElementById('libraryContainer');
             try {
-                const targetUrl = encodeURIComponent('https://ashtemobile.site/Ashtemobile.json');
-                const proxyUrl = `https://api.allorigins.win/raw?url=${targetUrl}`;
+                const targetUrl = 'https://ashtemobile.site/Ashtemobile.json';
                 
-                const res = await fetch(proxyUrl);
+                let res;
+                try {
+                    // Try direct fetch first
+                    res = await fetch(targetUrl + '?t=' + Date.now()); 
+                    if (!res.ok) throw new Error('Direct failed');
+                } catch (e) {
+                    // Fallback to stronger proxy if direct fails due to CORS
+                    const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`;
+                    res = await fetch(proxyUrl);
+                }
+
                 const data = await res.json();
                 
                 let apps = [];
                 if (data.apps) apps = data.apps;
                 else if (Array.isArray(data)) apps = data;
+                else if (typeof data === 'object') apps = [data];
 
                 if (apps.length === 0) {
-                    container.innerHTML = '<div style="text-align:center; padding: 20px; color: var(--text-gray);">No Apps Found</div>';
+                    container.innerHTML = '<div style="text-align:center; padding: 20px; color: var(--text-gray);">هیچ ئەپێک نەدۆزرایەوە</div>';
                     return;
                 }
 
@@ -429,19 +434,17 @@
                     const icon = app.iconURL || app.icon || "https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg";
                     const version = app.version || "1.0";
                     
-                    // Fixed Size Logic
                     let sizeText = '';
                     if (app.size) {
                         if (typeof app.size === 'string' && app.size.toLowerCase().includes('mb')) {
                             sizeText = '• ' + app.size;
                         } else if (!isNaN(parseInt(app.size))) {
                             let s = parseInt(app.size);
-                            if (s > 10000) sizeText = '• ' + (s / 1048576).toFixed(1) + ' MB'; // Bytes to MB
-                            else sizeText = '• ' + s + ' MB'; // Already MB
+                            if (s > 10000) sizeText = '• ' + (s / 1048576).toFixed(1) + ' MB';
+                            else sizeText = '• ' + s + ' MB';
                         }
                     }
                     
-                    // Broad check for download links
                     const downloadLink = app.downloadURL || app.url || app.plist || app.ipa || app.link || app.ipa_url || app.download_url || app.file || '';
                     
                     container.innerHTML += `
@@ -461,7 +464,7 @@
             }
         }
 
-        // --- CUSTOM INSTALL SHEET LOGIC (WITH NEW SCHEME) ---
+        // --- CUSTOM INSTALL SHEET LOGIC (WITH APP SCHEMES) ---
         let currentInstallUrl = "";
 
         function openInstallSheet(url) {
@@ -483,7 +486,6 @@
             closeInstallSheet();
             const rawUrl = currentInstallUrl;
             
-            // شێوازی نوێی کردنەوەی ئەپەکان وەک داوات کرد: name://install/url
             if (method === 'ashte') {
                 window.location.href = `ashte://install/${rawUrl}`;
             } else if (method === 'ipaomtk') {
@@ -493,7 +495,6 @@
             } else if (method === 'ksign') {
                 window.location.href = `ksign://install/${rawUrl}`;
             } else if (method === 'direct') {
-                // Direct Web Install Logic
                 if (rawUrl.startsWith('itms-services://')) {
                     window.location.href = rawUrl;
                 } else if (rawUrl.includes('.plist')) {
