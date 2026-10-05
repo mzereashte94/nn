@@ -94,9 +94,8 @@
 
         /* APP LIBRARY */
         .library-box {
-            flex: 1; background: var(--card-glass); border-radius: 20px; padding: 16px 12px; border: 1px solid var(--border-line); display: flex; flex-direction: column; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); overflow-y: auto;
+            flex: 1; background: var(--card-glass); border-radius: 20px; padding: 16px 12px; border: 1px solid var(--border-line); display: flex; flex-direction: column; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }
-        .library-box::-webkit-scrollbar { display: none; }
         .lib-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; text-align: left; padding-left: 8px; }
         
         .bento-grid {
@@ -173,7 +172,7 @@
         </div>
 
         <!-- VIP View -->
-        <!-- لێرەدا ئایدی formVIP بەکاردەهێنین و ڕاستەوخۆ دەیدەین بە جاڤاسکریپتەکە خوارەوە -->
+        <!-- لێرەدا فۆڕمەکە ئایدییەکەی چاککرا بۆ ئەوەی جاڤاسکریپتەکە بیخوێنێتەوە -->
         <form id="formVIP" class="view-section">
             <div class="panel">
                 <div class="vip-app-btn" onclick="openSheet()">
@@ -215,7 +214,6 @@
         <div id="formFree" class="view-section view-active">
             <div class="panel mb-4">
                 
-                <!-- شەهادەکان -->
                 <select id="freeCertSelect" class="select-native">
                     <option value="File">Enterprise Cert (Auto)</option>
                     <option value="Bureau">Bureau</option>
@@ -393,6 +391,7 @@
             btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
         }
 
+        // Install Function بە ڕیسێتەوە بۆ دۆخی ئاسایی و ڕۆیشتن بۆ تێلیگرام
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
             const appCard = btnElement.parentElement;
@@ -446,7 +445,7 @@
             }
         }
 
-        // لێرەدا کێشەکە چارەسەر کرا: formVIP لەبری signForm دانراوە
+        // لێرەدا کێشەکە چارەسەر کرا: formVIP لەبری signForm دانراوە بۆ ئەوەی دوگمەکە کار بکات
         document.getElementById('formVIP').onsubmit = async (e) => {
             e.preventDefault();
             const status = document.getElementById('vipStatus');
@@ -458,7 +457,7 @@
             const pass = document.getElementById('password');
             const appSelected = document.getElementById('appInput').value;
 
-            if (!p12File.files[0] || !provFile.files[0] || !pass.value) return alert('تکایە هەموو فایلەکان و پاسۆرد داخڵ بکە!');
+            if (!p12File.files[0] || !provFile.files[0] || !pass.value) return alert('Attach files and enter password!');
 
             btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; pWrap.style.display = 'block';
             status.style.display = 'block'; status.innerText = 'Uploading to Engine...'; 
