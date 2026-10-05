@@ -405,13 +405,9 @@
             }
         }
 
-        // --- INJECT STATIC APPS INTO HOME (5 APPS) ---
+        // --- INJECT STATIC APPS INTO HOME ---
         const appsData = [
-            { id: 'AshteMobile', name: 'AshteMobile', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
-            { id: 'ipaomtk', name: 'ipaomtk', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' },
-            { id: 'Esign', name: 'Esign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
-            { id: 'Ksign', name: 'Ksign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
-            { id: 'MyTV', name: 'MyTV', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
+            { id: 'AshteMobile', name: 'AshteMobile', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' }
         ];
 
         const bentoContainer = document.getElementById('bentoContainer');
@@ -429,23 +425,42 @@
             `;
         });
 
-        // --- FETCH JSON (ROBUST DUAL CHECK) ---
+        // --- FETCH JSON (SUPER ROBUST 3-WAY FALLBACK) ---
         async function fetchLibrary() {
             const container = document.getElementById('libraryContainer');
             try {
                 const targetUrl = 'https://ashtemobile.site/Ashtemobile.json';
+                let data = null;
                 
-                let res;
+                // هەوڵی یەکەم: راستەوخۆ
                 try {
-                    res = await fetch(targetUrl + '?t=' + Date.now()); 
-                    if (!res.ok) throw new Error('Direct failed');
-                } catch (e) {
-                    const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`;
-                    res = await fetch(proxyUrl);
+                    const res1 = await fetch(targetUrl + '?t=' + Date.now());
+                    if (res1.ok) data = await res1.json();
+                } catch(e) {}
+
+                // هەوڵی دووەم: بەکارهێنانی corsproxy
+                if (!data) {
+                    try {
+                        const res2 = await fetch('https://corsproxy.io/?' + encodeURIComponent(targetUrl));
+                        if (res2.ok) data = await res2.json();
+                    } catch(e) {}
                 }
 
-                const data = await res.json();
-                
+                // هەوڵی سێیەم: بەکارهێنانی allorigins
+                if (!data) {
+                    try {
+                        const res3 = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`);
+                        if (res3.ok) {
+                            const originData = await res3.json();
+                            data = JSON.parse(originData.contents);
+                        }
+                    } catch(e) {}
+                }
+
+                if (!data) {
+                    throw new Error("Unable to fetch or parse JSON");
+                }
+
                 let apps = [];
                 if (data.apps) apps = data.apps;
                 else if (Array.isArray(data)) apps = data;
@@ -488,7 +503,7 @@
                 });
                 window.libraryLoaded = true;
             } catch (err) {
-                container.innerHTML = '<div style="text-align:center; padding: 20px; color: #FF453A;">Failed to load JSON</div>';
+                container.innerHTML = '<div style="text-align:center; padding: 20px; color: #FF453A;">فایلەکە نەخوێندرایەوە. تکایە دڵنیابە لەوەی فایلی JSON کێشەی تێدا نییە.</div>';
             }
         }
 
