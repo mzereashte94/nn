@@ -29,7 +29,6 @@
             height: 100dvh; 
             display: flex; justify-content: center; align-items: center;
             overflow: hidden; 
-            /* خلفية متحركة وعميقة */
             background: radial-gradient(circle at 50% -20%, rgba(10, 132, 255, 0.25) 0%, rgba(0,0,0,1) 60%);
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Cairo", sans-serif;
         }
@@ -253,7 +252,6 @@
                     <option value="aramco">aramco</option>
                     <option value="vietnam">vietnam</option>
                     <option value="xl_axia">xl_axia</option>
-                    <!-- دەتوانیت ئەوانی تریش لێرە دابنێیتەوە -->
                 </select>
 
                 <div class="action-row">
@@ -327,7 +325,7 @@
             { id: 'Esign', name: 'Esign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
             { id: 'Ksign', name: 'Ksign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
             { id: 'MyTV', name: 'MyTV', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' },
-            { id: 'Feather', name: 'Feather', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' } // Add more to fill grid
+            { id: 'Feather', name: 'Feather', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' } 
         ];
 
         const bentoContainer = document.getElementById('bentoContainer');
@@ -483,7 +481,7 @@
             }
         }
 
-        document.getElementById('signForm').onsubmit = async (e) => {
+        document.getElementById('formVIP').onsubmit = async (e) => {
             e.preventDefault();
             const status = document.getElementById('vipStatus');
             const btn = document.getElementById('submitBtn');
