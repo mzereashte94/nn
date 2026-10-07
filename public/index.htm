@@ -172,8 +172,8 @@
         </div>
 
         <!-- VIP View -->
-        <!-- لێرەدا فۆڕمەکە ئایدییەکەی formVIP دانراوە بۆ ئەوەی دوگمەکە کار بکات -->
-        <form id="formVIP" class="view-section">
+        <!-- لێرەدا فۆڕمەکە لابرا و کرا بە div ڕێک وەک کۆدەکەی هاوڕێکەت بۆ ئەوەی کێشە دروست نەکات -->
+        <div id="formVIP" class="view-section">
             <div class="panel">
                 <div class="vip-app-btn" onclick="openSheet()">
                     <div class="flex items-center gap-4">
@@ -204,11 +204,11 @@
 
                 <input type="password" id="password" placeholder="Certificate Password" class="auth-input">
                 
-                <button type="submit" id="submitBtn" class="go-btn">Start Engine</button>
+                <button type="button" id="submitBtn" class="go-btn" onclick="startVipEngine()">Start Engine</button>
                 <div id="vipProgressWrapper" class="vip-loader-box"><div id="vipProgressFill" class="vip-loader-bar"></div></div>
                 <div id="vipStatus" class="vip-status-txt"></div>
             </div>
-        </form>
+        </div>
 
         <!-- Free View -->
         <div id="formFree" class="view-section view-active">
@@ -391,7 +391,7 @@
             btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
         }
 
-        // Install Function بە تێلیگرامەکەوە
+        // توقيع الشهادة المجانية (ڕێک وەک کۆدی هاوڕێکەت)
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
             const appCard = btnElement.parentElement;
@@ -400,23 +400,30 @@
             const pctText = iconWrap.querySelector('.pct-val');
             const successOverlay = iconWrap.querySelector('.success-overlay');
             
-            btnElement.style.opacity = '0.5';
-            btnElement.style.pointerEvents = 'none';
-            btnElement.innerText = '...';
+            btnElement.style.display = 'none';
             progressOverlay.style.display = 'flex';
 
             let pct = 0;
-            const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; pctText.innerText = pct + '%'; } }, 200);
+            const simInterval = setInterval(() => {
+                if (pct < 95) {
+                    pct += Math.floor(Math.random() * 6) + 2; 
+                    if (pct > 95) pct = 95;
+                    pctText.innerText = pct + '%';
+                }
+            }, 200);
 
             try {
                 const res = await fetch('/api/sign', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app: appName, use_free_cert: true, cert_folder: selectedCertId }) });
                 if(!res.ok) throw new Error('Error');
                 const data = await res.json();
+                const buildId = data.build_id;
                 
                 const checker = setInterval(async () => {
-                    const serverStatus = await checkStatus(data.build_id, appName);
+                    const serverStatus = await checkStatus(buildId, appName);
                     if (serverStatus.status === 'done') {
-                        clearInterval(checker); clearInterval(sim);
+                        clearInterval(checker);
+                        clearInterval(simInterval);
+                        
                         pctText.innerText = '100%';
                         
                         setTimeout(() => {
@@ -427,84 +434,94 @@
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
                             
                             setTimeout(() => {
-                                successOverlay.style.display = 'none';
-                                btnElement.innerText = 'GET';
-                                btnElement.style.opacity = '1';
-                                btnElement.style.pointerEvents = 'auto';
-                                pctText.innerText = '0%';
-                                
-                                // گەڕاندنەوەی تێلیگرام ڕێک وەک خۆی
                                 window.location.href = "https://t.me/ashtemobile";
-                            }, 2500);
+                            }, 1500);
 
                         }, 500);
                     }
                 }, 1200);
             } catch (err) {
-                clearInterval(sim); pctText.innerText = 'Err'; pctText.style.color = '#ff453a';
-                setTimeout(() => { progressOverlay.style.display = 'none'; pctText.style.color = '#fff'; btnElement.innerText = 'GET'; btnElement.style.opacity = '1'; btnElement.style.pointerEvents = 'auto'; }, 2500);
+                clearInterval(simInterval);
+                pctText.innerText = 'Err';
+                pctText.style.color = '#ef4444';
+                setTimeout(() => {
+                    progressOverlay.style.display = 'none';
+                    btnElement.style.display = 'block';
+                    pctText.style.color = '#fff';
+                }, 2000);
             }
         }
 
-        // لێرەدا کێشەکە چارەسەر کرا: formVIP بەکاردێت بۆ ئەوەی دوگمەکە کار بکات
-        document.getElementById('formVIP').onsubmit = async (e) => {
-            e.preventDefault();
+        // قسم الـ VIP (ڕێک وەک کۆدی هاوڕێکەت کراوە بە فەنکشن)
+        async function startVipEngine() {
             const status = document.getElementById('vipStatus');
             const btn = document.getElementById('submitBtn');
-            const pWrap = document.getElementById('vipProgressWrapper');
-            const pFill = document.getElementById('vipProgressFill');
+            const progressWrapper = document.getElementById('vipProgressWrapper');
+            const progressFill = document.getElementById('vipProgressFill');
             const p12File = document.getElementById('p12File');
             const provFile = document.getElementById('provFile');
-            const pass = document.getElementById('password');
+            const passwordInput = document.getElementById('password');
             const appSelected = document.getElementById('appInput').value;
 
-            if (!p12File.files[0] || !provFile.files[0] || !pass.value) return alert('Attach files and enter password!');
+            if (!p12File.files[0] || !provFile.files[0] || !passwordInput.value) {
+                return alert('تکایە هەموو فایلەکان و پاسۆرد داخڵ بکە!');
+            }
 
-            btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; pWrap.style.display = 'block';
+            btn.disabled = true; btn.innerText = 'Uploading to Engine...';
             status.style.display = 'block'; status.innerText = 'Uploading to Engine...'; 
 
             try {
                 const p12 = await toBase64(p12File.files[0]);
                 const prov = await toBase64(provFile.files[0]);
 
-                const res = await fetch('/api/sign', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app: appSelected, p12, prov, password: pass.value }) });
+                const res = await fetch('/api/sign', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ app: appSelected, p12, prov, password: passwordInput.value })
+                });
+
                 if(!res.ok) throw new Error('Error');
                 const data = await res.json();
+                const buildId = data.build_id;
 
+                progressWrapper.style.display = 'block';
+                btn.style.display = 'none';
                 status.innerText = 'Signing Certificate...';
-                let sim = 0; const anim = setInterval(() => { if (sim < 95) sim += 5; pFill.style.width = sim + '%'; }, 300);
+                
+                let simulatedProgress = 0;
+                const animationInterval = setInterval(() => {
+                    if (simulatedProgress < 95) simulatedProgress += Math.random() * 6 + 1;
+                    if (simulatedProgress > 95) simulatedProgress = 95;
+                    progressFill.style.width = simulatedProgress + '%';
+                }, 250);
 
                 const checker = setInterval(async () => {
-                    const serverStatus = await checkStatus(data.build_id, appSelected);
+                    const serverStatus = await checkStatus(buildId, appSelected);
                     if (serverStatus.status === 'done') {
-                        clearInterval(checker); clearInterval(anim); pFill.style.width = '100%';
-                        status.innerText = 'Success! Prompting Install...'; status.style.color = '#32D74B';
+                        clearInterval(checker); clearInterval(animationInterval);
+                        progressFill.style.width = '100%';
+                        status.innerText = 'Success! Prompting Install...';
+                        status.style.color = '#32D74B';
                         
                         setTimeout(() => {
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appSelected)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
                             
                             setTimeout(() => {
-                                pWrap.style.display = 'none'; 
-                                btn.style.display = 'block'; 
-                                btn.style.pointerEvents = 'auto';
-                                btn.style.opacity = '1';
-                                status.style.display = 'none'; 
-                                status.style.color = 'var(--text-gray)';
-                                pFill.style.width = '0%';
-                                
-                                // گەڕاندنەوەی تێلیگرام ڕێک وەک خۆی
                                 window.location.href = "https://t.me/ashtemobile";
-                            }, 2500);
+                            }, 1500);
 
                         }, 800); 
                     }
                 }, 1200); 
+
             } catch (err) {
-                status.innerText = 'Connection Failed. Try again.'; status.style.color = '#ef4444';
-                setTimeout(() => { pWrap.style.display = 'none'; btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; status.style.display = 'none'; }, 3000);
+                status.innerText = 'Connection Failed. Try again.';
+                status.style.color = '#ef4444';
+                progressWrapper.style.display = 'none';
+                btn.style.display = 'block'; btn.disabled = false; btn.innerText = 'Start Engine';
             }
-        };
+        }
     </script>
 </body>
 </html>
