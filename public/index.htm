@@ -172,7 +172,6 @@
         </div>
 
         <!-- VIP View -->
-        <!-- لێرەدا فۆڕمەکە ئایدییەکەی چاککرا بۆ ئەوەی جاڤاسکریپتەکە بیخوێنێتەوە -->
         <form id="formVIP" class="view-section">
             <div class="panel">
                 <div class="vip-app-btn" onclick="openSheet()">
@@ -391,7 +390,7 @@
             btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
         }
 
-        // Install Function بە ڕیسێتەوە بۆ دۆخی ئاسایی و ڕۆیشتن بۆ تێلیگرام
+        // Install Function
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
             const appCard = btnElement.parentElement;
@@ -433,7 +432,7 @@
                                 btnElement.style.pointerEvents = 'auto';
                                 pctText.innerText = '0%';
                                 
-                                window.location.href = "https://t.me/ashtemobile";
+                                // گواستنەوە بۆ تێلیگرام سڕایەوە بۆ ئەوەی نامەی ئینستاڵ دەربکەوێت
                             }, 2500);
 
                         }, 500);
@@ -445,7 +444,6 @@
             }
         }
 
-        // لێرەدا کێشەکە چارەسەر کرا: formVIP لەبری signForm دانراوە بۆ ئەوەی دوگمەکە کار بکات
         document.getElementById('formVIP').onsubmit = async (e) => {
             e.preventDefault();
             const status = document.getElementById('vipStatus');
@@ -492,7 +490,7 @@
                                 status.style.color = 'var(--text-gray)';
                                 pFill.style.width = '0%';
                                 
-                                window.location.href = "https://t.me/ashtemobile";
+                                // گواستنەوە بۆ تێلیگرام سڕایەوە بۆ ئەوەی نامەی ئینستاڵ دەربکەوێت
                             }, 2500);
 
                         }, 800); 
