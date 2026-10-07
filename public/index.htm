@@ -133,7 +133,7 @@
         }
         .store-get-btn:active { background: rgba(255,255,255,0.15); }
 
-        /* Modal VIP */
+        /* Modal VIP & Install */
         .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 50; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
         .modal-bg.show { opacity: 1; pointer-events: auto; }
         
@@ -175,7 +175,7 @@
         <!-- لێرەدا فۆڕمەکە ئایدییەکەی چاککرا بۆ ئەوەی جاڤاسکریپتەکە بیخوێنێتەوە -->
         <form id="formVIP" class="view-section">
             <div class="panel">
-                <div class="vip-app-btn" onclick="openSheet()">
+                <div class="vip-app-btn" onclick="openAppSheet()">
                     <div class="flex items-center gap-4">
                         <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-11 h-11 rounded-xl object-cover border border-[var(--border-line)]">
                         <div class="flex flex-col">
@@ -214,6 +214,7 @@
         <div id="formFree" class="view-section view-active">
             <div class="panel mb-4">
                 
+                <!-- هەموو ٣٧ شەهادەکە بە تەواوی دانراونەتەوە -->
                 <select id="freeCertSelect" class="select-native">
                     <option value="File">Enterprise Cert (Auto)</option>
                     <option value="Bureau">Bureau</option>
@@ -275,7 +276,7 @@
     </div>
 
     <!-- Modal بۆ VIP -->
-    <div class="modal-bg" id="sheetOverlay" onclick="closeSheet()"></div>
+    <div class="modal-bg" id="appSheetOverlay" onclick="closeAppSheet()"></div>
     <div class="sheet" id="appSheet">
         <div class="sheet-pill"></div>
         <div class="flex flex-col">
@@ -293,6 +294,32 @@
             </div>
             <div class="sheet-row" onclick="selectApp('MyTV', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg')">
                 <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg"> <span>MyTV</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Install Options Action Sheet -->
+    <div class="modal-bg" id="installSheetOverlay" onclick="closeInstallSheet()"></div>
+    <div class="sheet" id="installSheet">
+        <div class="sheet-pill"></div>
+        <h3 style="text-align:center; font-weight: 800; margin-bottom: 16px; font-size: 16px; color: var(--text-light);">Install via...</h3>
+        
+        <div class="flex flex-col gap-2">
+            <div class="sheet-row" onclick="proceedInstall('ashte')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg"> <span>AshteMobile</span>
+            </div>
+            <div class="sheet-row" onclick="proceedInstall('ipaomtk')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg"> <span>IPAOMTK</span>
+            </div>
+            <div class="sheet-row" onclick="proceedInstall('esign')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg"> <span>ESign</span>
+            </div>
+            <div class="sheet-row" onclick="proceedInstall('ksign')">
+                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg"> <span>KSign</span>
+            </div>
+            
+            <div class="sheet-row" onclick="proceedInstall('direct')" style="justify-content: center; background: rgba(10, 132, 255, 0.1); color: var(--app-blue); margin-top: 10px; border: 1px solid rgba(10,132,255,0.2);">
+                <span style="font-weight: 800;">Direct Install (Web)</span>
             </div>
         </div>
     </div>
@@ -318,7 +345,7 @@
                         </div>
                     </div>
                     <span class="app-text-name">${app.name}</span>
-                    <button class="store-get-btn" onclick="installFreeApp('${app.id}', this)">GET</button>
+                    <button class="store-get-btn" onclick="openInstallSheet('https://github.com/ios94/ipa/releases/download/1.0/${app.id}.ipa')">GET</button>
                 </div>
             `;
         });
@@ -345,14 +372,14 @@
             }
         }
 
-        const sheetOverlay = document.getElementById('sheetOverlay');
+        const appSheetOverlay = document.getElementById('appSheetOverlay');
         const appSheet = document.getElementById('appSheet');
         
-        function openSheet() { sheetOverlay.classList.add('show'); appSheet.classList.add('show'); }
-        function closeSheet() { sheetOverlay.classList.remove('show'); appSheet.classList.remove('show'); }
+        function openAppSheet() { appSheetOverlay.classList.add('show'); appSheet.classList.add('show'); }
+        function closeAppSheet() { appSheetOverlay.classList.remove('show'); appSheet.classList.remove('show'); }
         function selectApp(id, img) {
             document.getElementById('selImg').src = img; document.getElementById('selName').innerText = id;
-            document.getElementById('appInput').value = id; closeSheet();
+            document.getElementById('appInput').value = id; closeAppSheet();
         }
 
         document.getElementById('p12File').onchange = e => { if(e.target.files[0]) document.getElementById('p12Name').innerText = e.target.files[0].name; };
@@ -391,57 +418,34 @@
             btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
         }
 
-        // Install Function بە ڕیسێتەوە بۆ دۆخی ئاسایی و ڕۆیشتن بۆ تێلیگرام
-        async function installFreeApp(appName, btnElement) {
-            const selectedCertId = document.getElementById('freeCertSelect').value;
-            const appCard = btnElement.parentElement;
-            const iconWrap = appCard.querySelector('.app-img-box');
-            const progressOverlay = iconWrap.querySelector('.progress-overlay');
-            const pctText = iconWrap.querySelector('.pct-val');
-            const successOverlay = iconWrap.querySelector('.success-overlay');
+        // CUSTOM INSTALL SHEET LOGIC
+        let currentInstallUrl = "";
+
+        function openInstallSheet(url) {
+            currentInstallUrl = url;
+            document.getElementById('installSheetOverlay').classList.add('show');
+            document.getElementById('installSheet').classList.add('show');
+        }
+
+        function closeInstallSheet() {
+            document.getElementById('installSheetOverlay').classList.remove('show');
+            document.getElementById('installSheet').classList.remove('show');
+        }
+
+        function proceedInstall(method) {
+            closeInstallSheet();
+            const rawUrl = currentInstallUrl;
             
-            btnElement.style.opacity = '0.5';
-            btnElement.style.pointerEvents = 'none';
-            btnElement.innerText = '...';
-            progressOverlay.style.display = 'flex';
-
-            let pct = 0;
-            const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; pctText.innerText = pct + '%'; } }, 200);
-
-            try {
-                const res = await fetch('/api/sign', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app: appName, use_free_cert: true, cert_folder: selectedCertId }) });
-                if(!res.ok) throw new Error('Error');
-                const data = await res.json();
-                
-                const checker = setInterval(async () => {
-                    const serverStatus = await checkStatus(data.build_id, appName);
-                    if (serverStatus.status === 'done') {
-                        clearInterval(checker); clearInterval(sim);
-                        pctText.innerText = '100%';
-                        
-                        setTimeout(() => {
-                            progressOverlay.style.display = 'none'; 
-                            successOverlay.style.display = 'flex';
-                            
-                            const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
-                            window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
-                            
-                            setTimeout(() => {
-                                successOverlay.style.display = 'none';
-                                btnElement.innerText = 'GET';
-                                btnElement.style.opacity = '1';
-                                btnElement.style.pointerEvents = 'auto';
-                                pctText.innerText = '0%';
-                                
-                                window.location.href = "https://t.me/ashtemobile";
-                            }, 2500);
-
-                        }, 500);
-                    }
-                }, 1200);
-            } catch (err) {
-                clearInterval(sim); pctText.innerText = 'Err'; pctText.style.color = '#ff453a';
-                setTimeout(() => { progressOverlay.style.display = 'none'; pctText.style.color = '#fff'; btnElement.innerText = 'GET'; btnElement.style.opacity = '1'; btnElement.style.pointerEvents = 'auto'; }, 2500);
+            if (method === 'ashte') {
+                window.location.href = `ashte://install/${rawUrl}`;
+            } else if (method === 'ipaomtk') {
+                window.location.href = `ipaomtk://install/${rawUrl}`;
+            } else if (method === 'esign') {
+                window.location.href = `esign://install/${rawUrl}`;
+            } else if (method === 'ksign') {
+                window.location.href = `ksign://install/${rawUrl}`;
+            } else if (method === 'direct') {
+                window.location.href = rawUrl;
             }
         }
 
