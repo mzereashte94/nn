@@ -172,6 +172,7 @@
         </div>
 
         <!-- VIP View -->
+        <!-- لێرە ئایدی فۆڕمەکە formVIPـە، وە لە جاڤاسکریپتەکەش چاککرا بۆ formVIP -->
         <form id="formVIP" class="view-section">
             <div class="panel">
                 <div class="vip-app-btn" onclick="openSheet()">
@@ -213,7 +214,6 @@
         <div id="formFree" class="view-section view-active">
             <div class="panel mb-4">
                 
-                <!-- هەموو ٣٧ شەهادەکە بە تەواوی دانراونەتەوە -->
                 <select id="freeCertSelect" class="select-native">
                     <option value="File">Enterprise Cert (Auto)</option>
                     <option value="Bureau">Bureau</option>
@@ -391,7 +391,7 @@
             btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
         }
 
-        // Install Function بە ڕیسێتەوە بۆ دۆخی ئاسایی و ڕۆیشتن بۆ تێلیگرام
+        // Install Function بە کاتی گونجاو و تێلیگرام
         async function installFreeApp(appName, btnElement) {
             const selectedCertId = document.getElementById('freeCertSelect').value;
             const appCard = btnElement.parentElement;
@@ -433,6 +433,7 @@
                                 btnElement.style.pointerEvents = 'auto';
                                 pctText.innerText = '0%';
                                 
+                                // گەڕانەوە بۆ تێلیگرام
                                 window.location.href = "https://t.me/ashtemobile";
                             }, 2500);
 
@@ -445,7 +446,8 @@
             }
         }
 
-        document.getElementById('signForm').onsubmit = async (e) => {
+        // لێرەدا کێشەکە چارەسەر کرا: ئایدی فۆڕمەکە (formVIP) ڕێکخرایەوە
+        document.getElementById('formVIP').onsubmit = async (e) => {
             e.preventDefault();
             const status = document.getElementById('vipStatus');
             const btn = document.getElementById('submitBtn');
@@ -491,6 +493,7 @@
                                 status.style.color = 'var(--text-gray)';
                                 pFill.style.width = '0%';
                                 
+                                // گەڕانەوە بۆ تێلیگرام
                                 window.location.href = "https://t.me/ashtemobile";
                             }, 2500);
 
