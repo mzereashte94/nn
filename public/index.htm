@@ -1,506 +1,421 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>AshteMobile | Cloud Engine</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
+    <title>IPA BLACK | Premium Cloud</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         :root { 
-            --app-blue: #0A84FF;
-            --bg-deep: #000000; 
-            --card-base: #151517; 
-            --card-glass: rgba(28, 28, 30, 0.8);
-            --border-line: rgba(255, 255, 255, 0.1);
-            --text-light: #FFFFFF;
-            --text-gray: #98989D;
+            --gold: #d4af37; 
+            --gold-light: #fceabb; 
+            --gold-dark: #8c6b14; 
+            --black: #050505; 
         }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', 'Cairo', sans-serif; }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--black); color: #ffffff; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100vw; height: 100dvh; margin: 0; overflow: hidden; -webkit-tap-highlight-color: transparent; }
         
-        body { 
-            background-color: var(--bg-deep); 
-            color: var(--text-light); 
-            margin: 0; 
-            height: 100dvh; 
-            display: flex; justify-content: center; align-items: center;
-            overflow: hidden; 
-            background-image: radial-gradient(circle at 50% 0%, rgba(10, 132, 255, 0.15) 0%, transparent 50%);
+        /* سماء النجوم */
+        #stars-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; pointer-events: none; opacity: 0.6; }
+        .star { 
+            position: absolute; 
+            background: var(--gold-light); 
+            border-radius: 50%; 
+            animation: twinkle var(--twinkle-duration) infinite alternate ease-in-out, drift var(--drift-duration) infinite linear;
         }
+        @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.8); } 100% { opacity: 0.8; transform: scale(1); } }
+        @keyframes drift { from { transform: translateY(100vh); } to { transform: translateY(-10vh); } }
 
-        .main-frame { 
-            width: 100%; height: 100%; max-width: 420px; 
-            display: flex; flex-direction: column; 
-            padding: 16px 20px 24px 20px;
+        /* الكرات السائلة */
+        .liquid-blob { position: absolute; filter: blur(80px); z-index: 1; opacity: 0.2; animation: liquid-morph 15s infinite ease-in-out alternate; }
+        .blob-1 { width: 80vw; height: 80vw; max-width: 400px; max-height: 400px; background: var(--gold-dark); top: -10%; right: -20%; }
+        .blob-2 { width: 70vw; height: 70vw; max-width: 350px; max-height: 350px; background: var(--gold); bottom: -10%; left: -20%; animation-delay: -5s; animation-direction: alternate-reverse; }
+        @keyframes liquid-morph { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(20px, -20px) scale(0.9); } }
+
+        /* حاوية الهاتف */
+        .glass-mobile-card { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; 
+            background: rgba(15, 15, 15, 0.6); backdrop-filter: blur(25px); 
+            border: 1px solid rgba(212, 175, 55, 0.15); border-radius: 35px; 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); 
+            padding: 2rem 1.5rem; width: 92%; max-width: 400px; 
+            display: flex; flex-direction: column; gap: 1.2rem; max-height: 95vh; overflow-y: auto; scrollbar-width: none; 
         }
-
-        /* Header */
-        .title-box { text-align: center; margin-bottom: 16px; margin-top: 8px; }
-        .title-text { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; color: #fff; line-height: 1.1; }
-        .title-badge { display: inline-block; background: rgba(255,255,255,0.08); border: 1px solid var(--border-line); color: var(--text-gray); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
-
-        /* Switcher */
-        .segment-bg {
-            display: flex; background: var(--card-base); border-radius: 12px; padding: 4px; position: relative; margin-bottom: 16px; border: 1px solid var(--border-line);
-        }
-        .seg-btn {
-            flex: 1; text-align: center; padding: 10px 0; font-size: 13px; font-weight: 600; color: var(--text-gray); cursor: pointer; position: relative; z-index: 2; transition: 0.3s;
-        }
-        .seg-btn.active { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
-        .seg-indicator {
-            position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); background: #3A3A3C; border-radius: 9px; z-index: 1; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .view-section { display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s; height: 100%; }
-        .view-active { display: flex; opacity: 1; }
-
-        /* VIP UI */
-        .panel { background: var(--card-glass); border-radius: 20px; padding: 16px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--border-line); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .glass-mobile-card::-webkit-scrollbar { display: none; }
         
-        .vip-app-btn {
-            display: flex; align-items: center; justify-content: space-between; background: var(--card-base); border-radius: 16px; padding: 12px 16px; cursor: pointer; border: 1px solid var(--border-line); transition: 0.2s;
-        }
-        .vip-app-btn:active { background: #2C2C2E; }
-        
-        .upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .file-box {
-            background: var(--card-base); border: 1px dashed #48484A; border-radius: 16px; padding: 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; text-align: center; transition: 0.2s;
-        }
-        .file-box:active { border-color: var(--app-blue); background: rgba(10, 132, 255, 0.1); }
-        .file-box svg { color: var(--app-blue); width: 22px; height: 22px; }
+        /* مفتاح التبديل */
+        .toggle-switch { position: relative; display: inline-block; width: 46px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.05); transition: .4s; border-radius: 34px; border: 1px solid rgba(212, 175, 55, 0.2); }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: var(--gold); transition: .4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 50%; }
+        input:checked + .slider { background-color: rgba(212, 175, 55, 0.15); }
+        input:checked + .slider:before { transform: translateX(22px); background-color: var(--gold-light); }
 
-        .auth-input {
-            width: 100%; background: var(--card-base); border: 1px solid var(--border-line); border-radius: 14px; padding: 14px; color: white; font-size: 14px; outline: none; text-align: center; transition: 0.2s;
-        }
-        .auth-input:focus { border-color: var(--app-blue); }
+        /* تنسيقات قسم VIP */
+        .premium-section { transition: all 0.4s ease; }
+        .custom-select { position: relative; }
+        .select-selected { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 18px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.3s; }
+        .select-items { position: absolute; background: rgba(15, 15, 15, 0.98); backdrop-filter: blur(20px); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 18px; top: calc(100% + 8px); left: 0; right: 0; z-index: 99; display: none; max-height: 200px; overflow-y: auto; }
+        .select-items div { padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.02); font-size: 0.9rem; cursor: pointer; }
+        .select-items img, .select-selected img, .app-icon-img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; }
 
-        .go-btn {
-            background: var(--app-blue); color: #fff; font-weight: 600; font-size: 16px; padding: 14px; border-radius: 14px; width: 100%; border: none; cursor: pointer; transition: 0.2s;
-        }
-        .go-btn:active { opacity: 0.8; transform: scale(0.98); }
+        .upload-row { display: flex; justify-content: space-between; align-items: center; background: rgba(212, 175, 55, 0.03); border: 1px dashed rgba(212, 175, 55, 0.3); border-radius: 18px; padding: 12px 16px; transition: 0.3s; cursor: pointer; }
+        .upload-row:active { background: rgba(212, 175, 55, 0.08); }
+        .upload-text { display: flex; flex-direction: column; text-align: right; }
 
-        /* Free UI Controls */
-        .select-native {
-            width: 100%; background: var(--card-base) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2398989D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center; background-size: 14px; border: 1px solid var(--border-line); border-radius: 14px; padding: 14px 16px; color: white; font-size: 14px; font-weight: 500; outline: none; appearance: none; margin-bottom: 12px;
-        }
-        
-        .action-row { display: flex; gap: 10px; }
-        .mini-btn {
-            flex: 1; background: var(--card-base); border: 1px solid var(--border-line); color: #fff; font-size: 13px; font-weight: 600; padding: 12px; border-radius: 14px; display: flex; justify-content: center; align-items: center; gap: 6px; text-decoration: none; cursor: pointer; transition: 0.2s;
-        }
-        .mini-btn:active { background: #2C2C2E; }
+        .gold-input { width: 70%; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 14px; padding: 10px; color: white; text-align: center; font-size: 0.9rem; letter-spacing: 1px; outline: none; margin: 0 auto; display: block; transition: 0.3s;}
+        .gold-input:focus { border-color: var(--gold); background: rgba(0,0,0,0.6); }
 
-        /* APP LIBRARY */
-        .library-box {
-            flex: 1; background: var(--card-glass); border-radius: 20px; padding: 16px 12px; border: 1px solid var(--border-line); display: flex; flex-direction: column; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        }
-        .lib-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px; text-align: left; padding-left: 8px; }
-        
-        .bento-grid {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; align-items: stretch;
-        }
-        
-        .app-bento-card {
-            flex: 1 1 calc(30% - 12px);
-            min-width: 95px;
-            background: var(--card-base); 
-            border: 1px solid var(--border-line); 
-            border-radius: 16px; 
-            padding: 14px 10px; 
-            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-        }
-        
-        .app-img-box { 
-            width: 54px; height: 54px; border-radius: 12px; position: relative; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; flex-shrink: 0;
-        }
-        .app-img-box img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .progress-overlay {
-            position: absolute; inset: 0; background: rgba(0,0,0,0.65); display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); z-index: 2;
-        }
-        .pct-val { font-size: 13px; font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
-        
-        .success-overlay {
-            position: absolute; inset: 0; background: rgba(50, 215, 75, 0.85); display: none; justify-content: center; align-items: center; color: #fff; z-index: 3;
-        }
+        .btn-liquid { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: #000; font-weight: 800; font-size: 1rem; padding: 14px; border-radius: 18px; width: 100%; margin-top: 5px; border: none; cursor: pointer; transition: 0.3s transform; }
+        .btn-liquid:active { transform: scale(0.97); }
 
-        .app-text-name { font-size: 11px; font-weight: 700; color: #fff; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 10px; }
+        .progress-wrapper { width: 100%; background: rgba(255, 255, 255, 0.05); border-radius: 8px; height: 6px; overflow: hidden; display: none; margin-top: 10px; }
+        .progress-fill { width: 0%; height: 100%; background: var(--gold); transition: width 0.2s ease-out; }
 
-        .store-get-btn {
-            width: 100%; background: rgba(255,255,255,0.08); color: var(--app-blue); border: none; border-radius: 12px; font-size: 12px; font-weight: 700; padding: 6px 0; cursor: pointer; transition: 0.2s;
-        }
-        .store-get-btn:active { background: rgba(255,255,255,0.15); }
-
-        /* Modal VIP */
-        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 50; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-        .modal-bg.show { opacity: 1; pointer-events: auto; }
+        /* تنسيقات قسم الشهادة المجانية */
+        .free-section { display: none; opacity: 0; transition: all 0.4s ease; display: flex; flex-direction: column; gap: 10px; }
+        .free-app-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 12px 16px; transition: 0.3s; }
+        .free-app-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(212,175,55,0.2); }
         
-        .sheet {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: #1C1C1E; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 12px 16px 36px 16px; z-index: 60; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); border-top: 1px solid var(--border-line);
-        }
-        .sheet.show { transform: translateY(0); }
-        .sheet-pill { width: 36px; height: 5px; background: #48484A; border-radius: 5px; margin: 0 auto 16px auto; }
+        .install-action-btn { background: rgba(212, 175, 55, 0.1); color: var(--gold); border: 1px solid rgba(212, 175, 55, 0.3); padding: 6px 16px; border-radius: 12px; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.3s; }
+        .install-action-btn:active { transform: scale(0.92); background: var(--gold); color: #000; }
         
-        .sheet-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid var(--border-line); cursor: pointer; transition: 0.2s; }
-        .sheet-row:last-child { border-bottom: none; }
-        .sheet-row:active { background: #2C2C2E; border-radius: 16px; }
-        .sheet-row img { width: 42px; height: 42px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
-        .sheet-row span { font-size: 15px; font-weight: 600; color: #fff; }
-
-        .vip-loader-box { width: 100%; height: 5px; background: var(--card-base); border-radius: 5px; overflow: hidden; display: none; margin-top: 12px; }
-        .vip-loader-bar { height: 100%; width: 0%; background: var(--app-blue); transition: 0.3s; }
-        .vip-status-txt { text-align: center; font-size: 12px; font-weight: 600; margin-top: 8px; display: none; color: var(--text-gray); }
+        .app-progress-container { display: none; flex-direction: column; align-items: center; width: 70px; }
+        .app-pct-text { font-size: 0.85rem; font-weight: 800; color: var(--gold-light); margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+        .app-mini-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+        .app-mini-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.2s ease; }
+        
+        .success-badge { display: none; color: #4ade80; font-size: 0.75rem; font-weight: 800; align-items: center; gap: 4px; background: rgba(74, 222, 128, 0.1); padding: 6px 10px; border-radius: 10px; border: 1px solid rgba(74, 222, 128, 0.2); }
     </style>
 </head>
 <body>
 
-    <div class="main-frame">
-        
-        <!-- Header -->
-        <div class="title-box">
-            <h1 class="title-text">AshteMobile</h1>
-            <div class="title-badge">Cloud Engine</div>
+    <!-- سماء النجوم -->
+    <div id="stars-container"></div>
+
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+
+    <div class="glass-mobile-card">
+        <div class="text-center mb-1">
+            <h1 class="text-2xl font-black tracking-tighter" style="color: var(--gold);">IPA BLACK</h1>
+            <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-widest font-bold">Premium Cloud Signer</p>
         </div>
 
-        <!-- Switcher -->
-        <div class="segment-bg">
-            <div class="seg-indicator" id="tabIndicator" style="transform: translateX(100%);"></div>
-            <div class="seg-btn" id="btnPrem" onclick="setTab('premium')">VIP Signature</div>
-            <div class="seg-btn active" id="btnFree" onclick="setTab('free')">Free Enterprise</div>
+        <!-- مفتاح التبديل الديناميكي -->
+        <div class="flex items-center justify-between bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-3 transition-colors duration-300" id="modeToggleBox">
+            <span class="text-[12px] font-bold text-gray-300 flex items-center gap-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <span id="toggleTextLabel">الشهادة المجانية</span>
+            </span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="freeCertToggle">
+                <span class="slider"></span>
+            </label>
         </div>
 
-        <!-- VIP View -->
-        <form id="formVIP" class="view-section">
-            <div class="panel">
-                <div class="vip-app-btn" onclick="openSheet()">
-                    <div class="flex items-center gap-4">
-                        <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg" id="selImg" class="w-11 h-11 rounded-xl object-cover border border-[var(--border-line)]">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] text-[var(--text-gray)] font-bold uppercase tracking-wider mb-0.5">App to Sign</span>
-                            <span id="selName" class="text-white font-bold text-[16px] leading-none">AshteMobile</span>
-                        </div>
-                    </div>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-gray)" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        <!-- 1. قسم الشهادة المخصصة -->
+        <div id="signForm" class="premium-section space-y-4">
+            <div class="custom-select" id="customSelect">
+                <div class="select-selected" id="selectedApp">
+                    <img src="https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1419.jpeg" alt="icon">
+                    <span class="text-gray-200">ESign</span>
                 </div>
-                <input type="hidden" id="appInput" value="AshteMobile">
-
-                <div class="upload-row">
-                    <div class="file-box" onclick="document.getElementById('p12File').click()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-                        <div class="text-[13px] font-bold text-white">Certificate</div>
-                        <div id="p12Name" class="text-[10px] text-[var(--text-gray)] truncate w-full px-1">.p12 File</div>
-                        <input type="file" id="p12File" class="hidden" accept=".p12">
-                    </div>
-                    <div class="file-box" onclick="document.getElementById('provFile').click()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
-                        <div class="text-[13px] font-bold text-white">Provision</div>
-                        <div id="provName" class="text-[10px] text-[var(--text-gray)] truncate w-full px-1">.mobileprovision</div>
-                        <input type="file" id="provFile" class="hidden" accept=".mobileprovision">
-                    </div>
+                <div class="select-items" id="appOptions">
+                    <div data-value="ESign"><img src="https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1419.jpeg" alt="ESign">ESign</div>
+                    <div data-value="KSign"><img src="https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1416.jpeg" alt="KSign">KSign</div>
+                    <div data-value="Scarlet"><img src="https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1420.jpeg" alt="Scarlet">Scarlet</div>
+                    <div data-value="GBox"><img src="https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1417.jpeg" alt="GBox">GBox</div>
+                    <div data-value="Feather"><img src="https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1421.jpeg" alt="Feather">Feather</div>
                 </div>
-
-                <input type="password" id="password" placeholder="Certificate Password" class="auth-input">
-                
-                <button type="submit" id="submitBtn" class="go-btn">Start Engine</button>
-                <div id="vipProgressWrapper" class="vip-loader-box"><div id="vipProgressFill" class="vip-loader-bar"></div></div>
-                <div id="vipStatus" class="vip-status-txt"></div>
+                <input type="hidden" id="appInput" value="ESign" required>
             </div>
-        </form>
 
-        <!-- Free View -->
-        <div id="formFree" class="view-section view-active">
-            <div class="panel mb-4">
-                
-                <select id="freeCertSelect" class="select-native">
-                    <option value="File">Enterprise Cert (Auto)</option>
-                    <option value="Bureau">Bureau</option>
-                    <option value="CITICPrudential">CITICPrudential</option>
-                    <option value="ChinaEverbri">ChinaEverbri</option>
-                    <option value="ChinaMobile">ChinaMobile</option>
-                    <option value="FPTSoftware">FPTSoftware</option>
-                    <option value="Guangzhou">Guangzhou</option>
-                    <option value="HDFC2">HDFC2</option>
-                    <option value="HDFCLife">HDFCLife</option>
-                    <option value="Manulife">Manulife</option>
-                    <option value="MiguDigital">MiguDigital</option>
-                    <option value="MylanInc">MylanInc</option>
-                    <option value="Planning">Planning</option>
-                    <option value="SANY">SANY</option>
-                    <option value="SHANGHAI">SHANGHAI</option>
-                    <option value="STOCK">STOCK</option>
-                    <option value="Shanghai">Shanghai</option>
-                    <option value="ShanghaiForeign">ShanghaiForeign</option>
-                    <option value="Social">Social</option>
-                    <option value="Sunshine">Sunshine</option>
-                    <option value="Tianwen">Tianwen</option>
-                    <option value="XCMG">XCMG</option>
-                    <option value="aramco">aramco</option>
-                    <option value="beijing_xibei">beijing_xibei</option>
-                    <option value="beijing_zhizhangyi">beijing_zhizhangyi</option>
-                    <option value="bzi_boc">bzi_boc</option>
-                    <option value="china_telecom">china_telecom</option>
-                    <option value="jiangsu">jiangsu</option>
-                    <option value="luoyang">luoyang</option>
-                    <option value="moving">moving</option>
-                    <option value="moving2">moving2</option>
-                    <option value="powerchin">powerchin</option>
-                    <option value="qingdao">qingdao</option>
-                    <option value="vietnam">vietnam</option>
-                    <option value="xl_axia">xl_axia</option>
-                </select>
+            <div class="space-y-2">
+                <div class="upload-row" onclick="document.getElementById('p12File').click()">
+                    <div class="upload-text">
+                        <span class="text-[12px] font-bold text-gray-200">ملف P12</span>
+                        <span id="p12Name" class="text-[10px] text-gray-500 mt-1">اضغط لاختيار الشهادة</span>
+                    </div>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <input type="file" id="p12File" class="hidden" accept=".p12">
+                </div>
 
-                <div class="action-row">
-                    <a href="https://ashtemobile.site/ashtemobile.mobileconfig" class="mini-btn">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        Block DNS
-                    </a>
-                    <button type="button" id="dlCertBtn" onclick="downloadCertFiles()" class="mini-btn" style="color: var(--app-blue); border-color: rgba(10, 132, 255, 0.2);">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                        Get ZIP
-                    </button>
+                <div class="upload-row" onclick="document.getElementById('provFile').click()">
+                    <div class="upload-text">
+                        <span class="text-[12px] font-bold text-gray-200">ملف Provision</span>
+                        <span id="provName" class="text-[10px] text-gray-500 mt-1">اضغط لاختيار التكوين</span>
+                    </div>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold-light)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <input type="file" id="provFile" class="hidden" accept=".mobileprovision">
                 </div>
             </div>
 
-            <div class="library-box">
-                <h2 class="lib-title">App Library</h2>
-                <div class="bento-grid" id="bentoContainer">
-                    <!-- ئەپەکان لێرە دروست دەکرێن -->
-                </div>
-            </div>
+            <input type="password" id="password" placeholder="كلمة المرور" class="gold-input">
+
+            <!-- لێرەدا کێشەکە چارەسەر کرا: دوگمەکە کرایە button لەبری submit، وە onClickی بۆ زیاد کرا -->
+            <button type="button" id="submitBtn" class="btn-liquid" onclick="startVipEngine()">بدء التوقيع</button>
             
+            <div id="progressWrapper" class="progress-wrapper">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+            <div id="status" class="text-center text-[10px] font-bold hidden text-[var(--gold)] mt-2"></div>
         </div>
-    </div>
 
-    <!-- Modal بۆ VIP -->
-    <div class="modal-bg" id="sheetOverlay" onclick="closeSheet()"></div>
-    <div class="sheet" id="appSheet">
-        <div class="sheet-pill"></div>
-        <div class="flex flex-col">
-            <div class="sheet-row" onclick="selectApp('AshteMobile', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg')">
-                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg"> <span>AshteMobile</span>
-            </div>
-            <div class="sheet-row" onclick="selectApp('ipaomtk', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg')">
-                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg"> <span>ipaomtk</span>
-            </div>
-            <div class="sheet-row" onclick="selectApp('Esign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg')">
-                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg"> <span>Esign</span>
-            </div>
-            <div class="sheet-row" onclick="selectApp('Ksign', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg')">
-                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg"> <span>Ksign</span>
-            </div>
-            <div class="sheet-row" onclick="selectApp('MyTV', 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg')">
-                <img src="https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg"> <span>MyTV</span>
-            </div>
+        <!-- 2. قسم الشهادة المجانية -->
+        <div id="freeAppsSection" class="free-section" style="display: none;">
+            <!-- سيتم توليد التطبيقات هنا عبر الجافاسكربت -->
         </div>
+
     </div>
 
     <script>
+        // توليد النجوم
+        const starsContainer = document.getElementById('stars-container');
+        for (let i = 0; i < 40; i++) {
+            let star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + 'vw';
+            let size = Math.random() * 2 + 1;
+            star.style.width = size + 'px'; star.style.height = size + 'px';
+            star.style.setProperty('--twinkle-duration', (Math.random() * 3 + 2) + 's');
+            star.style.setProperty('--drift-duration', (Math.random() * 30 + 40) + 's');
+            star.style.animationDelay = (Math.random() * -50) + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // بيانات التطبيقات بنصوص نظيفة
         const appsData = [
-            { id: 'AshteMobile', name: 'AshteMobile', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ashtemobile.jpeg' },
-            { id: 'ipaomtk', name: 'ipaomtk', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/ipaomtk.jpeg' },
-            { id: 'Esign', name: 'Esign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Esign.jpeg' },
-            { id: 'Ksign', name: 'Ksign', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/Ksign.jpeg' },
-            { id: 'MyTV', name: 'MyTV', icon: 'https://raw.githubusercontent.com/mzereashte94/Mzere/main/icons/mytv.jpeg' }
+            { id: 'ESign', name: 'ESign', icon: 'https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1419.jpeg' },
+            { id: 'KSign', name: 'KSign', icon: 'https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1416.jpeg' },
+            { id: 'Scarlet', name: 'Scarlet', icon: 'https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1420.jpeg' },
+            { id: 'GBox', name: 'GBox', icon: 'https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1417.jpeg' },
+            { id: 'Feather', name: 'Feather', icon: 'https://raw.githubusercontent.com/ipa-black/Signer/refs/heads/main/icons/IMG_1421.jpeg' }
         ];
 
-        const bentoContainer = document.getElementById('bentoContainer');
+        // بناء قائمة التطبيقات
+        const freeAppsSection = document.getElementById('freeAppsSection');
         appsData.forEach(app => {
-            bentoContainer.innerHTML += `
-                <div class="app-bento-card">
-                    <div class="app-img-box">
-                        <img src="${app.icon}">
-                        <div class="progress-overlay"><span class="pct-val">0%</span></div>
-                        <div class="success-overlay">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        </div>
+            freeAppsSection.innerHTML += `
+                <div class="free-app-item">
+                    <div class="flex items-center gap-3">
+                        <img src="${app.icon}" class="app-icon-img" alt="${app.id}">
+                        <span class="text-[13px] font-bold text-gray-200">${app.name}</span>
                     </div>
-                    <span class="app-text-name">${app.name}</span>
-                    <button class="store-get-btn" onclick="installFreeApp('${app.id}', this)">GET</button>
+                    
+                    <button class="install-action-btn" onclick="installFreeApp('${app.id}', this)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                        تثبيت
+                    </button>
+                    
+                    <div class="app-progress-container">
+                        <span class="app-pct-text">0%</span>
+                        <div class="app-mini-bar"><div class="app-mini-fill"></div></div>
+                    </div>
+
+                    <div class="success-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        جاهز
+                    </div>
                 </div>
             `;
         });
 
-        function setTab(mode) {
-            const indicator = document.getElementById('tabIndicator');
-            const btnPrem = document.getElementById('btnPrem');
-            const btnFree = document.getElementById('btnFree');
-            const formVIP = document.getElementById('formVIP');
-            const formFree = document.getElementById('formFree');
+        // منطق التبديل وتغيير النص ديناميكياً
+        const freeCertToggle = document.getElementById('freeCertToggle');
+        const premiumSection = document.querySelector('.premium-section');
+        const modeToggleBox = document.getElementById('modeToggleBox');
+        const toggleTextLabel = document.getElementById('toggleTextLabel');
 
-            if(mode === 'premium') {
-                indicator.style.transform = 'translateX(0)';
-                btnPrem.classList.add('active'); btnFree.classList.remove('active');
-                
-                formFree.style.display = 'none'; formFree.classList.remove('view-active');
-                formVIP.style.display = 'flex'; setTimeout(() => formVIP.classList.add('view-active'), 20);
+        freeCertToggle.addEventListener('change', function() {
+            if (this.checked) {
+                toggleTextLabel.innerText = "الشهادة المدفوعة";
+                modeToggleBox.style.borderColor = 'rgba(212, 175, 55, 0.3)';
+                premiumSection.style.opacity = '0';
+                setTimeout(() => {
+                    premiumSection.style.display = 'none';
+                    freeAppsSection.style.display = 'flex';
+                    setTimeout(() => freeAppsSection.style.opacity = '1', 10);
+                }, 300);
             } else {
-                indicator.style.transform = 'translateX(100%)';
-                btnFree.classList.add('active'); btnPrem.classList.remove('active');
-                
-                formVIP.style.display = 'none'; formVIP.classList.remove('view-active');
-                formFree.style.display = 'flex'; setTimeout(() => formFree.classList.add('view-active'), 20);
+                toggleTextLabel.innerText = "الشهادة المجانية";
+                modeToggleBox.style.borderColor = 'rgba(255,255,255,0.05)';
+                freeAppsSection.style.opacity = '0';
+                setTimeout(() => {
+                    freeAppsSection.style.display = 'none';
+                    premiumSection.style.display = 'block';
+                    setTimeout(() => premiumSection.style.opacity = '1', 10);
+                }, 300);
             }
-        }
+        });
 
-        const sheetOverlay = document.getElementById('sheetOverlay');
-        const appSheet = document.getElementById('appSheet');
-        
-        function openSheet() { sheetOverlay.classList.add('show'); appSheet.classList.add('show'); }
-        function closeSheet() { sheetOverlay.classList.remove('show'); appSheet.classList.remove('show'); }
-        function selectApp(id, img) {
-            document.getElementById('selImg').src = img; document.getElementById('selName').innerText = id;
-            document.getElementById('appInput').value = id; closeSheet();
-        }
-
-        document.getElementById('p12File').onchange = e => { if(e.target.files[0]) document.getElementById('p12Name').innerText = e.target.files[0].name; };
-        document.getElementById('provFile').onchange = e => { if(e.target.files[0]) document.getElementById('provName').innerText = e.target.files[0].name; };
-        
+        // دوال مساعدة
+        const truncate = (str, n) => str.length > n ? str.substr(0, n - 1) + '...' : str;
+        document.getElementById('p12File').onchange = e => { if(e.target.files[0]) document.getElementById('p12Name').innerText = truncate(e.target.files[0].name, 25); };
+        document.getElementById('provFile').onchange = e => { if(e.target.files[0]) document.getElementById('provName').innerText = truncate(e.target.files[0].name, 25); };
         const toBase64 = file => new Promise((resolve, reject) => {
             const reader = new FileReader(); reader.readAsDataURL(file);
             reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = error => reject(error);
         });
 
         async function checkStatus(buildId, appName) {
-            try { const res = await fetch(`/api/status?build_id=${buildId}&app=${appName}`); return await res.json(); } catch(e) { return { status: 'processing' }; }
-        }
-
-        async function downloadCertFiles() {
-            const certId = document.getElementById('freeCertSelect').value;
-            const baseUrl = `https://raw.githubusercontent.com/mzereashte94/nn/main/cert/${certId}`;
-            const btn = document.getElementById('dlCertBtn');
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = '...'; btn.style.opacity = '0.5'; btn.disabled = true;
-
             try {
-                const zip = new JSZip();
-                const files = ['cert.p12', 'profile.mobileprovision', 'pass.txt'];
-                for (const file of files) {
-                    const res = await fetch(`${baseUrl}/${file}?v=${Date.now()}`); 
-                    if(res.ok) zip.file(file, await res.blob());
-                }
-                const zipContent = await zip.generateAsync({type:"blob"});
-                const url = window.URL.createObjectURL(zipContent);
-                const a = document.createElement('a'); a.href = url; a.download = `${certId}_cert.zip`; 
-                document.body.appendChild(a); a.click(); document.body.removeChild(a); window.URL.revokeObjectURL(url);
-            } catch(e) { alert("Error downloading"); }
-            
-            btn.innerHTML = originalText; btn.style.opacity = '1'; btn.disabled = false;
+                const res = await fetch(`/api/status?build_id=${buildId}&app=${appName}`);
+                return await res.json();
+            } catch (e) {
+                return { status: 'processing' };
+            }
         }
 
-        // Install Function
+        // --- توقيع الشهادة المجانية ---
         async function installFreeApp(appName, btnElement) {
-            const selectedCertId = document.getElementById('freeCertSelect').value;
-            const appCard = btnElement.parentElement;
-            const iconWrap = appCard.querySelector('.app-img-box');
-            const progressOverlay = iconWrap.querySelector('.progress-overlay');
-            const pctText = iconWrap.querySelector('.pct-val');
-            const successOverlay = iconWrap.querySelector('.success-overlay');
-            
-            btnElement.style.opacity = '0.5';
-            btnElement.style.pointerEvents = 'none';
-            btnElement.innerText = '...';
-            progressOverlay.style.display = 'flex';
+            const itemContainer = btnElement.parentElement;
+            const progressContainer = itemContainer.querySelector('.app-progress-container');
+            const pctText = itemContainer.querySelector('.app-pct-text');
+            const fillBar = itemContainer.querySelector('.app-mini-fill');
+            const successBadge = itemContainer.querySelector('.success-badge');
+
+            btnElement.style.display = 'none';
+            progressContainer.style.display = 'flex';
 
             let pct = 0;
-            const sim = setInterval(() => { if (pct < 95) { pct += Math.floor(Math.random() * 8) + 2; if (pct > 95) pct = 95; pctText.innerText = pct + '%'; } }, 200);
+            const simInterval = setInterval(() => {
+                if (pct < 95) {
+                    pct += Math.floor(Math.random() * 6) + 2; 
+                    if (pct > 95) pct = 95;
+                    pctText.innerText = pct + '%';
+                    fillBar.style.width = pct + '%';
+                }
+            }, 200);
 
             try {
-                const res = await fetch('/api/sign', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app: appName, use_free_cert: true, cert_folder: selectedCertId }) });
+                const res = await fetch('/api/sign', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ app: appName, use_free_cert: true })
+                });
+                
                 if(!res.ok) throw new Error('Error');
                 const data = await res.json();
-                
+                const buildId = data.build_id;
+
                 const checker = setInterval(async () => {
-                    const serverStatus = await checkStatus(data.build_id, appName);
+                    const serverStatus = await checkStatus(buildId, appName);
                     if (serverStatus.status === 'done') {
-                        clearInterval(checker); clearInterval(sim);
+                        clearInterval(checker);
+                        clearInterval(simInterval);
+                        
                         pctText.innerText = '100%';
+                        fillBar.style.width = '100%';
                         
                         setTimeout(() => {
-                            progressOverlay.style.display = 'none'; 
-                            successOverlay.style.display = 'flex';
+                            progressContainer.style.display = 'none';
+                            successBadge.style.display = 'flex';
                             
                             const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appName)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
                             
                             setTimeout(() => {
-                                successOverlay.style.display = 'none';
-                                btnElement.innerText = 'GET';
-                                btnElement.style.opacity = '1';
-                                btnElement.style.pointerEvents = 'auto';
-                                pctText.innerText = '0%';
-                                
-                                // گواستنەوە بۆ تێلیگرام سڕایەوە بۆ ئەوەی نامەی ئینستاڵ دەربکەوێت
-                            }, 2500);
+                                window.location.href = "https://t.me/hl00ss";
+                            }, 1500);
 
                         }, 500);
                     }
                 }, 1200);
+
             } catch (err) {
-                clearInterval(sim); pctText.innerText = 'Err'; pctText.style.color = '#ff453a';
-                setTimeout(() => { progressOverlay.style.display = 'none'; pctText.style.color = '#fff'; btnElement.innerText = 'GET'; btnElement.style.opacity = '1'; btnElement.style.pointerEvents = 'auto'; }, 2500);
+                clearInterval(simInterval);
+                pctText.innerText = 'فشل';
+                pctText.style.color = '#ef4444';
+                fillBar.style.background = '#ef4444';
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                    btnElement.style.display = 'flex';
+                    pctText.style.color = 'var(--gold-light)';
+                    fillBar.style.background = 'var(--gold)';
+                }, 2000);
             }
         }
 
-        document.getElementById('formVIP').onsubmit = async (e) => {
-            e.preventDefault();
-            const status = document.getElementById('vipStatus');
+        // --- قسم الـ VIP ---
+        const selectedApp = document.getElementById('selectedApp');
+        const appOptions = document.getElementById('appOptions');
+        const appInput = document.getElementById('appInput');
+
+        selectedApp.onclick = e => { e.stopPropagation(); appOptions.style.display = appOptions.style.display === 'block' ? 'none' : 'block'; };
+        document.querySelectorAll('.select-items div').forEach(opt => {
+            opt.onclick = function() { selectedApp.innerHTML = this.innerHTML; appInput.value = this.getAttribute('data-value'); appOptions.style.display = 'none'; };
+        });
+        document.onclick = () => appOptions.style.display = 'none';
+
+        // لێرەدا فەنکشنەکە دانراوە بۆ ئەوەی ڕاستەوخۆ کار بکات بێ ئەوەی کێشە بۆ فۆڕمەکە دروست بێت
+        async function startVipEngine() {
+            const status = document.getElementById('status');
             const btn = document.getElementById('submitBtn');
-            const pWrap = document.getElementById('vipProgressWrapper');
-            const pFill = document.getElementById('vipProgressFill');
+            const progressWrapper = document.getElementById('progressWrapper');
+            const progressFill = document.getElementById('progressFill');
             const p12File = document.getElementById('p12File');
             const provFile = document.getElementById('provFile');
-            const pass = document.getElementById('password');
-            const appSelected = document.getElementById('appInput').value;
+            const passwordInput = document.getElementById('password');
 
-            if (!p12File.files[0] || !provFile.files[0] || !pass.value) return alert('Attach files and enter password!');
+            if (!p12File.files[0] || !provFile.files[0] || !passwordInput.value) {
+                return alert('يرجى إرفاق ملفات الشهادة وكلمة المرور!');
+            }
 
-            btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none'; pWrap.style.display = 'block';
-            status.style.display = 'block'; status.innerText = 'Uploading to Engine...'; 
+            btn.disabled = true; btn.innerText = 'جاري المعالجة...';
+            status.classList.remove('hidden'); status.innerText = 'يتم الاتصال بالمحرك...';
 
             try {
                 const p12 = await toBase64(p12File.files[0]);
                 const prov = await toBase64(provFile.files[0]);
 
-                const res = await fetch('/api/sign', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ app: appSelected, p12, prov, password: pass.value }) });
+                const res = await fetch('/api/sign', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ app: appInput.value, p12, prov, password: passwordInput.value })
+                });
+
                 if(!res.ok) throw new Error('Error');
                 const data = await res.json();
+                const buildId = data.build_id;
 
-                status.innerText = 'Signing Certificate...';
-                let sim = 0; const anim = setInterval(() => { if (sim < 95) sim += 5; pFill.style.width = sim + '%'; }, 300);
+                progressWrapper.style.display = 'block';
+                btn.style.display = 'none';
+                status.innerText = 'يتم التوقيع الآن...';
+                
+                let simulatedProgress = 0;
+                const animationInterval = setInterval(() => {
+                    if (simulatedProgress < 95) simulatedProgress += Math.random() * 6 + 1;
+                    if (simulatedProgress > 95) simulatedProgress = 95;
+                    progressFill.style.width = simulatedProgress + '%';
+                }, 250);
 
                 const checker = setInterval(async () => {
-                    const serverStatus = await checkStatus(data.build_id, appSelected);
+                    const serverStatus = await checkStatus(buildId, appInput.value);
                     if (serverStatus.status === 'done') {
-                        clearInterval(checker); clearInterval(anim); pFill.style.width = '100%';
-                        status.innerText = 'Success! Prompting Install...'; status.style.color = '#32D74B';
+                        clearInterval(checker); clearInterval(animationInterval);
+                        progressFill.style.width = '100%';
+                        status.innerText = '✅ تم التوقيع بنجاح! جاري التثبيت...';
                         
                         setTimeout(() => {
-                            const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appSelected)}`;
+                            const manifestApiUrl = `https://${window.location.host}/api/manifest?ipa=${encodeURIComponent(serverStatus.ipaUrl)}&bundle_url=${encodeURIComponent(serverStatus.bundleUrl)}&app=${encodeURIComponent(appInput.value)}`;
                             window.location.href = `itms-services://?action=download-manifest&url=${encodeURIComponent(manifestApiUrl)}`;
                             
                             setTimeout(() => {
-                                pWrap.style.display = 'none'; 
-                                btn.style.display = 'block'; 
-                                btn.style.pointerEvents = 'auto';
-                                btn.style.opacity = '1';
-                                status.style.display = 'none'; 
-                                status.style.color = 'var(--text-gray)';
-                                pFill.style.width = '0%';
-                                
-                                // گواستنەوە بۆ تێلیگرام سڕایەوە بۆ ئەوەی نامەی ئینستاڵ دەربکەوێت
-                            }, 2500);
+                                window.location.href = "https://t.me/hl00ss";
+                            }, 1500);
 
                         }, 800); 
                     }
                 }, 1200); 
+
             } catch (err) {
-                status.innerText = 'Connection Failed. Try again.'; status.style.color = '#ef4444';
-                setTimeout(() => { pWrap.style.display = 'none'; btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; status.style.display = 'none'; }, 3000);
+                status.innerText = '❌ فشل التوقيع، حاول مجدداً.';
+                progressWrapper.style.display = 'none';
+                btn.style.display = 'block'; btn.disabled = false; btn.innerText = 'بدء التوقيع';
             }
-        };
+        }
     </script>
 </body>
 </html>
